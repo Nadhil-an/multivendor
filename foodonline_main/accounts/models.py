@@ -70,14 +70,14 @@ class user(AbstractBaseUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username','first_name','last_name']
 
-    obejct = userManager() ##connect the the above class with this one
+    objects = userManager() ##connect the the above class with this one
 
     def __str__(self):
         return self.email
     
     def has_perm(self,perm,obj=None): # Only admins have permission.
         return self.is_admin
-    
-    def has_module_perm(self,app_label): #checks if the user has access to a whole app/module.
+    def has_module_perms(self, app_label):  # Correct spelling
         return True
+
 
