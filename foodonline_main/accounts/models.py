@@ -17,7 +17,7 @@ class userManager(BaseUserManager):
         )
 
         user.set_password(password)
-        user.save(user.self_db)
+        user.save(using=self._db)
         return user
     
 
@@ -34,47 +34,50 @@ class userManager(BaseUserManager):
         user.is_active = True
         user.is_staff  = True
         user.is_superadmin = True
-        user.save(user.self_db)
+        user.save(using=self._db)
 
 
 class user(AbstractBaseUser):
+    
     RESTAURANT = 1
-    CUSTOMER  = 2
+    CUSTOMER   = 2 
 
     ROLE_CHOICE = {
         (RESTAURANT,'Restaurant'),
-        (CUSTOMER,'Customer'),
+        (CUSTOMER,'customer')
     }
+
     first_name = models.CharField(max_length=50)
     last_name  = models.CharField(max_length=50)
-    username   = models.CharField(max_length=50,unique=True)
+    username   = models.CharField(max_length=50)
     email      = models.EmailField(max_length=100,unique=True)
-    phone_number = models.CharField(max_length=12,blank=True)
-    role      = models.PositiveBigIntegerField(choices=ROLE_CHOICE,blank=True,null=True)
+    phone_number     = models.CharField(max_length=50)
+    role       = models.PositiveBigIntegerField(choices = ROLE_CHOICE, blank=True,null=True)
 
 
-    ##required filed
+    #required fileds
 
-    date_joined = models.DateTimeField(auto_now_add = True )
-    last_login  = models.DateTimeField(auto_now_add= True)
-    created_date = models.DateTimeField(auto_now_add = True)
+    date_joined = models.DateTimeField(auto_now_add=True)
+    last_login  = models.DateTimeField(auto_now_add=True)
+    created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now_add=True)
     is_admin = models.BooleanField(default=False)
-    is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
     is_superadmin = models.BooleanField(default=False)
+
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username','first_name','last_name']
 
-    object = userManager()
-
+    obejct = userManager() ##connect the the above class with this one
 
     def __str__(self):
         return self.email
     
-    def has_perm(self,perm,obj=None):
+    def has_perm(self,perm,obj=None): # Only admins have permission.
         return self.is_admin
     
-    def has_module_perms(self, app_label):
+    def has_module_perm(self,app_label): #checks if the user has access to a whole app/module.
         return True
+
