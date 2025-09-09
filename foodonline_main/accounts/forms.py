@@ -15,4 +15,4 @@ class UserForm(forms.ModelForm):
         confirm_password = cleaned_data.get('confirm_password')
 
         if password != confirm_password:
-            raise forms.validationError("password doesn't match")
+            raise forms.ValidationError("password doesn't match")
