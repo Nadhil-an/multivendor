@@ -9,7 +9,11 @@ from .models import UserProfile
 
 
 def registerUser(request):
-    if request.method == 'POST':
+    if request.user.is_authenticated:
+        messages.warning(request,'Already registered')
+        return redirect('dashboard')
+    
+    elif request.method == 'POST':
         form = UserForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
@@ -26,42 +30,64 @@ def registerUser(request):
 
 
 def registerVendor(request):
+    if request.user.is_authenticated:
+        messages.warning(request, 'You are already registered')
+        return redirect('dashboard')
+
     if request.method == 'POST':
         form = UserForm(request.POST)
-        v_form = VendorForm(request.POST,request.FILES)
+        v_form = VendorForm(request.POST, request.FILES)
+
         if form.is_valid() and v_form.is_valid():
+            # Create user
             first_name = form.cleaned_data['first_name']
             last_name = form.cleaned_data['last_name']
             username  = form.cleaned_data['username']
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
-            user = User.objects.create_user(first_name=first_name,last_name=last_name,username=username,email=email,password=password)
+            email     = form.cleaned_data['email']
+            password  = form.cleaned_data['password']
+
+            user = User.objects.create_user(
+                first_name=first_name,
+                last_name=last_name,
+                username=username,
+                email=email,
+                password=password
+            )
             user.role = User.RESTAURANT
             user.save()
+
+            # Create vendor
             vendor = v_form.save(commit=False)
             vendor.user = user
-            user_profile = UserProfile.objects.get(user=user)
+
+            # Safely get or create user profile
+            user_profile, created = UserProfile.objects.get_or_create(user=user)
             vendor.user_profile = user_profile
+
             vendor.save()
-            messages.success(request,'Your account has been registered successfully! please wait for the approval')
-            return redirect('registerVendor')
+
+            messages.success(request, 'Your account has been registered successfully! Please wait for approval.')
+            return redirect('loginUser')   # Redirect to login instead of reloading the same page
         else:
-            print('Invalid form')
-            print(form.errors)
+            messages.error(request, 'Please correct the errors below.')
+
     else:
         form = UserForm()
         v_form = VendorForm()
-   
+
     context = {
-        'form':form,
-        'v_form':VendorForm()
+        'form': form,
+        'v_form': v_form
     }
-    return render(request,'accounts/RegisterVendor.html',context)
+    return render(request, 'accounts/RegisterVendor.html', context)
+
 
 
 def loginUser(request):
-
-    if request.method == 'POST':
+    if request.user.is_authenticated:
+        messages.warning(request,'You are  already logged in')
+        return redirect('dashboard')
+    elif request.method == 'POST':
         email = request.POST['email']
         password = request.POST['password']
 
