@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from django.contrib import messages
+from django.contrib import messages,auth
 from . forms import UserForm
 from . models import User
 from vendor.forms import VendorForm
@@ -17,7 +17,7 @@ def registerUser(request):
             user.set_password(form.cleaned_data['password'])
             user.save()
             messages.success(request,'Your Account Has Been Created ')
-            return redirect('registerUser')  # reload same page
+            return redirect('loginUser')  # reload same page
     else:
         form = UserForm()
 
@@ -51,15 +51,38 @@ def registerVendor(request):
     else:
         form = UserForm()
         v_form = VendorForm()
-
-
-
-
-
-
    
     context = {
         'form':form,
         'v_form':VendorForm()
     }
     return render(request,'accounts/RegisterVendor.html',context)
+
+
+def loginUser(request):
+
+    if request.method == 'POST':
+        email = request.POST['email']
+        password = request.POST['password']
+
+        user = auth.authenticate(email=email,password=password)
+
+        if user is not None:
+            auth.login(request,user)
+            messages.success(request,'successfully login')
+            return redirect('dashboard')
+        else:
+            messages.error(request,'Invalid login credentials')
+            return redirect('loginUser')
+
+    return render(request,'accounts/login.html')
+
+def logout(request):
+    auth.logout(request)
+    messages.info(request,'you are logged out')
+    return redirect('loginUser')
+
+    
+
+def dashboard(request):
+    return render(request,'accounts/dashboard.html')
