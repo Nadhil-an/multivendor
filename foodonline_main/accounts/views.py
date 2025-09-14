@@ -4,6 +4,8 @@ from . forms import UserForm
 from . models import User
 from vendor.forms import VendorForm
 from .models import UserProfile
+from . utilis import detectUser
+
 
 
 # Create your views here.
@@ -14,7 +16,7 @@ from .models import UserProfile
 def registerUser(request):
     if request.user.is_authenticated:
         messages.warning(request,'Already registered')
-        return redirect('dashboard')
+        return redirect('myaccount')
     
     elif request.method == 'POST':
         form = UserForm(request.POST)
@@ -38,7 +40,7 @@ def registerUser(request):
 def registerVendor(request):
     if request.user.is_authenticated:
         messages.warning(request, 'You are already registered')
-        return redirect('dashboard')
+        return redirect('myaccount')
 
     if request.method == 'POST':
         form = UserForm(request.POST)
@@ -93,7 +95,7 @@ def registerVendor(request):
 def loginUser(request):
     if request.user.is_authenticated:
         messages.warning(request,'You are  already logged in')
-        return redirect('dashboard')
+        return redirect('myaccount')
     elif request.method == 'POST':
         email = request.POST['email']
         password = request.POST['password']
@@ -123,12 +125,16 @@ def logout(request):
 # Dashboard Redirection
 # -----------------------------  
 
-def dashboard(request):
-    return render(request,'accounts/dashboard.html')
+def vendorDashboard(request):
+    return render(request,'accounts/vendorDashboard.html')
 
-
+def customerDashboard(request):
+    return render(request,'accounts/customerDashboard.html')
 
 # -----------------------------
 # Dashboard Views
 # -----------------------------
-
+def myaccount(request):
+    user = request.user
+    redirecturl = detectUser(user)
+    return redirect(redirecturl)
