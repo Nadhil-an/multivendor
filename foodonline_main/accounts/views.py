@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect
 from django.contrib import messages,auth
+from django.contrib.auth.decorators import login_required
 from . forms import UserForm
 from . models import User
 from vendor.forms import VendorForm
@@ -124,10 +125,10 @@ def logout(request):
 # -----------------------------
 # Dashboard Redirection
 # -----------------------------  
-
+@login_required(login_url='login')
 def vendorDashboard(request):
     return render(request, 'accounts/vendorDashboard.html')
-
+@login_required(login_url='login/')
 def customerDashboard(request):
     return render(request, 'accounts/customerDashboard.html')
 
@@ -135,6 +136,7 @@ def customerDashboard(request):
 # -----------------------------
 # Dashboard Views
 # -----------------------------
+@login_required(login_url='login')
 def myaccount(request):
     if request.user.is_authenticated:
         redirecturl = detectUser(request.user)
