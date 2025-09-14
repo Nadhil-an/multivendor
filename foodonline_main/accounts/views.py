@@ -126,15 +126,18 @@ def logout(request):
 # -----------------------------  
 
 def vendorDashboard(request):
-    return render(request,'accounts/vendorDashboard.html')
+    return render(request, 'accounts/vendorDashboard.html')
 
 def customerDashboard(request):
-    return render(request,'accounts/customerDashboard.html')
+    return render(request, 'accounts/customerDashboard.html')
+
 
 # -----------------------------
 # Dashboard Views
 # -----------------------------
 def myaccount(request):
-    user = request.user
-    redirecturl = detectUser(user)
-    return redirect(redirecturl)
+    if request.user.is_authenticated:
+        redirecturl = detectUser(request.user)
+        return redirect(redirecturl)
+    else:
+        return redirect('loginUser')

@@ -3,7 +3,5 @@ def detectUser(user):
         return 'vendorDashboard'
     elif user.role == 2:  # Customer
         return 'customerDashboard'
-    elif user.is_superuser:   # ✅ Django's built-in superuser check
-        return '/admin'
     else:
-        return 'home'
+        return 'loginUser'
