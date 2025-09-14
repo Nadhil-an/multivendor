@@ -6,14 +6,12 @@ from . forms import UserForm
 from . models import User
 from vendor.forms import VendorForm
 from .models import UserProfile
-from . utilis import detectUser
+from . utilis import detectUser,send_verification_email
 
 
 
 # Create your views here.
-# -----------------------------
-# User Registration
-# -----------------------------
+
 
 #Restrict the vendor from acessing the customer page
 def check_role_vendor(user):
@@ -28,7 +26,9 @@ def check_role_customer(user):
         return True
     else:
         raise PermissionDenied
-
+# -----------------------------
+# Customer Registration
+# -----------------------------
 
 def registerUser(request):
     if request.user.is_authenticated:
@@ -42,7 +42,10 @@ def registerUser(request):
             user.role = User.CUSTOMER       
             user.set_password(form.cleaned_data['password'])
             user.save()
+            #account activation
+            send_verification_email(request,user)
             messages.success(request,'Your Account Has Been Created ')
+            
             return redirect('loginUser')  # reload same page
     else:
         form = UserForm()
@@ -89,6 +92,7 @@ def registerVendor(request):
             user_profile, created = UserProfile.objects.get_or_create(user=user)
             vendor.user_profile = user_profile
             vendor.save()
+            send_verification_email(request,user)
 
             messages.success(request, 'Your account has been registered successfully! Please wait for approval.')
             return redirect('loginUser')   # Redirect to login instead of reloading the same page
@@ -161,3 +165,7 @@ def myaccount(request):
         return redirect(redirecturl)
     else:
         return redirect('loginUser')
+    
+
+def active(request):
+    pass
