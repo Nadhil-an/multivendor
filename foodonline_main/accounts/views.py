@@ -5,8 +5,11 @@ from . models import User
 from vendor.forms import VendorForm
 from .models import UserProfile
 
-# Create your views here.
 
+# Create your views here.
+# -----------------------------
+# User Registration
+# -----------------------------
 
 def registerUser(request):
     if request.user.is_authenticated:
@@ -28,6 +31,9 @@ def registerUser(request):
     context = {'form': form}
     return render(request, 'accounts/userRegister.html', context)
 
+# -----------------------------
+# Vendor Registration
+# -----------------------------
 
 def registerVendor(request):
     if request.user.is_authenticated:
@@ -63,7 +69,6 @@ def registerVendor(request):
             # Safely get or create user profile
             user_profile, created = UserProfile.objects.get_or_create(user=user)
             vendor.user_profile = user_profile
-
             vendor.save()
 
             messages.success(request, 'Your account has been registered successfully! Please wait for approval.')
@@ -81,7 +86,9 @@ def registerVendor(request):
     }
     return render(request, 'accounts/RegisterVendor.html', context)
 
-
+# -----------------------------
+# Login
+# -----------------------------
 
 def loginUser(request):
     if request.user.is_authenticated:
@@ -96,19 +103,32 @@ def loginUser(request):
         if user is not None:
             auth.login(request,user)
             messages.success(request,'successfully login')
-            return redirect('dashboard')
+            return redirect('myaccount')
         else:
             messages.error(request,'Invalid login credentials')
             return redirect('loginUser')
 
     return render(request,'accounts/login.html')
 
+# -----------------------------
+# Logout
+# -----------------------------
+
 def logout(request):
     auth.logout(request)
     messages.info(request,'you are logged out')
     return redirect('loginUser')
 
-    
+# -----------------------------
+# Dashboard Redirection
+# -----------------------------  
 
 def dashboard(request):
     return render(request,'accounts/dashboard.html')
+
+
+
+# -----------------------------
+# Dashboard Views
+# -----------------------------
+
