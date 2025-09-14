@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from django.contrib import messages,auth
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required,user_passes_test
+from django.core.exceptions import PermissionDenied
 from . forms import UserForm
 from . models import User
 from vendor.forms import VendorForm
@@ -13,6 +14,21 @@ from . utilis import detectUser
 # -----------------------------
 # User Registration
 # -----------------------------
+
+#Restrict the vendor from acessing the customer page
+def check_role_vendor(user):
+    if user.role == 1:
+        return True
+    else:
+        raise PermissionDenied
+    
+#Restrict the customer from accessing the vendor page
+def check_role_customer(user):
+    if user.role == 2:
+        return True
+    else:
+        raise PermissionDenied
+
 
 def registerUser(request):
     if request.user.is_authenticated:
@@ -126,9 +142,11 @@ def logout(request):
 # Dashboard Redirection
 # -----------------------------  
 @login_required(login_url='login')
+@user_passes_test(check_role_vendor)
 def vendorDashboard(request):
     return render(request, 'accounts/vendorDashboard.html')
 @login_required(login_url='login/')
+@user_passes_test(check_role_customer)
 def customerDashboard(request):
     return render(request, 'accounts/customerDashboard.html')
 
