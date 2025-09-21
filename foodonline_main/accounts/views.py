@@ -6,7 +6,7 @@ from . forms import UserForm
 from . models import User
 from vendor.forms import VendorForm
 from .models import UserProfile
-from . utilis import detectUser,send_verification_email
+from . utilis import detectUser,send_verification_email,password_reset_email
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
 
@@ -185,11 +185,43 @@ def activate(request,uidb64,token):
     else:
         messages.error(request,"Invalid activation link")
         return redirect('myaccount')
+    
 
-#forget password
+####################
+#forget password   #
+                   #
+####################
+
 
 def forgotpassword(request):
+    if request.method == 'POST':
+        email = request.POST['email']
 
+        try:
+
+            user = User.objects.get(email=email)
+            password_reset_email(request,user)
+            messages.success(request,'Reset Email has been send')
+        except User.DoesNotExist:
+            messages.error(request,'Email doesnot exist')
+            return redirect(forgotpassword)
+        
 
     return render(request,'accounts/forgotpassword.html')
+
+
+
+####################
+#Reset password   #
+                   #
+####################
+
+def resetpassword(request, uidb64, token):
+    try:
+        pass
+    except:
+        None
+
+
+    return render(request,'accounts/resetpassword.html')
 
