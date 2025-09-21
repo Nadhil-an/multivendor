@@ -92,6 +92,7 @@ def registerVendor(request):
             user_profile, created = UserProfile.objects.get_or_create(user=user)
             vendor.user_profile = user_profile
             vendor.save()
+            #ventor account verification
             send_verification_email(request,user)
 
             messages.success(request, 'Your account has been registered successfully! Please wait for approval.')
@@ -167,5 +168,5 @@ def myaccount(request):
         return redirect('loginUser')
     
 
-def active(request):
+def activate(request):
     pass
