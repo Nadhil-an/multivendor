@@ -216,7 +216,23 @@ def resetpassword(request, uidb64, token):
             'uidb64': uidb64,
             'token': token,
         }
+    return render(request,'accounts/resetpassword.html')
 
+def reset_password_validate(request,uidb64, token):
+    try:
+        uid  = urlsafe_base64_decode(uidb64).decode()
+        user = User.__default_manager.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user=None
 
+    if user is not None and default_token_generator.check_token(user,token):
+        request.session['uid']=uid
+        messages.info(request,'Please reset the password')
+        return redirect ('resetpassword')
+    else:
+        messages.error(request,'This link has been expired')
+        return redirect('Myaccount')
+
+def reset_password(request):
     return render(request,'accounts/resetpassword.html')
 
