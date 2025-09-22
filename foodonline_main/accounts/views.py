@@ -208,20 +208,12 @@ def forgotpassword(request):
 # Reset Password
 # -----------------------------
 
-def resetpassword(request, uidb64, token):
-    if request.method == 'POST':
-        pass
-    else:
-         context = {
-            'uidb64': uidb64,
-            'token': token,
-        }
-    return render(request,'accounts/resetpassword.html')
+
 
 def reset_password_validate(request,uidb64, token):
     try:
         uid  = urlsafe_base64_decode(uidb64).decode()
-        user = User.__default_manager.get(pk=uid)
+        user = User._default_manager.get(pk=uid)
     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
         user=None
 
