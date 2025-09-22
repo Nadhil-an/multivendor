@@ -6,7 +6,7 @@ from . forms import UserForm
 from . models import User
 from vendor.forms import VendorForm
 from .models import UserProfile
-from . utilis import detectUser,send_verification_email,password_reset_email
+from . utilis import detectUser,send_verification_email
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
 
@@ -44,11 +44,12 @@ def registerUser(request):
             user.role = User.CUSTOMER       
             user.set_password(form.cleaned_data['password'])
             user.save()
-            #account activation
-            send_verification_email(request,user)
-            messages.success(request,'Your Account Has Been Created ')
-            
-            return redirect('loginUser')  # reload same page
+            # account activation
+            mail_subject = 'Activate your Account'
+            email_template = 'accounts/emails/account_verification_email.html'
+            send_verification_email(request, user, email_template, mail_subject)
+            messages.success(request, 'Activation email as been sended ')
+            return redirect('loginUser')
     else:
         form = UserForm()
 
@@ -70,18 +71,12 @@ def registerVendor(request):
 
         if form.is_valid() and v_form.is_valid():
             # Create user
-            first_name = form.cleaned_data['first_name']
-            last_name = form.cleaned_data['last_name']
-            username  = form.cleaned_data['username']
-            email     = form.cleaned_data['email']
-            password  = form.cleaned_data['password']
-
             user = User.objects.create_user(
-                first_name=first_name,
-                last_name=last_name,
-                username=username,
-                email=email,
-                password=password
+                first_name=form.cleaned_data['first_name'],
+                last_name=form.cleaned_data['last_name'],
+                username=form.cleaned_data['username'],
+                email=form.cleaned_data['email'],
+                password=form.cleaned_data['password']
             )
             user.role = User.RESTAURANT
             user.save()
@@ -89,31 +84,29 @@ def registerVendor(request):
             # Create vendor
             vendor = v_form.save(commit=False)
             vendor.user = user
-
-            # Safely get or create user profile
             user_profile, created = UserProfile.objects.get_or_create(user=user)
             vendor.user_profile = user_profile
             vendor.save()
-            #ventor account verification
-            send_verification_email(request,user)
+
+            # vendor account verification
+            mail_subject = 'Activate your Account'
+            email_template = 'accounts/emails/account_verification_email.html'
+            send_verification_email(request, user, email_template, mail_subject)
 
             messages.success(request, 'Your account has been registered successfully! Please wait for approval.')
-            return redirect('loginUser')   # Redirect to login instead of reloading the same page
+            return redirect('loginUser')
         else:
             messages.error(request, 'Please correct the errors below.')
-
     else:
         form = UserForm()
         v_form = VendorForm()
 
-    context = {
-        'form': form,
-        'v_form': v_form
-    }
+    context = {'form': form, 'v_form': v_form}
     return render(request, 'accounts/RegisterVendor.html', context)
 
+
 # -----------------------------
-# Login
+# User Login
 # -----------------------------
 
 def loginUser(request):
@@ -137,7 +130,7 @@ def loginUser(request):
     return render(request,'accounts/login.html')
 
 # -----------------------------
-# Logout
+# User Logout
 # -----------------------------
 
 def logout(request):
@@ -187,40 +180,42 @@ def activate(request,uidb64,token):
         return redirect('myaccount')
     
 
-####################
-#forget password   #
-                   #
-####################
+# -----------------------------
+# forgot password
+# -----------------------------
 
 
 def forgotpassword(request):
     if request.method == 'POST':
         email = request.POST['email']
-
-        try:
-
-            user = User.objects.get(email=email)
-            password_reset_email(request,user)
-            messages.success(request,'Reset Email has been send')
-        except User.DoesNotExist:
-            messages.error(request,'Email doesnot exist')
-            return redirect(forgotpassword)
-        
-
-    return render(request,'accounts/forgotpassword.html')
+        if User.objects.filter(email=email).exists():
+            user = User.objects.get(email__exact=email)
 
 
+            # send reset email
+            mail_subject = 'Reset Your Password'
+            email_template = 'accounts/emails/reset_password_email.html'
+            send_verification_email(request, user, email_template, mail_subject)
+            messages.success(request, 'Reset Email has been sent')
+            return redirect('loginUser')
+        else:
+            messages.error(request, 'Account does not exist')
+            return redirect('forgotpassword')
 
-####################
-#Reset password   #
-                   #
-####################
+    return render(request, 'accounts/forgotpassword.html')
+
+# -----------------------------
+# Reset Password
+# -----------------------------
 
 def resetpassword(request, uidb64, token):
-    try:
+    if request.method == 'POST':
         pass
-    except:
-        None
+    else:
+         context = {
+            'uidb64': uidb64,
+            'token': token,
+        }
 
 
     return render(request,'accounts/resetpassword.html')
