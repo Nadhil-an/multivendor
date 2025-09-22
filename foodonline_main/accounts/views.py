@@ -226,5 +226,30 @@ def reset_password_validate(request,uidb64, token):
         return redirect('Myaccount')
 
 def reset_password(request):
+    uid = request.session.get('uid')
+    if not uid:
+        messages.error(request, 'Unauthorized access!')
+        return redirect('myaccount')
+
+
+    if request.method == 'POST':
+        password = request.POST['password']
+        confirm_password = request.POST['confirm_password']
+
+        if password == confirm_password:
+            pk = request.session.get('uid')
+            user = User.objects.get(pk=pk)
+            user.set_password(password)
+            user.is_active = True
+            user.save()
+            messages.success(request,'Password reset successfully')
+            return redirect('loginUser')
+
+        
+        else:
+            messages.error(request,'Password does not match')
+            return redirect('reset_password')
+
+
     return render(request,'accounts/resetpassword.html')
 
