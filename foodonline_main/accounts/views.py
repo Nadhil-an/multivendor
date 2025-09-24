@@ -88,11 +88,6 @@ def registerVendor(request):
             vendor.user_profile = user_profile
             vendor.save()
 
-            # vendor account verification
-            mail_subject = 'Activate your Account'
-            email_template = 'accounts/emails/account_verification_email.html'
-            send_verification_email(request, user, email_template, mail_subject)
-
             messages.success(request, 'Your account has been registered successfully! Please wait for approval.')
             return redirect('loginUser')
         else:
@@ -183,8 +178,6 @@ def activate(request,uidb64,token):
 # -----------------------------
 # forgot password
 # -----------------------------
-
-
 def forgotpassword(request):
     if request.method == 'POST':
         email = request.POST['email']
@@ -207,9 +200,6 @@ def forgotpassword(request):
 # -----------------------------
 # Reset Password
 # -----------------------------
-
-
-
 def reset_password_validate(request,uidb64, token):
     try:
         uid  = urlsafe_base64_decode(uidb64).decode()
