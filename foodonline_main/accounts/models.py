@@ -103,6 +103,12 @@ class UserProfile(models.Model):
     longitude = models.CharField(max_length=20,blank=True,null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now_add=True)
+    
+
+    def full_name(self):
+        return f'{self.address_line_1},{self.address_line_2}'
 
     def __str__(self):
         return self.user.email
+    
+    

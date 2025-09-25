@@ -5,7 +5,7 @@
 
 		<!-- Main Section Start -->
 		<div class="main-section">
-			<div class="page-section restaurant-detail-image-section" style=" background: url(assets/extra-images/cover-photo01.jpg) no-repeat scroll 0 0 / cover;">
+			<div class="page-section restaurant-detail-image-section" style=" background: url({% static 'images/cover-photo-3.PNG' %})   no-repeat scroll 0 0 / cover;">
 				<!-- Container Start -->
 				<div class="container">
 					<!-- Row Start -->
@@ -16,15 +16,15 @@
 								<div class="company-info">
 									<div class="img-holder">
 										<figure>
-											<img src="assets/extra-images/listing-logo18.png" alt="">
+											<img src="{% static 'images/cover-photo-3.PNG' %}" alt="">
 										</figure>
 									</div>
 
 									<div class="text-holder">
-										<span class="restaurant-title">Restaurant Dashboard</span>
+										<span class="restaurant-title">{{ vendor.vendor_name}}</span>
 										<div class="text">
 											<i class="icon-location"></i>
-											<p>Mark ricardo road, lane 27, Austin, Texas, USA.</p>
+											<p>{{ vendor.}}</p>
 										</div>
 									</div>
 								</div>

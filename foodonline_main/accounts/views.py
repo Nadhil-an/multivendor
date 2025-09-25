@@ -9,6 +9,7 @@ from .models import UserProfile
 from . utilis import detectUser,send_verification_email
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
+from vendor.models import Vendor 
 
 
 
@@ -139,7 +140,14 @@ def logout(request):
 @login_required(login_url='loginUser')
 @user_passes_test(check_role_vendor)
 def vendorDashboard(request):
-    return render(request, 'accounts/vendorDashboard.html')
+    vendor = Vendor.objects.get(user=request.user)
+    context = {
+        'vendor':vendor
+    }
+    return render(request, 'accounts/vendorDashboard.html',context)
+
+
+
 @login_required(login_url='login/')
 @user_passes_test(check_role_customer)
 def customerDashboard(request):
