@@ -16,7 +16,7 @@ def vprofile(request):
         profile_form = UserProfileForm(request.POST, request.FILES, instance=profile)
         vendor_form = VendorForm(request.POST, request.FILES, instance=vendor_get)
         if profile_form.is_valid() and vendor_form.is_valid():
-            profile_form.form.save()
+            profile_form.save()
             vendor_form.save()
             messages.success(request,'Settings Updated.')
             return redirect('vprofile')
