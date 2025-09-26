@@ -10,5 +10,13 @@
     bottom: 100%;
     right: 20px;
     animation-name:show-toast ;
-    animation-duration:5s ;
+    animation-duration:8s ;
+    z-index: 99;
 }
+
+.btn.btn-info{
+    padding: 2px 1.75sem;
+    font-size: 12px;
+    cursor: pointer;
+}
+
