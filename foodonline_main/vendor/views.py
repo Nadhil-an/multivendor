@@ -21,8 +21,8 @@ def vprofile(request):
             messages.success(request,'Settings Updated.')
             return redirect('vprofile')
         else:
-            print(profile_form.error)
-            print(vendor_form.error)
+            print(profile_form.errors)
+            print(vendor_form.errors)
     else:
         profile_form = UserProfileForm(instance=profile)
         vendor_form = VendorForm(instance=vendor_get)
