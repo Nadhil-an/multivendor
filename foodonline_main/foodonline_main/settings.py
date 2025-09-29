@@ -147,6 +147,12 @@ MEDIA_ROOT = BASE_DIR /'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+# mapbox api key
+MAPBOX_PUBLIC_TOKEN = "pk.eyJ1IjoibmFkaGlsIiwiYSI6ImNtZzRybWRwcTF0Z2EybHNkbjMxMW5kbzkifQ.zuqZYDeyGvhyYVo7t_8DtA"
+
+
+
+
 #email  configuration
 
 EMAIL_HOST = config('EMAIL_HOST', default='localhost')
