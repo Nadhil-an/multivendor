@@ -6,7 +6,7 @@
 
 		<!-- Main Section Start -->
 		<div class="main-section">
-			<div class="page-section restaurant-detail-image-section" style=" background: url({{ profile.cover_photo.url }}) no-repeat scroll 0 0 / cover;">
+			<div class="page-section restaurant-detail-image-section" style="background: url('{% if profile.cover_photo %}{{ profile.cover_photo.url }}{% else %}/images/cover-photo-1.PNG{% endif %}') no-repeat scroll 0 0 / cover;">
 				<!-- Container Start -->
 				<div class="container">
 					<!-- Row Start -->
@@ -60,7 +60,7 @@
 																		<li class="gal-img">
 																			<div class="drag-list">
 																				<div class="item-thumb">
-																					<img class="thumbnail" src="{{ profile.profile_picture.url }}" alt="">
+																					<img class="thumbnail" src="{% if profile.profile_picture %}{{ profile.profile_picture.url }}{% else %}/images/default.jpg{% endif %}" alt="">
 																				</div>
 																			</div>
 																		</li>
@@ -83,7 +83,8 @@
 																		<li class="gal-img">
 																			<div class="drag-list">
 																				<div class="item-thumb">
-																					<img class="thumbnail" src="{{ profile.cover_photo.url }}" alt="">
+																					<img class="thumbnail" src="{% if profile.cover_photo %}{{ profile.cover_photo.url }}{% else %}/images/cover-photo-1.PNG{% endif %}" alt="">
+
 																				</div>
 																			</div>
 																		</li>
@@ -105,7 +106,8 @@
 																		<li class="gal-img">
 																			<div class="drag-list">
 																				<div class="item-thumb">
-																					<img class="thumbnail" src="{{ vendor_get.vendor_licence.url}}" alt="">
+																					<img class="thumbnail" src="{% if vendor_get.vendor_licence %}{{ vendor_get.vendor_licence.url }}{% else %}/images/rice-bowl.jpg{% endif %}" alt="">
+
 																				</div>
 																			</div>
 																		</li>
@@ -136,7 +138,7 @@
 															</div>
 															<small class="text-muted float-right">powered by Google</small>
 														</div>
-														<br>
+														<br>	
 														<br>
 
 

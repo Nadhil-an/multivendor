@@ -92,7 +92,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE, blank=True, null=True)
     name = models.CharField(max_length=20,blank=True,null=True)
     profile_picture = models.ImageField(upload_to='users/profile_pictures', blank=True, null=True)
-    cover_photo = models.ImageField(upload_to='users/cover_photos',blank=True,null=True)
+    cover_photo = models.ImageField(upload_to='users/cover_photos/',blank=True,null=True )
     address = models.CharField(max_length=250,blank=True,null=True)
     
     country = models.CharField(max_length=50,blank=True,null=True)
@@ -114,5 +114,7 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.name or self.address or self.place_id
+    
+    cover_photo = models.ImageField(upload_to='users/cover_photos/',blank=True,null=True,default='/images/cover-photo-1.PNG' )
     
     
