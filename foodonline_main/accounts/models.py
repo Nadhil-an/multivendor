@@ -98,14 +98,15 @@ class UserProfile(models.Model):
     country = models.CharField(max_length=50,blank=True,null=True)
     state = models.CharField(max_length=50,blank=True,null=True)
     city  = models.CharField(max_length=50,blank=True,null=True)
-    pin_code = models.CharField(max_length=6,blank=True,null=True)
-    latitude = models.CharField(max_length=20,blank=True,null=True)
-    longitude = models.CharField(max_length=20,blank=True,null=True)
+    pin_code = models.CharField(max_length=30,blank=True,null=True)
+    latitude = models.FloatField(max_length=30,blank=True,null=True)
+    longitude = models.FloatField(max_length=9,blank=True,null=True)
+    #place_id = models.CharField(max_length=255,blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now_add=True)
     
 
-  
+    
 
     def __str__(self):
         return self.user.email
