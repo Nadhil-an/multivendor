@@ -134,7 +134,15 @@
 														<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 															<div class="field-holder">
 																<label>Address</label>
-																<div id="geocoder" class="geocoder"></div>
+																<input type="text" id="id_address" name="address" 
+																value="{{ profile_form.address.value|default:'' }}" 
+																{% if not profile_form.address.value %}style="display:none;"{% endif %}>
+
+																<!-- Geocoder div, visible by default if input is empty -->
+																<div id="geocoder" class="geocoder" 
+																{% if profile_form.address.value %}style="display:none;"{% endif %}></div>
+
+
 																
 															</div>
 															 <small class="text-muted float-right">powered by Mapbox</small>
@@ -246,36 +254,50 @@
 </style>
 
 <script>
-  mapboxgl.accessToken = "{{ MAPBOX_PUBLIC_TOKEN }}";
+ mapboxgl.accessToken = "{{ MAPBOX_PUBLIC_TOKEN }}";
 
-  const geocoder = new MapboxGeocoder({
-      accessToken: mapboxgl.accessToken,
-      placeholder: "Search your restaurant location",
-      types: "place,postcode,address,poi",
-      limit: 5,
-	  countries: "in",  // India
-    bbox: [74.861, 8.17, 77.538, 12.964]  // Kerala bounding box
-  });
+const geocoder = new MapboxGeocoder({
+    accessToken: mapboxgl.accessToken,
+    placeholder: "Search your restaurant location",
+    types: "place,postcode,address,poi",
+    limit: 5,
+    countries: "in",
+    bbox: [74.861, 8.17, 77.538, 12.964] // Kerala
+});
 
-  console.log(geocoder);
+// Add geocoder to the div
+geocoder.addTo('#geocoder');
 
-  // Add geocoder UI to your div
-  geocoder.addTo('#geocoder');
+const addressInput = document.getElementById("id_address");
+const geocoderDiv = document.getElementById("geocoder");
 
-  // Fill hidden Django form inputs when user selects a location
-  geocoder.on('result', function(e) {
+
+if(addressInput.value.trim() !== ""){
+	geocoderDiv.style.display = "none"
+	addressInput.style.display = "block"
+}else{
+	geocoderDiv.style.display = "block"
+	addressInput.style.display = "none"
+}
+
+// Update input when user selects location from geocoder
+geocoder.on('result', function(e) {
     const loc = e.result;
-    document.getElementById("id_address").value = loc.place_name;   // address
-    document.getElementById("id_latitude").value = loc.center[1];  // latitude
-    document.getElementById("id_longitude").value = loc.center[0]; // longitude
-  });
+    addressInput.value = loc.place_name;
 
-  // Clear fields if user clears geocoder input
-  geocoder.on('clear', function() {
-    document.getElementById("id_address").value = '';
-    document.getElementById("id_latitude").value = '';
-    document.getElementById("id_longitude").value = '';
-  });
+    // Show input after selection
+    addressInput.style.display = 'block'
+	geocoderDiv.style.display = "none"
+});
+
+// If user clears the input manually, show geocoder again
+addressInput.addEventListener('input', function() {
+    if (this.value.trim() === "") {
+        geocoderDiv.style.display = "block";
+        this.style.display = "none";
+    }
+});
+
 </script>
 
 {% endblock %}
