@@ -6,6 +6,7 @@ from accounts.forms import UserProfileForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required,user_passes_test
 from accounts.views import check_role_vendor
+from django.conf import settings
 
 
 
@@ -38,7 +39,8 @@ def vprofile(request):
         'profile':profile,
         'vendor_get':vendor_get,
         'profile_form':profile_form,
-        'vendor_form':vendor_form
+        'vendor_form':vendor_form,
+        "MAPBOX_PUBLIC_TOKEN": settings.MAPBOX_PUBLIC_TOKEN
     }
 
 

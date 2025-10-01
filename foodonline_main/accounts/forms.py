@@ -36,4 +36,10 @@ class UserProfileForm(forms.ModelForm):
     #     for field in self.fields:
     #         if field == 'latitude' or field == 'longitude':
     #             self.fields[field].widget.attrs['readonly'] = 'readonly'
+
+    widgets = {
+            'address': forms.TextInput(attrs={'id': 'id_address'}),
+            'latitude': forms.HiddenInput(attrs={'id': 'id_latitude'}),
+            'longitude': forms.HiddenInput(attrs={'id': 'id_longitude'}),
+    }
     

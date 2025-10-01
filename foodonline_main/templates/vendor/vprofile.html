@@ -134,9 +134,12 @@
 														<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 															<div class="field-holder">
 																<label>Address</label>
-																{{ profile_form.address}}
+																<div id="geocoder" class="geocoder"></div>
+																
 															</div>
-															<small class="text-muted float-right">powered by Google</small>
+															 <small class="text-muted float-right">powered by Mapbox</small>
+															   <!-- Add Mapbox Geocoder here -->
+															  
 														</div>
 														<br>	
 														<br>
@@ -149,8 +152,8 @@
 
 														<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
 															<div class="field-holder">
-																<label>Country </label>
-																{{ profile_form.country}}
+																<label>City </label>
+																{{ profile_form.city}}
 																
 															</div>
 														</div>
@@ -165,8 +168,8 @@
 
 														<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
 															<div class="field-holder">
-																<label>City </label>
-																{{ profile_form.city}}
+																<label>Country </label>
+																{{ profile_form.country}}
 															</div>
 														</div>
 
@@ -185,7 +188,7 @@
 														</div>
 
 														<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-															<div class="field-holder">
+															<div class="field-holder" ]>
 																<label>Longitude</label>
 																{{ profile_form.longitude}}
 															</div>
@@ -221,5 +224,58 @@
 		</div>
 		<!-- Main Section End -->
 
+<style>
+
+
+  /* Style geocoder input like Bootstrap fields */
+  .mapboxgl-ctrl-geocoder {
+      width: 100% !important;
+      max-width: 100% !important;
+      border-radius: 4px;
+      border: 1px solid #ced4da;
+      box-shadow: none !important;
+      height: calc(2.25rem + 2px);
+  }
+
+  .mapboxgl-ctrl-geocoder input {
+      font-size: 1rem;
+      padding: .375rem .75rem;
+      border: none !important;
+      height: 100%;
+  }
+</style>
+
+<script>
+  mapboxgl.accessToken = "{{ MAPBOX_PUBLIC_TOKEN }}";
+
+  const geocoder = new MapboxGeocoder({
+      accessToken: mapboxgl.accessToken,
+      placeholder: "Search your restaurant location",
+      types: "place,postcode,address,poi",
+      limit: 5,
+	  countries: "in",  // India
+    bbox: [74.861, 8.17, 77.538, 12.964]  // Kerala bounding box
+  });
+
+  console.log(geocoder);
+
+  // Add geocoder UI to your div
+  geocoder.addTo('#geocoder');
+
+  // Fill hidden Django form inputs when user selects a location
+  geocoder.on('result', function(e) {
+    const loc = e.result;
+    document.getElementById("id_address").value = loc.place_name;   // address
+    document.getElementById("id_latitude").value = loc.center[1];  // latitude
+    document.getElementById("id_longitude").value = loc.center[0]; // longitude
+  });
+
+  // Clear fields if user clears geocoder input
+  geocoder.on('clear', function() {
+    document.getElementById("id_address").value = '';
+    document.getElementById("id_latitude").value = '';
+    document.getElementById("id_longitude").value = '';
+  });
+</script>
 
 {% endblock %}
