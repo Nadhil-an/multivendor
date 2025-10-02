@@ -196,7 +196,7 @@
 														</div>
 
 														<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-															<div class="field-holder" ]>
+															<div class="field-holder" >
 																<label>Longitude</label>
 																{{ profile_form.longitude}}
 															</div>
@@ -269,8 +269,14 @@ const geocoder = new MapboxGeocoder({
 geocoder.addTo('#geocoder');
 
 const addressInput = document.getElementById("id_address");
-const geocoderDiv = document.getElementById("geocoder");
+const latitude = document.getElementById("id_latitude");
+const longitude = document.getElementById("id_longitude");
+const city = document.getElementById("id_city");
+const state = document.getElementById("id_state");
+const country = document.getElementById("id_country");
+const pincode = document.getElementById("id_pincode");
 
+const geocoderDiv = document.getElementById("geocoder");
 
 if(addressInput.value.trim() !== ""){
 	geocoderDiv.style.display = "none"
@@ -280,22 +286,61 @@ if(addressInput.value.trim() !== ""){
 	addressInput.style.display = "none"
 }
 
-// Update input when user selects location from geocoder
 geocoder.on('result', function(e) {
     const loc = e.result;
-    addressInput.value = loc.place_name;
+	console.log(loc);
+	loc.context.forEach(item => {
+    loc.context.forEach(item => {
+        if(item.id.startsWith("postcode")) pincode.value = item.text;
+        if(item.id.startsWith("locality")) city.value = item.text;
+        if(item.id.startsWith("region")) state.value = item.text;
+        if(item.id.startsWith("country")) country.value = item.text;
+    });
+});
+
+    
+	
+
+	
+
+	addressInput.value = loc.text;
+    latitude.value = loc.center[1];
+    longitude.value = loc.center[0];
+
+	
+	// pincode.value = loc.context[0].text;
+	// city.value = loc.context[3].text;
+	// state.value - loc.context[4].text;
+	// country.value = loc.context[5].text;
+
+
+  
+
+   
+   
+
+    
 
     // Show input after selection
-    addressInput.style.display = 'block'
-	geocoderDiv.style.display = "none"
+    addressInput.style.display = 'block';
+    geocoderDiv.style.display = 'none';
 });
+
 
 // If user clears the input manually, show geocoder again
 addressInput.addEventListener('input', function() {
     if (this.value.trim() === "") {
         geocoderDiv.style.display = "block";
         this.style.display = "none";
+		latitude.value = '';
+        longitude.value = '';
+		state.value = '';
+		city.value = '';
+		country.value = '';
+		pincode.value = '';
     }
+
+	
 });
 
 </script>

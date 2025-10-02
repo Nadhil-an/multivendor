@@ -29,6 +29,7 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ['profile_picture','cover_photo','address','country','state','city','pin_code','latitude','longitude']
+        
 
 
     # def __init__(self,*args,**kwargs):
@@ -41,5 +42,9 @@ class UserProfileForm(forms.ModelForm):
             'address': forms.TextInput(attrs={'id': 'id_address'}),
             'latitude': forms.HiddenInput(attrs={'id': 'id_latitude'}),
             'longitude': forms.HiddenInput(attrs={'id': 'id_longitude'}),
-    }
+            'city': forms.HiddenInput(attrs={'id':'id_city'}),
+            'state': forms.HiddenInput(attrs={'id':'id_state'}),
+            'country': forms.HiddenInput(attrs={'id':"id_country"}),
+            'pin_code' : forms.HiddenInput(attrs={'id':"id_pincode"})
+        }
     
