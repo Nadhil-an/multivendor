@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required,user_passes_test
 from accounts.views import check_role_vendor
 from django.conf import settings
+from menu.models import Category
 
 
 
@@ -42,7 +43,13 @@ def vprofile(request):
         'vendor_form':vendor_form,
         "MAPBOX_PUBLIC_TOKEN": settings.MAPBOX_PUBLIC_TOKEN
     }
-
-
     
     return render(request,'vendor/vprofile.html',context)
+
+def menu_builder(request):
+    vendor = Vendor.objects.get(user=request.user)
+    category = Category.objects.filter(vendor=vendor)
+    context = {
+        'category':category
+    }
+    return render(request,'vendor/menu_builder.html',context)
