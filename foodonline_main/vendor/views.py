@@ -80,17 +80,16 @@ def add_category(request):
     if request.method == 'POST':
         form = CategoryForm(request.POST)
         if form.is_valid():
-            category_name = form.cleaned_data['category_name']
             category = form.save(commit=False)
-            category.vendor = get_vendor(request)
-            category.slug = slugify(category_name)
-            form.save()
-            messages.success(request,'Category added Successfully')
+            category.vendor = get_vendor(request)  # ✅ assign vendor
+            category.save()  # ✅ slug auto-handled in model.save()
+            messages.success(request, 'Category added Successfully')
             return redirect('menu_builder')
     else:
         form = CategoryForm()
-        context = {
-            'form':form,
-        }
 
-    return render(request,'vendor/add_category.html',context)
+    # ✅ context is always defined
+    context = {
+        'form': form,
+    }
+    return render(request, 'vendor/add_category.html', context)
