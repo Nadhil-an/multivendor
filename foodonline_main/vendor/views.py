@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required,user_passes_test
 from accounts.views import check_role_vendor
 from django.conf import settings
-from menu.models import Category
+from menu.models import Category,FoodItem
 
 
 
@@ -53,3 +53,14 @@ def menu_builder(request):
         'category':category
     }
     return render(request,'vendor/menu_builder.html',context)
+
+def fooditems_by_category(request,pk=None):
+    vendor = Vendor.objects.get(user=request.user)
+    category = get_object_or_404(Category,pk=pk)
+    fooditems = FoodItem.objects.filter(vendor=vendor, category=category)
+
+    context = {
+        'category':category,
+        'fooditems':fooditems
+    }
+    return render(request,'vendor/menu_category.html',context)
