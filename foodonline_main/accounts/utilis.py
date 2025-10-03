@@ -36,3 +36,5 @@ def send_approve_mail(mail_template,context,mail_subject):
     mail.send()
 
 
+
+
