@@ -13,6 +13,7 @@ class Category(models.Model):
     class Meta:
         verbose_name = 'category'
         verbose_name_plural = 'categories'
+        unique_together = ('vendor', 'category_name')
 
     def __str__(self):
         return self.category_name
