@@ -14,4 +14,4 @@ class FoodItemForm(forms.ModelForm):
      image = forms.ImageField(widget=forms.FileInput(attrs={'class':'btn btn-info'}),validators=[form_validation_error])
      class Meta:
          model = FoodItem
-         fields = ['food_title','description','price','image']
+         fields = ['category','food_title','description','price','image','is_available']
