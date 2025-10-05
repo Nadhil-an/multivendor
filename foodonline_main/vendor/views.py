@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required,user_passes_test
 from accounts.views import check_role_vendor
 from django.conf import settings
 from menu.models import Category,FoodItem
-from menu.forms import CategoryForm
+from menu.forms import CategoryForm,FoodItemForm
 from django.template.defaultfilters import slugify  
 
 
@@ -119,3 +119,10 @@ def delete_category(request,pk=None):
 
     messages.success(request,'Category Successfully delete')
     return redirect('menu_builder') 
+
+def addfood(request):
+    form = FoodItemForm()
+    context = {
+        'form':form
+    }
+    return render(request,'vendor/addfood.html',context)

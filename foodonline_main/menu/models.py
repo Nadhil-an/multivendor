@@ -33,6 +33,14 @@ class FoodItem(models.Model):
     is_available = models.BooleanField(default=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        unique_together = ('category','food_title')
+
     def __str__(self):
         return self.food_title 
+    
+    def clean(self):
+        self.food_title = self.food_title.capitalize()
+
+    
 
