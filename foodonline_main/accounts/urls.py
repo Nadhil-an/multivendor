@@ -16,7 +16,6 @@ urlpatterns = [
    
     path('activate/<uidb64>/<token>/',views.activate, name='activate'),
     path('reset-password-validate/<uidb64>/<token>/', views.reset_password_validate, name='reset_password_validate'),
-
     path('vendor/',include('vendor.urls')),
 
 ]

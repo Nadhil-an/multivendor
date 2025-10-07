@@ -210,6 +210,7 @@ def edit_food(request,pk=None):
     food = get_object_or_404(FoodItem, pk=pk)
     if request.method == "POST":
         form = FoodItemForm(request.POST,request.FILES,instance=food )
+        form.fields['category'].queryset = Category.objects.filter(vendor=get_vendor(request))
         if form.is_valid():
                 food = form.save(commit=False)
                 food.vendor = get_vendor(request)  # ✅ assign vendor
@@ -221,6 +222,7 @@ def edit_food(request,pk=None):
 
     else:
         form = FoodItemForm(instance=food)  
+        form.fields['category'].queryset = Category.objects.filter(vendor=get_vendor(request))
 
     # ✅ context is always defined
     context = {
