@@ -106,7 +106,7 @@ def add_category(request):
     if request.method == 'POST':
         form = CategoryForm(request.POST)
         if form.is_valid():
-            category_name = form.clean_data['category_name']
+            category_name = form.cleaned_data['category_name']
             category = form.save(commit=False)
             category.vendor = get_vendor(request)
             category.slug = slugify(category_name)  # ✅ assign vendor
@@ -179,6 +179,7 @@ def addfood(request):
 
     if request.method == 'POST':
         form = FoodItemForm(request.POST,request.FILES)
+        form.fields['category'].queryset = Category.objects.filter(vendor=get_vendor(request))
         if form.is_valid():
             food_title = form.cleaned_data['food_title']
             food = form.save(commit=False)
@@ -189,9 +190,11 @@ def addfood(request):
             return redirect('fooditems_by_category',food.category.id)
     else:
         form = FoodItemForm()
+        form.fields['category'].queryset = Category.objects.filter(vendor=get_vendor(request))
 
     context = {
         'form':form
+        
     }
     return render(request,'vendor/addfood.html',context)
 
