@@ -80,8 +80,10 @@ def add_category(request):
     if request.method == 'POST':
         form = CategoryForm(request.POST)
         if form.is_valid():
+            category_name = form.clean_data['category_name']
             category = form.save(commit=False)
-            category.vendor = get_vendor(request)  # ✅ assign vendor
+            category.vendor = get_vendor(request)
+            category.slug = slugify(category_name)  # ✅ assign vendor
             category.save()  # ✅ slug auto-handled in model.save()
             messages.success(request, 'Category added Successfully')
             return redirect('menu_builder')
@@ -121,7 +123,20 @@ def delete_category(request,pk=None):
     return redirect('menu_builder') 
 
 def addfood(request):
-    form = FoodItemForm()
+
+    if request.method == 'POST':
+        form = FoodItemForm(request.POST,request.FILES)
+        if form.is_valid():
+            food_title = form.cleaned_data['food_title']
+            food = form.save(commit=False)
+            food.vendor = get_vendor(request)
+            food.slug= slugify(food_title) 
+            food.save() 
+            messages.success(request, 'Food Successfully Added')
+            return redirect('fooditems_by_category',food.category.id)
+    else:
+        form = FoodItemForm()
+
     context = {
         'form':form
     }
