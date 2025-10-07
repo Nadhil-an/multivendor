@@ -13,6 +13,11 @@ from django.template.defaultfilters import slugify
 
 
 
+##################################
+#
+# Create Vendor Profile
+#
+###################################
 
 # Create your views here.
 @login_required(login_url='loginUser')
@@ -53,6 +58,12 @@ def get_vendor(request):
     return vendor
 
 
+##################################
+#
+# Menu Builder
+#
+###################################
+
 @login_required(login_url='loginUser')
 @user_passes_test(check_role_vendor)
 def menu_builder(request):
@@ -63,6 +74,13 @@ def menu_builder(request):
     }
     return render(request,'vendor/menu_builder.html',context)
 
+
+
+##################################
+#
+# Food_items by category
+#
+###################################
 @login_required(login_url='loginUser')
 @user_passes_test(check_role_vendor)
 def fooditems_by_category(request,pk=None):
@@ -76,6 +94,14 @@ def fooditems_by_category(request,pk=None):
     }
     return render(request,'vendor/menu_category.html',context)
 
+##################################
+#
+# Add Category
+#
+###################################
+
+@login_required(login_url='loginUser')
+@user_passes_test(check_role_vendor)
 def add_category(request):
     if request.method == 'POST':
         form = CategoryForm(request.POST)
@@ -96,6 +122,15 @@ def add_category(request):
     }
     return render(request, 'vendor/add_category.html', context)
 
+
+##################################
+#
+# Edit Category
+#
+###################################
+
+@login_required(login_url='loginUser')
+@user_passes_test(check_role_vendor)
 def edit_category(request,pk=None):
     category = get_object_or_404(Category, pk=pk)
     form = CategoryForm(request.POST,instance=category)
@@ -103,7 +138,7 @@ def edit_category(request,pk=None):
             category = form.save(commit=False)
             category.vendor = get_vendor(request)  # ✅ assign vendor
             category.save()  # ✅ slug auto-handled in model.save()
-            messages.success(request, 'Category uodated Successfully')
+            messages.success(request, 'Category updated Successfully')
             return redirect('menu_builder')
     else:
         form = CategoryForm(instance=category)
@@ -115,6 +150,14 @@ def edit_category(request,pk=None):
     }
     return render(request,'vendor/edit_category.html',context)
 
+##################################
+#
+# Delete Category
+#
+###################################
+
+@login_required(login_url='loginUser')
+@user_passes_test(check_role_vendor)
 def delete_category(request,pk=None):
     category = get_object_or_404(Category, pk=pk)
     category.delete()
@@ -122,6 +165,16 @@ def delete_category(request,pk=None):
     messages.success(request,'Category Successfully delete')
     return redirect('menu_builder') 
 
+
+##################################
+#
+# Add Food Item
+#
+###################################
+
+
+@login_required(login_url='loginUser')
+@user_passes_test(check_role_vendor)
 def addfood(request):
 
     if request.method == 'POST':
@@ -141,3 +194,34 @@ def addfood(request):
         'form':form
     }
     return render(request,'vendor/addfood.html',context)
+
+
+##################################
+#
+# Edit food item
+#
+###################################
+@login_required(login_url='loginUser')
+@user_passes_test(check_role_vendor)
+def edit_food(request,pk=None):
+    food = get_object_or_404(FoodItem, pk=pk)
+    if request.method == "POST":
+        form = FoodItemForm(request.POST,request.FILES,instance=food )
+        if form.is_valid():
+                food = form.save(commit=False)
+                food.vendor = get_vendor(request)  # ✅ assign vendor
+                food.save()  # ✅ slug auto-handled in model.save()
+                messages.success(request, 'FoodItem updated Successfully')
+                return redirect('menu_builder')
+        else:
+            print(form.errors)
+
+    else:
+        form = FoodItemForm(instance=food)  
+
+    # ✅ context is always defined
+    context = {
+        'form': form,
+        'food':food,
+    }
+    return render(request,'vendor/edit_food.html',context)
