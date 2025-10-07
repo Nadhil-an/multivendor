@@ -10,6 +10,7 @@ from django.conf import settings
 from menu.models import Category,FoodItem
 from menu.forms import CategoryForm,FoodItemForm
 from django.template.defaultfilters import slugify  
+from django.views.decorators.cache import never_cache
 
 
 

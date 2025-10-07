@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from vendor.models import Vendor
+from django.views.decorators.cache import never_cache
 def home(request):
     vendors = Vendor.objects.filter(is_approved=True, user__is_active=True)[:8]
     context = {
