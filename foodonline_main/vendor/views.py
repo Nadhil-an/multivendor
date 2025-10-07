@@ -212,7 +212,7 @@ def edit_food(request,pk=None):
                 food.vendor = get_vendor(request)  # ✅ assign vendor
                 food.save()  # ✅ slug auto-handled in model.save()
                 messages.success(request, 'FoodItem updated Successfully')
-                return redirect('menu_builder')
+                return redirect('fooditems_by_category', food.category.id)
         else:
             print(form.errors)
 
@@ -225,3 +225,17 @@ def edit_food(request,pk=None):
         'food':food,
     }
     return render(request,'vendor/edit_food.html',context)
+##################################
+#
+# Edit food item
+#
+###################################
+@login_required(login_url='loginUser')
+def delete_food(request,pk=None):
+    food = get_object_or_404(FoodItem, pk=pk)
+    food.delete()
+
+    messages.success(request,'Food item delete successfully ')
+    return redirect('menu_builder') 
+
+
