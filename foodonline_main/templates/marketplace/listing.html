@@ -21,7 +21,7 @@
 									<div class="listing simple">
 										<ul>
                                             {% for vendor in vendors %}
-											<li>
+											<li style="line-height: 15px;">
 												<div class="img-holder">
 													<figure>
                                                         {% if vendor.user_profile.profile_picture %}
@@ -45,9 +45,9 @@
 															<span class="sponsored text-color">Sponsored</span>
 														</h5>
 													</div>
-													<span class="post-categories"><span>Type of food :
-														</span> Apple
-														Juice</span>
+                                                    {% if vendor.user_profile.address %}
+													<span><small class="text-muted">{{ vendor.user_profile.address }}</small></span>
+                                                    {% endif %}
 													
 												</div>
 												<div class="list-option">
@@ -71,7 +71,7 @@
 										<strong>I'm not Listed!</strong><span>is your restaurant or
 											business not
 											listed on over site</span>
-										<a href="#" class="request-btn">Add Your business!</a>
+										<a href="{% url 'registerVendor' %}" class="request-btn">Add Your business!</a>
 									</div>
 								</div>
 							</div>
