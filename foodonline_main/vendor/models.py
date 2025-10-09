@@ -17,24 +17,29 @@ class Vendor(models.Model):
 
     def __str__(self):
         return self.vendor_name
+    def save(self, *args, **kwargs):
+        # Auto-generate slug if it doesn't exist
+        if not self.vendor_slug:
+            self.vendor_slug = slugify(self.vendor_name) + '-' + str(self.user.id)
 
 
-def save(self, *args, **kwargs):
-    if self.pk is not None:
-        orig = Vendor.objects.get(pk=self.pk)
-        if orig.is_approved != self.is_approved:
-            mail_template = 'accounts/emails/vendor_email.html'
-            context = {
-                'user': self.user,
-                'is_approved': self.is_approved,
-            }
 
-            if self.is_approved:
-                mail_subject = 'Congratulations, Your Restaurant Menu was Approved'
-            else:
-                mail_subject = 'Restaurant Menu was Rejected'
+    def save(self, *args, **kwargs):
+        if self.pk is not None:
+            orig = Vendor.objects.get(pk=self.pk)
+            if orig.is_approved != self.is_approved:
+                mail_template = 'accounts/emails/vendor_email.html'
+                context = {
+                    'user': self.user,
+                    'is_approved': self.is_approved,
+                }
 
-            send_approve_mail(mail_template, context, mail_subject)
+                if self.is_approved:
+                    mail_subject = 'Congratulations, Your Restaurant Menu was Approved'
+                else:
+                    mail_subject = 'Restaurant Menu was Rejected'
 
-    # Always call super() to save changes
-    super().save(*args, **kwargs)
+                send_approve_mail(mail_template, context, mail_subject)
+
+        # Always call super() to save changes
+        super().save(*args, **kwargs)
