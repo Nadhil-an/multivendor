@@ -5,6 +5,8 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
 from django.conf import settings
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
 
 
 def detectUser(user):

@@ -46,10 +46,10 @@ def registerUser(request):
             user.set_password(form.cleaned_data['password'])
             user.save()
             # account activation
-            mail_subject = 'Activate your Account'
-            email_template = 'accounts/emails/account_verification_email.html'
-            send_verification_email(request, user, email_template, mail_subject)
-            messages.success(request, 'Activation email as been sended ')
+            # mail_subject = 'Activate your Account'
+            # email_template = 'accounts/emails/account_verification_email.html'
+            # send_verification_email(request, user, email_template, mail_subject)
+            # messages.success(request, 'Activation email as been sended ')
             return redirect('loginUser')
     else:
         form = UserForm()
