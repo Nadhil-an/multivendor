@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404
 from vendor.models import Vendor
 
 # Create your views here.
@@ -10,3 +10,14 @@ def marketplace(request):
         'count':count
     }
     return render(request,'marketplace/listing.html',context)
+
+
+def vendor_details(request,vendor_slug):
+    vendor = get_object_or_404(Vendor,vendor_slug=vendor_slug)
+
+    context={
+        'vendor':vendor,
+    }
+
+   
+    return render(request,'marketplace/vendor_details.html',context)
