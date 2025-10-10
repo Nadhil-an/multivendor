@@ -1,6 +1,8 @@
 from django.shortcuts import render,get_object_or_404
 from vendor.models import Vendor
-from menu.models import Category
+from menu.models import Category,FoodItem
+
+from django.db.models import Prefetch
 
 # Create your views here.
 def marketplace(request):
@@ -15,7 +17,13 @@ def marketplace(request):
 
 def vendor_details(request,vendor_slug):
     vendor = get_object_or_404(Vendor,vendor_slug=vendor_slug)
-    category = Category.objects.filter(vendor=vendor)
+    category = Category.objects.filter(vendor=vendor).prefetch_related(
+        Prefetch(
+            'fooditems',
+            queryset = FoodItem.objects.filter(is_available=True)
+        )
+
+    )
 
     context={
         'vendor':vendor,
