@@ -1,5 +1,6 @@
 from django.shortcuts import render,get_object_or_404
 from vendor.models import Vendor
+from menu.models import Category
 
 # Create your views here.
 def marketplace(request):
@@ -14,9 +15,11 @@ def marketplace(request):
 
 def vendor_details(request,vendor_slug):
     vendor = get_object_or_404(Vendor,vendor_slug=vendor_slug)
+    category = Category.objects.filter(vendor=vendor)
 
     context={
         'vendor':vendor,
+        'category':category,
     }
 
    
