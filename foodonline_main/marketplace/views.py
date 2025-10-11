@@ -1,6 +1,7 @@
 from django.shortcuts import render,get_object_or_404
 from vendor.models import Vendor
 from menu.models import Category,FoodItem
+from django.http import HttpResponse
 
 from django.db.models import Prefetch
 
@@ -22,13 +23,12 @@ def vendor_details(request,vendor_slug):
             'fooditems',
             queryset = FoodItem.objects.filter(is_available=True)
         )
-
     )
-
     context={
         'vendor':vendor,
         'category':category,
     }
-
-   
     return render(request,'marketplace/vendor_details.html',context)
+
+def add_to_cart(request,food_id=None):
+    return HttpResponse('Testing')
