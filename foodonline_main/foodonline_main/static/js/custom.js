@@ -8,16 +8,28 @@ $(document).ready(function(){
 
     // Handle Add to Cart
     $(document).on('click', '.add_to_cart', function(e){
-        e.preventDefault();
-        var food_id = $(this).attr('data-id');
-        var url = $(this).attr('data-url');
-        $.ajax({
-            type: 'GET',
-            url: url,
-            data: {'food_id': food_id},
-            success: function(response){
-                $('#qty-' + food_id).html(response.qty);
-            }
-        });
+    e.preventDefault();
+    
+    var food_id = $(this).attr('data-id');
+    var url = $(this).attr('data-url');
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        data: {'food_id': food_id},
+        success: function(response){
+            console.log(response);
+
+            // Update the cart counter (top right)
+            $('#cart_counter').html(response.cart_counter['cart_count']);
+
+            // ✅ Update the correct item quantity
+           $('#qty-' + food_id).html(response.qty);
+
+        }
     });
+});
+
+
+
 });

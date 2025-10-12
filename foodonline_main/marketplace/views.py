@@ -1,8 +1,9 @@
 from django.shortcuts import render,get_object_or_404
 from vendor.models import Vendor
 from menu.models import Category,FoodItem
-from marketplace.models import Cart
-from django.http import HttpResponse,JsonResponse
+from .models import Cart
+from . context_processor import get_cart_counter
+from django.http import JsonResponse
 
 from django.db.models import Prefetch
 
@@ -42,18 +43,20 @@ def add_to_cart(request,food_id=None):
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
 
             try:
+                #check if the food item is available
                 fooditem = FoodItem.objects.get(id=food_id)
             except FoodItem.DoesNotExist:
                 return JsonResponse({'status':'failed','message':'This food does not exist'})
 
             try:
+                #checking if the food item is already added to the cart
                 chkCart = Cart.objects.get(user=request.user, fooditem=fooditem)
                 chkCart.quantity += 1
                 chkCart.save()
-                return JsonResponse({'status':'Success','message':'Increased the cart quantity'})
+                return JsonResponse({'status':'Success','message':'Increased the cart quantity','cart_counter':get_cart_counter(request), 'qty':chkCart.quantity})
             except Cart.DoesNotExist:
-                Cart.objects.create(user=request.user, fooditem=fooditem, quantity=1)
-                return JsonResponse({'status':'Success','message':'Product added to the cart'})
+                newCart = Cart.objects.create(user=request.user, fooditem=fooditem, quantity=1)
+                return JsonResponse({'status':'Success','message':'Product added to the cart','cart_counter':get_cart_counter(request), 'qty':newCart.quantity})
 
         return JsonResponse({'status':'failed','message':'Invalid Request'})
 
