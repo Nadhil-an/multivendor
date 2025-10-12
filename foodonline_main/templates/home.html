@@ -114,7 +114,7 @@
 									<li class="has-border">
 										<figure>
 											{% if vend.user_profile.profile_picture %}
-											<a href="#"><img src="{{ vend.user_profile.profile_picture.url }}" class="attachment-full size-full wp-post-image" alt=""></a>
+											<a href="{% if vend.vendor_slug %}{% url 'vendor_details' vend.vendor_slug %}{% else %}#{% endif %}"><img src="{{ vend.user_profile.profile_picture.url }}" class="attachment-full size-full wp-post-image" alt=""></a>
 											{% else %}
 											<a href="#"><img src="{% static 'images/users/black.jpg' %}" class="attachment-full size-full wp-post-image" alt=""></a>
 											{% endif %}
@@ -148,7 +148,7 @@
 												
 												<figure>
 													{% if vend.user_profile.profile_picture %}
-													<a href="#"><img src="{{ vend.user_profile.profile_picture.url }}" class="attachment-full size-full wp-post-image" alt=""></a>
+													<a href="{% if vend.vendor_slug %}{% url 'vendor_details' vend.vendor_slug %}{% else %}#{% endif %}"><img src="{{ vend.user_profile.profile_picture.url }}" class="attachment-full size-full wp-post-image" alt=""></a>
 													{% else %}
 													<a href="#"><img src="{% static 'images/users/black.jpg' %}" class="attachment-full size-full wp-post-image" alt=""></a>
 													{% endif %}
@@ -160,7 +160,7 @@
 											<div class="text-holder">
 												<div class="post-title">
 													<h5>
-														<a href="#">{{ vend.vendor_name }}</a>
+														<a href="{% if vend.vendor_slug %}{% url 'vendor_details' vend.vendor_slug %}{% else %}#{% endif %}">{{ vend.vendor_name }}</a>
 													</h5>
 												</div>
 												{% if vend.user_profile.city and vend.user_profile.state and vend.user_profile.pin_code %}
