@@ -6,7 +6,11 @@ from . context_processor import get_cart_counter
 from django.http import JsonResponse,HttpResponse
 
 from django.db.models import Prefetch
-
+#######################
+#
+# market place
+# 
+#######################
 # Create your views here.
 def marketplace(request):
     vendors = Vendor.objects.filter(is_approved=True,user__is_active=True)
@@ -16,7 +20,11 @@ def marketplace(request):
         'count':count
     }
     return render(request,'marketplace/listing.html',context)
-
+#######################
+#
+# vendor_details
+#
+#######################
 
 def vendor_details(request,vendor_slug):
     vendor = get_object_or_404(Vendor,vendor_slug=vendor_slug)
@@ -37,7 +45,11 @@ def vendor_details(request,vendor_slug):
         'cart_items':cart_items,
     }
     return render(request,'marketplace/vendor_details.html',context)
-
+#######################
+#
+# add_to_cart
+#
+#######################
 def add_to_cart(request,food_id=None):
     if request.user.is_authenticated:
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
@@ -61,9 +73,12 @@ def add_to_cart(request,food_id=None):
         return JsonResponse({'status':'failed','message':'Invalid Request'})
 
     else:
-        return JsonResponse({'status':'failed','message':'Please login to continue'})
-
-
+        return JsonResponse({'status':'login_required','message':'Please login to continue'})
+#######################
+#
+# decrease_cart
+#
+#######################
 def decrease_cart(request,food_id=None):
     if request.user.is_authenticated:
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
@@ -87,12 +102,12 @@ def decrease_cart(request,food_id=None):
                 return JsonResponse({'status':'Success','message':'Remove the cart quantity','cart_counter':get_cart_counter(request), 'qty':qty})
             except Cart.DoesNotExist:
                
-                return JsonResponse({'status':'Failed','message':'You do not have item in your cart', 'qty':0})
+                return JsonResponse({'status':'failed','message':'You do not have item in your cart', 'qty':0})
 
         return JsonResponse({'status':'failed','message':'Invalid Request'})
 
     else:
-        return JsonResponse({'status':'failed','message':'Please login to continue'})
+        return JsonResponse({'status':'login_required','message':'Please login to continue'})
 
 
     

@@ -18,9 +18,24 @@ $(document).ready(function(){
         url: url,
         data: {'food_id': food_id},
         success: function(response){
-            if (response.status == 'failed'){
-                console.log('an error is occur');
-            }else{
+            if (response.status == 'login_required') {
+            Swal.fire({
+                icon: 'info',
+                title: response.message,
+                showConfirmButton: true,
+                confirmButtonText: 'Login Now'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/login';
+                }
+            });
+           }else if(response.status == 'failed'){
+                swal.fire({
+                    icon:'error',
+                    title:response.message
+                });
+            }
+             else{
                 // Update the cart counter (top right)
                 $('#cart_counter').html(response.cart_counter['cart_count']);
                  // ✅ Update the correct item quantity
@@ -45,15 +60,29 @@ $(document).ready(function(){
                     'food_id':food_id
                 },
                 success:function(response){
-                    if (response.status == 'failed'){
-                        console.log(response);
+                   if (response.status == 'login_required') {
+                        Swal.fire({
+                            icon: 'info',
+                            title: response.message,
+                            showConfirmButton: true,
+                            confirmButtonText: 'Login Now'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '/login';
+                            }
+                        });
+                    }else if(response.status == 'failed'){
+                            swal.fire({
+                            icon:'error',
+                            title:response.message
+                                });
                     }else{
-                        $('#cart_counter').html(response.cart_counter['cart_count']);
-                        $('#qty-' + food_id).html(response.qty);
-                    }     
-                }
-            })
-            })
+                         $('#cart_counter').html(response.cart_counter['cart_count']);
+                         $('#qty-' + food_id).html(response.qty);
+                        
+                        }}
+                        })
+                    })
 
 
 
