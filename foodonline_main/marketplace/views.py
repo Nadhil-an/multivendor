@@ -25,9 +25,15 @@ def vendor_details(request,vendor_slug):
             queryset = FoodItem.objects.filter(is_available=True)
         )
     )
+    
+    if request.user.is_authenticated:
+        cart_items = Cart.objects.filter(user=request.user)
+    else:
+        cart_items = None
     context={
         'vendor':vendor,
         'category':category,
+        'cart_items':cart_items,
     }
     return render(request,'marketplace/vendor_details.html',context)
 

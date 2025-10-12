@@ -1,23 +1,23 @@
 $(document).ready(function(){
+    // Show correct quantities on page load
+    $('.item_qty').each(function(){
+        var the_id = $(this).attr('id');
+        var qty = $(this).attr('data-qty');
+        $('#' + the_id).html(qty);
+    });
+
+    // Handle Add to Cart
     $(document).on('click', '.add_to_cart', function(e){
         e.preventDefault();
-        
-        food_id = $(this).attr('data-id');
-        url = $(this).attr('data-url')
-
-        data ={
-            food_id:food_id,
-        }
-
+        var food_id = $(this).attr('data-id');
+        var url = $(this).attr('data-url');
         $.ajax({
-            type :'GET',
-            url : url,
-            data:data,
-            success:function(response){
-               console.log(response);
+            type: 'GET',
+            url: url,
+            data: {'food_id': food_id},
+            success: function(response){
+                $('#qty-' + food_id).html(response.qty);
             }
-        })
-
-    })
-})
-
+        });
+    });
+});
