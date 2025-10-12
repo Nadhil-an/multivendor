@@ -3,7 +3,7 @@ from vendor.models import Vendor
 from menu.models import Category,FoodItem
 from .models import Cart
 from . context_processor import get_cart_counter
-from django.http import JsonResponse
+from django.http import JsonResponse,HttpResponse
 
 from django.db.models import Prefetch
 
@@ -62,4 +62,37 @@ def add_to_cart(request,food_id=None):
 
     else:
         return JsonResponse({'status':'failed','message':'Please login to continue'})
+
+
+def decrease_cart(request,food_id=None):
+    if request.user.is_authenticated:
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+
+            try:
+                #check if the food item is available
+                fooditem = FoodItem.objects.get(id=food_id)
+            except FoodItem.DoesNotExist:
+                return JsonResponse({'status':'failed','message':'This food does not exist'})
+
+            try:
+                #checking if the food item is already added to the cart
+                chkCart = Cart.objects.get(user=request.user, fooditem=fooditem)
+                if chkCart.quantity >1:
+                    chkCart.quantity -= 1
+                    chkCart.save()
+                    qty = chkCart.quantity
+                else:
+                    chkCart.delete()
+                    qty=0
+                return JsonResponse({'status':'Success','message':'Remove the cart quantity','cart_counter':get_cart_counter(request), 'qty':qty})
+            except Cart.DoesNotExist:
+               
+                return JsonResponse({'status':'Failed','message':'You do not have item in your cart', 'qty':0})
+
+        return JsonResponse({'status':'failed','message':'Invalid Request'})
+
+    else:
+        return JsonResponse({'status':'failed','message':'Please login to continue'})
+
+
     
