@@ -26,7 +26,8 @@
                                         {% if cart_items %}
                                         <ul>
                                             {% for cart in cart_items %}
-                                            <li style="display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee;">
+                                            <li id="cart-item-{{cart.fooditem.id }}"
+                                            style="display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee;">
                                                 <div class="image-holder" style="flex: 0 0 80px;">
                                                     <a href="{{ cart.fooditem.image.url }}">
                                                         <img src="{{ cart.fooditem.image.url }}"
@@ -57,7 +58,7 @@
                                                             style="margin-right: 15px; text-decoration: none; border-radius: 50%; ">
                                                             <i class="icon-plus4 text-color"></i>
                                                         </a>
-                                                        <a href="#" class="delete_item" style="text-decoration: none;"data-id="{{ cart.id }}"data-url="{% url 'delete_item' cart.fooditem.id %}"
+                                                        <a href="#" class="delete_item" style="text-decoration: none;" data-id="{{ cart.fooditem.id }}"data-url="{% url 'delete_item' cart.fooditem.id %}"
                                                             style="margin-left: 8px;">
                                                             <i class="icon-delete text-color"></i>
                                                         </a>

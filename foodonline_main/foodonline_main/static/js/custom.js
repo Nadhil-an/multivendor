@@ -104,13 +104,14 @@ $(document).ready(function(){
                         } else {
                             $('#cart_counter').html(response.cart_counter['cart_count']);
                             Swal.fire('Success', response.message, 'success');
-                            // Optionally remove the item from DOM
-                            $('#item-' + food_id).remove();
+                             $('#cart-item-' + food_id).remove();
+                             
+                           
                         }
                     }
                 });
             });
 
-
+            
 
 });
