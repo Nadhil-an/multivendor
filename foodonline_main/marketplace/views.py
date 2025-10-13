@@ -37,12 +37,15 @@ def vendor_details(request,vendor_slug):
     
     if request.user.is_authenticated:
         cart_items = Cart.objects.filter(user=request.user)
+        cart_items_dict = {item.fooditem.id: item.quantity for item in cart_items}
     else:
         cart_items = None
+        cart_items_dict = {}
     context={
         'vendor':vendor,
         'category':category,
         'cart_items':cart_items,
+        'cart_items_dict': cart_items_dict
     }
     return render(request,'marketplace/vendor_details.html',context)
 #######################
@@ -117,4 +120,16 @@ def cart(request):
     return render(request,'marketplace/cart.html',context)
 
 
-    
+def delete_item(request,food_id):
+        if request.user.is_authenticated:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                try:
+                    cart_item = Cart.objects.get(user=request.user,id=food_id)
+                    if cart_item:
+                        cart_item.delete()
+                        return JsonResponse({'status':'Success','message':'Cart Item has been deleted!','cart_counter':get_cart_counter(request)})
+                except:
+                     return JsonResponse({'status':'failed','message':'Cart Item does not exist'})
+
+
+            return JsonResponse({'status':'failed','message':'Invalid Request'})
