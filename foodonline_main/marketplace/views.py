@@ -120,16 +120,21 @@ def cart(request):
     return render(request,'marketplace/cart.html',context)
 
 
-def delete_item(request,food_id):
-        if request.user.is_authenticated:
-            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-                try:
-                    cart_item = Cart.objects.get(user=request.user,id=food_id)
-                    if cart_item:
-                        cart_item.delete()
-                        return JsonResponse({'status':'Success','message':'Cart Item has been deleted!','cart_counter':get_cart_counter(request)})
-                except:
-                     return JsonResponse({'status':'failed','message':'Cart Item does not exist'})
+def delete_item(request, food_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({'status':'login_required','message':'Please login to continue'})
 
+    if request.headers.get('x-requested-with') != 'XMLHttpRequest':
+        return JsonResponse({'status':'failed','message':'Invalid Request'})
 
-            return JsonResponse({'status':'failed','message':'Invalid Request'})
+    try:
+        # Get the cart item for this user and food item
+        cart_item = Cart.objects.get(user=request.user, fooditem_id=food_id)
+        cart_item.delete()
+        return JsonResponse({
+            'status':'Success',
+            'message':'Cart Item has been deleted!',
+            'cart_counter': get_cart_counter(request)  # returns updated cart count
+        })
+    except Cart.DoesNotExist:
+        return JsonResponse({'status':'failed','message':'Cart Item does not exist'})

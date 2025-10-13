@@ -46,8 +46,11 @@
 
                                                         <a href="#" class="decrease_cart" data-id="{{ cart.fooditem.id }}" data-url="{% url 'decrease_cart' cart.fooditem.id %}" style="margin-right: 28px;"><i class="icon-minus text-color"></i></a>
 
-
+                                                        {% if cart.quantity %}
                                                         <label id="qty-{{ cart.fooditem.id }}">{{ cart.quantity }}</label>
+                                                        {% else %}
+                                                        <label id="qty-{{ cart.fooditem.id }}">0</label>
+                                                        {% endif %}
                                                         <a href="#" class="add_to_cart"
                                                             data-id="{{ cart.fooditem.id }}"
                                                             data-url="{% url 'add_to_cart' cart.fooditem.id %}"
