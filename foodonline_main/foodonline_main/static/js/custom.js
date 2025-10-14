@@ -104,12 +104,19 @@ $(document).ready(function(){
                         } else {
                             $('#cart_counter').html(response.cart_counter['cart_count']);
                             Swal.fire('Success', response.message, 'success');
-                             $('#cart-item-' + food_id).remove();
+                             $('#cart-item-' + food_id).remove();         
                              
-                           
+                             displayEmptyText()
                         }
                     }
                 });
+                function displayEmptyText(){
+                    var cart_counter = document.getElementById('cart_counter').innerHTML
+                    if(cart_counter == 0){
+                        document.getElementById('check-cart').style.display='block';
+                    }
+
+                }
             });
 
             
