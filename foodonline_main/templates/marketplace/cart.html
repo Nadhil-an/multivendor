@@ -31,7 +31,7 @@
                                         {% if cart_items %}
                                         <ul>
                                             {% for cart in cart_items %}
-                                            <li id="cart-item-{{cart.fooditem.id }}"
+                                            <li id="cart-item-{{cart.id }}"
                                             style="display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee;">
                                                 <div class="image-holder" style="flex: 0 0 80px;">
                                                     <a href="{{ cart.fooditem.image.url }}">
@@ -50,7 +50,7 @@
                                                     <div style="margin-top: 5px;">
                                                         
 
-                                                        <a href="#" class="decrease_cart" data-id="{{ cart.fooditem.id }}" data-url="{% url 'decrease_cart' cart.fooditem.id %}" style="margin-right: 28px;"><i class="icon-minus text-color"></i></a>
+                                                        <a href="#" class="decrease_cart" data-id="{{ cart.fooditem.id }}" data-cart-id="{{cart.id}}" data-url="{% url 'decrease_cart' cart.fooditem.id %}" style="margin-right: 28px;"><i class="icon-minus text-color"></i></a>
 
                                                         {% if cart.quantity %}
                                                         <label id="qty-{{ cart.fooditem.id }}">{{ cart.quantity }}</label>
@@ -63,7 +63,7 @@
                                                             style="margin-right: 15px; text-decoration: none; border-radius: 50%; ">
                                                             <i class="icon-plus4 text-color"></i>
                                                         </a>
-                                                        <a href="#" class="delete_item" style="text-decoration: none;" data-id="{{ cart.fooditem.id }}"data-url="{% url 'delete_item' cart.fooditem.id %}"
+                                                        <a href="#" class="delete_item" style="text-decoration: none;" data-id="{{ cart.id }}"data-url="{% url 'delete_item' cart.fooditem.id %}"
                                                             style="margin-left: 8px;">
                                                             <i class="icon-delete text-color"></i>
                                                         </a>
