@@ -129,12 +129,12 @@ def delete_item(request, food_id):
 
     try:
         # Get the cart item for this user and food item
-        cart_item = Cart.objects.get(user=request.user, fooditem_id=food_id)
-        cart_item.delete()
-        return JsonResponse({
-            'status':'Success',
-            'message':'Cart Item has been deleted!',
-            'cart_counter': get_cart_counter(request)  # returns updated cart count
-        })
-    except Cart.DoesNotExist:
-        return JsonResponse({'status':'failed','message':'Cart Item does not exist'})
+    #     cart_item = Cart.objects.get(user=request.user, fooditem_id=food_id)
+    #     cart_item.delete()
+    #     return JsonResponse({
+    #         'status':'Success',
+    #         'message':'Cart Item has been deleted!',
+    #         'cart_counter': get_cart_counter(request)  # returns updated cart count
+    #     })
+    # except Cart.DoesNotExist:
+    #     return JsonResponse({'status':'failed','message':'Cart Item does not exist'})
