@@ -44,6 +44,7 @@
                                                 <div class="text-holder" style="flex: 1; margin-left: 15px;">
                                                     <h6 style="margin: 0; font-size: 16px;">{{ cart.fooditem.food_title }}</h6>
                                                     <span style="font-size: 13px; color: #777;">{{ cart.fooditem.description }}</span>
+                                                    <a href="{% url 'vendor_details' cart.fooditem.vendor.vendor_slug%}" class="badge badge-warning">{{ cart.fooditem.vendor }}</a>
                                                 </div>
 
                                                 <div class="price-holder" style="text-align: right;">
@@ -102,19 +103,19 @@
                                         <li style="list-style-type: none; margin-bottom: 10px;">
                                             Subtotal
                                             <span class="price float-right">
-                                                ₹<span id="subtotal">0</span>
+                                                ₹<span id="subtotal">{{ subtotal}}</span>
                                             </span>
                                         </li>
                                         <li style="list-style-type: none; margin-bottom: 10px;">
                                             Tax
                                             <span class="price float-right">
-                                                ₹<span id="tax">0</span>
+                                                ₹<span id="tax">{{ tax }}</span>
                                             </span>
                                         </li>
                                         <li style="list-style-type: none; font-weight: 600;">
                                             TOTAL
                                             <span class="price float-right">
-                                                ₹<span id="total">0</span>
+                                                ₹<span id="total">{{ grand_total }}</span>
                                             </span>
                                         </li>
                                     </ul>

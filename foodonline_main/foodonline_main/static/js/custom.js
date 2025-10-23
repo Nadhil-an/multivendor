@@ -39,6 +39,11 @@ $(document).ready(function(){
                     // ✅ Update cart counter and item quantity
                     $('#cart_counter').html(response.cart_counter['cart_count']);
                     $('#qty-' + food_id).html(response.qty);
+                    applyamount(
+                        response.cart_amount['subtotal'],
+                        response.cart_amount['tax'],
+                        response.cart_amount['grand_total']
+                    )
                 }
             }
         });
@@ -77,6 +82,11 @@ $(document).ready(function(){
                     // ✅ Update cart counter and item quantity
                     $('#cart_counter').html(response.cart_counter['cart_count']);
                     $('#qty-' + food_id).html(response.qty);
+                    applyamount(
+                        response.cart_amount['subtotal'],
+                        response.cart_amount['tax'],
+                        response.cart_amount['grand_total']
+                    )
 
                     // ✅ If quantity becomes 0, remove the li element
                     if (parseInt(response.qty) <= 0){
@@ -114,6 +124,11 @@ $(document).ready(function(){
                         $(this).remove();
                         displayEmptyText();
                     });
+                    applyamount(
+                        response.cart_amount['subtotal'],
+                        response.cart_amount['tax'],
+                        response.cart_amount['grand_total']
+                    )
                 }
             }
         });
@@ -124,6 +139,14 @@ $(document).ready(function(){
         var cart_counter = parseInt($('#cart_counter').html());
         if(cart_counter === 0){
             $('#check-cart').show();
+        }
+    }
+
+    function applyamount(subtotal,tax,grand_total){
+        if (window.location.pathname = '/cart/'){
+            $('#subtotal').html(subtotal)
+            $('#tax').html(tax)
+            $('#grand_total').html(grand_total)
         }
     }
 
