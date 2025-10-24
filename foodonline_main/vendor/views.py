@@ -49,7 +49,7 @@ def vprofile(request):
         'vendor_get':vendor_get,
         'profile_form':profile_form,
         'vendor_form':vendor_form,
-        "MAPBOX_PUBLIC_TOKEN": settings.MAPBOX_PUBLIC_TOKEN
+        
     }
     
     return render(request,'vendor/vprofile.html',context)

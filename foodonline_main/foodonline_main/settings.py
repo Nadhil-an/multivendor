@@ -69,6 +69,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'marketplace.context_processor.get_cart_counter',
                 'marketplace.context_processor.get_cart_amount',
+                'accounts.context_processor.get_google_api',
             ],
         },
     },
@@ -151,8 +152,8 @@ MEDIA_ROOT = BASE_DIR /'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# mapbox api key
-MAPBOX_PUBLIC_TOKEN = "pk.eyJ1IjoibmFkaGlsIiwiYSI6ImNtZzRybWRwcTF0Z2EybHNkbjMxMW5kbzkifQ.zuqZYDeyGvhyYVo7t_8DtA"
+#Google map api
+GOOGLE_API_KEY = 'AIzaSyBk0FyVPDx4fLq0QELbO7jD8b7HXL3_50Y'
 
 
 
