@@ -12,5 +12,8 @@ urlpatterns = [
     path('decrease_cart/<int:food_id>/',views.decrease_cart,name='decrease_cart'),
     #Delete cart item
     path('delete/<int:food_id>/',views.delete_item,name='delete_item'),
+
+    #search
+    path('search/',views.search,name='search'),
    
 ]

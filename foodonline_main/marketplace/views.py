@@ -139,3 +139,6 @@ def delete_item(request, food_id):
         })
     except Cart.DoesNotExist:
         return JsonResponse({'status':'failed','message':'Cart Item does not exist'})
+    
+def search(request):
+    return HttpResponse
