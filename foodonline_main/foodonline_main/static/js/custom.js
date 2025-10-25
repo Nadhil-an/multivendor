@@ -9,13 +9,27 @@ function initAutocomplete() {
 }
 
 function onPlaceChanged() {
-  var place = autocomplete.getPlace();
+  const place = autocomplete.getPlace();
+  document.getElementById('id_address').addEventListener('input',function(){
+    console.log('Typed',this.value);
+  })
   if (!place.geometry) {
     document.getElementById('id_address').placeholder = "Start typing...";
-  } else {
-    console.log('place name =>', place.name);
+    return;
   }
+
+  // Get latitude and longitude directly from the selected place
+  const latitude = place.geometry.location.lat();
+  const longitude = place.geometry.location.lng();
+
+  // Fill your Django form fields
+$('#id_latitude').val(latitude.toFixed(6));
+$('#id_longitude').val(longitude.toFixed(6));
+
+
+  console.log('Place selected:', place.name, latitude, longitude);
 }
+
 
 
 
