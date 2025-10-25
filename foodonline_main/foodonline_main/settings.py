@@ -153,7 +153,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 #Google map api
-GOOGLE_API_KEY = 'AIzaSyBk0FyVPDx4fLq0QELbO7jD8b7HXL3_50Y'
+GOOGLE_API_KEY = 'AIzaSyDjN20zspuKLchIPTS6GpiCVmeiZVjgKPo'
 
 
 

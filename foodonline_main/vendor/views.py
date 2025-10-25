@@ -49,6 +49,7 @@ def vprofile(request):
         'vendor_get':vendor_get,
         'profile_form':profile_form,
         'vendor_form':vendor_form,
+        'GOOGLE_API_KEY': settings.GOOGLE_API_KEY,
         
     }
     
