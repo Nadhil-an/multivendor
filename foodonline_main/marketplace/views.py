@@ -141,4 +141,11 @@ def delete_item(request, food_id):
         return JsonResponse({'status':'failed','message':'Cart Item does not exist'})
     
 def search(request):
-    return HttpResponse
+
+    address = request.GET['address']
+    longitude = request.GET['lng']
+    latitude = request.GET['lat']
+    radius = request.GET['radius']
+    r_name = request.GET['rest_name']
+    print(address,longitude,latitude,radius)
+    return render (request,'marketplace/listing.html')
