@@ -9,7 +9,8 @@ function initAutocomplete() {
 }
 
 function onPlaceChanged() {
-  const place = autocomplete.getPlace();
+  const place = autocomplete.getPlace()
+  console.log(place);
   document.getElementById('id_address').addEventListener('input',function(){
     console.log('Typed',this.value);
   })
@@ -26,8 +27,26 @@ function onPlaceChanged() {
 $('#id_latitude').val(latitude.toFixed(6));
 $('#id_longitude').val(longitude.toFixed(6));
 
+if (place.name) {
+        $('#id_address').val(place.name);
+    }
 
-  console.log('Place selected:', place.name, latitude, longitude);
+
+for (var i = 0; i < place.address_components.length; i++) {
+    for (var j = 0; j < place.address_components[i].types.length; j++) {
+        if (place.address_components[i].types[j] === 'country') {
+            $('#id_country').val(place.address_components[i].long_name);
+        } else if (place.address_components[i].types[j] === 'administrative_area_level_1') {
+            $('#id_state').val(place.address_components[i].long_name);
+        } else if (place.address_components[i].types[j] === 'locality') {
+            $('#id_city').val(place.address_components[i].long_name);
+        }else if(place.address_components[i].types[j] === 'postal_code'){
+            $('#id_pin_code').val(place.address_components[i].long_name);
+        }
+    }
+}
+
+  console.log('Place selected:', place);
 }
 
 
