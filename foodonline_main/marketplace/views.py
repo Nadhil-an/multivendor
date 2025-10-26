@@ -4,7 +4,7 @@ from menu.models import Category,FoodItem
 from .models import Cart
 from . context_processor import get_cart_counter,get_cart_amount
 from django.http import JsonResponse,HttpResponse
-
+from django.db.models import Q
 from django.db.models import Prefetch
 #######################
 #
@@ -150,8 +150,16 @@ def search(request):
     
     vendor  = Vendor.objects.filter(vendor_name__icontains=keyword,user__is_active=True,is_approved=True)
     vendor_count = vendor.count()
+
+    #get vendor ids that has the food item the user is looking for
+    fetch_vendor_by_fooditems = FoodItem.objects.filter(food_title__icontains=keyword,is_available=True).values_list('vendor',flat=True)
+
+    vendor =Vendor.objects.filter(Q(id__in=fetch_vendor_by_fooditems) | Q(vendor_name__icontains=keyword,is_approved=True, user__is_active=True))
+    vendor_count = vendor.count()
+
     context ={
         'vendors':vendor,
         'count':vendor_count,
+
     }
     return render (request,'marketplace/listing.html',context)
