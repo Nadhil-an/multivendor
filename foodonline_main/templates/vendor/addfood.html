@@ -42,7 +42,8 @@
 									<h5>Build Your Menu</h5>
 									<!-- My Restaurants Form Start -->
                                      <hr>
-                                     <button class="btn btn-secondary" onclick="history.back()"><i class="fa fa-angle-left" aria-hidden="true"></i>Back</button>
+                                    <a href="{% url 'menu_builder' %}" class="btn btn-secondary"><i class="fa fa-angle-left" aria-hidden="true"></i> Back</a>
+
                                      <h6>Add Food Items</h6>
                                      <form action="{% url 'addfood' %}" method="POST"  enctype="multipart/form-data">
                                         {% csrf_token %}

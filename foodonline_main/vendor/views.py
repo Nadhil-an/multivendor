@@ -111,8 +111,11 @@ def add_category(request):
             category_name = form.cleaned_data['category_name']
             category = form.save(commit=False)
             category.vendor = get_vendor(request)
-            category.slug = slugify(category_name)  # ✅ assign vendor
-            category.save()  # ✅ slug auto-handled in model.save()
+            category.save()
+
+            category.slug = slugify(category_name)+'-'+str(category.id) # ✅ assign vendor
+            category.save()
+              # ✅ slug auto-handled in model.save()
             messages.success(request, 'Category added Successfully')
             return redirect('menu_builder')
     else:
