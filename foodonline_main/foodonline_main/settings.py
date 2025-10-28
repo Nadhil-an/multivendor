@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 from decouple import config
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -166,3 +167,7 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=False, cast=bool)
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
+# Add GDAL & PROJ paths manually
+os.environ['PATH'] = os.path.join(BASE_DIR, 'env', 'Lib', 'site-packages', 'osgeo') + ';' + os.environ['PATH']
+os.environ['PROJ_LIB'] = os.path.join(BASE_DIR, 'env', 'Lib', 'site-packages', 'osgeo', 'data', 'proj')
+GDAL_LIBRARY_PATH = os.path.join(BASE_DIR, 'env', 'Lib', 'site-packages', 'osgeo', 'gdal.dll')
