@@ -6,6 +6,8 @@ from . context_processor import get_cart_counter,get_cart_amount
 from django.http import JsonResponse,HttpResponse
 from django.db.models import Q
 from django.db.models import Prefetch
+from django.contrib.gis.geos import GEOSGeometry
+from django.contrib.gis.measure import D
 #######################
 #
 # market place
@@ -155,6 +157,12 @@ def search(request):
     fetch_vendor_by_fooditems = FoodItem.objects.filter(food_title__icontains=keyword,is_available=True).values_list('vendor',flat=True)
 
     vendor =Vendor.objects.filter(Q(id__in=fetch_vendor_by_fooditems) | Q(vendor_name__icontains=keyword,is_approved=True, user__is_active=True))
+
+    if latitude and longitude and radius:
+        pnt = GEOSGeometry('POINT(%s %s)' % (longitude,latitude))
+        vendor =Vendor.objects.filter(Q(id__in=fetch_vendor_by_fooditems) | Q(vendor_name__icontains=keyword,is_approved=True, user__is_active=True),
+                                      user_profile__location__distance_ite=(pnt,D(km=radius)))
+
     vendor_count = vendor.count()
 
     context ={
