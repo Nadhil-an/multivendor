@@ -139,7 +139,13 @@
 												</div>
 												{% if vend.user_profile.city and vend.user_profile.state and vend.user_profile.pin_code %}
 												<span>{{ vend.user_profile.city }}, {{ vend.user_profile.state }}, {{ vend.user_profile.pin_code }}</span>
+												{% endif %}'
+												
+												{% if vend.km %}
+												<br>
+												<span><small><b>{{ vend.km }} km</b> away</small></span>
 												{% endif %}
+
 											</div>
 										</div>
 									</li>
