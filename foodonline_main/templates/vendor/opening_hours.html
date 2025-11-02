@@ -1,0 +1,99 @@
+{% extends 'base.html'%}
+{% load static %}
+
+{% block content %}
+
+
+		<!-- Main Section Start -->
+		<div class="main-section">
+			<div class="page-section restaurant-detail-image-section">
+				<!-- Container Start -->
+				<div class="container">
+					<!-- Row Start -->
+					<div class="row">
+						<!-- Column Start -->
+						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+							<div class="company-info-detail">
+								<div class="company-info">
+									
+
+                                        
+								</div>
+							</div>
+						</div>
+						<!-- Column End -->
+					</div>
+					<!-- Row End -->
+				</div>
+				<!-- Container End -->
+			</div>
+			<div class="page-section account-header buyer-logged-in">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+							<div class="user-account-nav user-account-sidebar">
+								{% include 'includes/v_sidebar.html' %}
+							</div>
+						</div>
+						<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
+							<div class="user-dashboard loader-holder">
+								<div class="user-holder">
+
+									<h5>Opening Hours</h5>
+									<!-- My Restaurants Form Start -->
+                                     <hr>
+                                     {% for hour in opening_hours %}
+                                        {{ hour }} {{ hour.from_hour }}- {{ hour.to_hour }}
+                                    {% endfor %}
+                                    <table class="table opening_hours" style="width: 500px; border: none  !important;">
+                                        <tbody> 
+                                            {% for hour in opening_hours %}
+                                            <tr>
+                                                <td><b>{{ hour }}</b></td>
+                                                <td>{% if hour.is_closed %}Closed{% else %}{{ hour.from_hour }} - {{ hour.to_hour}}{{endif}}</td>
+                                                <td><a href="#"></a>Remove</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <br>
+
+                                    <form id="opening_hours">
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                {{ form.day}}
+                                            </div>
+                                            <div class="col-md-2">
+                                                {{ form.from_hour}}
+                                            </div>
+                                            <div class="col-md-3">
+                                                {{ form.is_closed }} Set as Closed
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button class="btn btn-success">Add Hours</button>
+
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                     
+                                        
+    
+                                        
+								
+									
+									
+					
+									
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Main Section End -->
+
+
+
+{% endblock %}

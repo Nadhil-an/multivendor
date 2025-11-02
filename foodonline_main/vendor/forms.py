@@ -1,5 +1,5 @@
 from django import forms
-from . models import Vendor
+from . models import Vendor,OpeningHour
 from accounts.validators import form_validation_error
 
 
@@ -9,5 +9,10 @@ class VendorForm(forms.ModelForm):
     class Meta:
         model = Vendor
         fields = ['vendor_name','vendor_licence']
+
+class OpeningHourForm(forms.ModelForm):
+    class Meta:
+        model = OpeningHour
+        fields = ['day','from_hour','to_hour','is_closed']
 
      

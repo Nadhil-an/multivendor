@@ -1,6 +1,6 @@
 from django.shortcuts import render,get_object_or_404,redirect
-from . models import Vendor
-from . forms import VendorForm
+from . models import Vendor,OpeningHour
+from .forms import VendorForm,OpeningHourForm
 from accounts.models import UserProfile
 from accounts.forms import UserProfileForm
 from django.contrib import messages
@@ -179,7 +179,7 @@ def delete_category(request,pk=None):
 
 
 @login_required(login_url='loginUser')
-@user_passes_test(check_role_vendor)
+@user_passes_test(check_role_vendor)    
 def addfood(request):
 
     if request.method == 'POST':
@@ -247,5 +247,20 @@ def delete_food(request,pk=None):
 
     messages.success(request,'Food item delete successfully ')
     return redirect('menu_builder') 
+
+
+##################################
+#
+# Opening Hours
+#
+###################################
+def opening_hour(request):
+    opening_hours = OpeningHour.objects.filter(vendor=get_vendor(request))
+    form = OpeningHourForm() 
+    context = {
+        'form':form,
+        'opening_hours':opening_hours,
+    }
+    return render(request,'vendor/opening_hours.html',context)
 
 

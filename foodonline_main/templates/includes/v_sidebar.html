@@ -3,6 +3,7 @@
 										<li class="{% if '/vendorDashboard/' == request.path  %}active{%endif%}"><a href="{% url 'vendorDashboard' %}"><i class="icon-dashboard3"></i>Dashboard</a></li>
 										<li class="{% if 'profile' in request.path %}active{% endif %}"><a href="{% url 'vprofile' %}"><i class="icon-building"></i>My Restaurant</a></li>
 										<li class="{% if request.resolver_match.url_name == 'menu_builder' %}active{% endif %}"><a href="{% url 'menu_builder' %}"><i class="icon-menu"></i>Menu Builder</a></li>
+										<li class="{% if request.resolver_match.url_name == 'opening_hour' %}active{% endif %}"><a href="{% url 'opening_hour' %}"><i class="icon-menu"></i>Opening Hours</a></li>
 
 										<li><a href="restaurant-orders.html"><i class="icon-add_shopping_cart"></i>Orders</a></li>
 										<li><a href="restaurant-earnings.html"><i class="icon-money"></i>Earnings</a></li>
