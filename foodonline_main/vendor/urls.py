@@ -20,6 +20,7 @@ urlpatterns = [
 
     #opening Hour CRUD OPERATIONS
     path('opening-hours/',views.opening_hour,name='opening_hour'),
+    path('add-hour/',views.add_hour,name='add_hour'),
 
 
 

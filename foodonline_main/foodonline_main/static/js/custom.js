@@ -155,7 +155,7 @@ $(document).ready(function(){
         });
     });
 
-    // ✅ Delete Item from Cart
+    //  Delete Item from Cart
     $(document).on('click', '.delete_item', function(e){
         e.preventDefault();
 
@@ -189,7 +189,7 @@ $(document).ready(function(){
         });
     });
 
-    // ✅ Check if Cart is Empty
+    //  Check if Cart is Empty
     function displayEmptyText(){
         var cart_counter = parseInt($('#cart_counter').html());
         if(cart_counter === 0){
@@ -204,5 +204,20 @@ $(document).ready(function(){
             $('#grand_total').html(grand_total)
         }
     }
+
+    //add hours
+    $(document).on('click','add_hour',function(e){
+        e.preventDefault()
+
+        var day = document.getElementById('id_day').value;
+        var from_hour = document.getElementById('id_from_hour').value;
+        var to_hour = document.getElementById('id_to_hour').value;
+        var is_closed = document.getElementById('id_is_closed').value;
+        var csrf_token = $('input[name=csrfmiddlewaretoken]').val
+
+        console.log(day,from_hour,to_hour,is_closed,csrf_token);
+    })
+
+    
 
 });
