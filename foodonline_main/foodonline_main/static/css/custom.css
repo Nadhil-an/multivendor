@@ -23,3 +23,7 @@
 .main-search.fancy.field-folder input[type="text"]{
     color:#000000 !important
 }
+
+#opening_hours select{
+    padding: 5px 10px !important;
+}

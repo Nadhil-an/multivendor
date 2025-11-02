@@ -36,7 +36,9 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <!-- Google Maps API -->
+ {% if '/' == request.path or 'profile' in request.path %}
 <script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_API_KEY }}&libraries=places&callback=initAutocomplete" async defer></script>
+{% endif %}
 
 <!-- Your custom JS files (Load LAST) -->
 <script src="{% static 'js/modernizr.js' %}"></script>
