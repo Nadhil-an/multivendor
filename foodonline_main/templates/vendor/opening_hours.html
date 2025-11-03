@@ -74,13 +74,13 @@
                                                 {{ form.from_hour}}
                                             </div>
 											 <div class="col-md-2">
-                                                {{ form.from_hour}}
+                                                {{ form.to_hour}}
                                             </div>
                                             <div class="col-md-3">
                                                 {{ form.is_closed }} Set as Closed
                                             </div>
                                             <div class="col-md-2">
-                                                <button class="btn btn-success add_hour">Add Hours</button>
+                                                <button class="btn btn-success add_hour" data-url="{% url 'add_hour' %}">Add Hours</button>
 
                                             </div>
                                         </div>

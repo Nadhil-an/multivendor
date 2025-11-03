@@ -19,7 +19,7 @@ urlpatterns = [
     path('menu-builder/food/delete/<int:pk>/',views.delete_food,name='delete_food'),
 
     #opening Hour CRUD OPERATIONS
-    path('opening-hours/',views.opening_hour,name='opening_hour'),
+    path('opening-hours/',views.opening_hours,name='opening_hours'),
     path('add-hour/',views.add_hour,name='add_hour'),
 
 

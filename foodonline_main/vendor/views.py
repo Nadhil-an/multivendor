@@ -255,7 +255,7 @@ def delete_food(request,pk=None):
 # Opening Hours
 #
 ###################################
-def opening_hour(request):
+def opening_hours(request):
     opening_hours = OpeningHour.objects.filter(vendor=get_vendor(request))
     form = OpeningHourForm() 
     context = {

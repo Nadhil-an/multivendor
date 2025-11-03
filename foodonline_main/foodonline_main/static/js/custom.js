@@ -211,11 +211,45 @@ $(document).ready(function(){
 
         var day = $('#id_day').val();
         var from_hour = $('#id_from_hour').val();
-         var to_hour = $('#id_from_hour').val();
+        var to_hour = $('#id_to_hour').val();
         var is_closed = $('#id_is_closed').is(':checked');
-        var csrf_token = $('input[name=csrfmiddlewaretoken]').val()
+        var csrf_token = $('input[name=csrfmiddlewaretoken]').val();
+        var url = $(this).attr('data-url');
 
-        console.log(day,from_hour,to_hour,is_closed,csrf_token);
+        if(is_closed){
+            is_closed = 'True'
+            if(day === ''){
+                Swal.fire({title: 'Please select a day',icon: 'info',});
+                return
+            }
+        }else{
+            is_closed = 'False'
+            if(day === '' || from_hour === '' || to_hour === '' ){
+                Swal.fire({title: 'Please fill the input',icon: 'info',});
+                 return;
+            }
+        }
+
+        
+            $.ajax({
+                type:'POST',
+                url : url,
+                data:{
+                    'day':day,
+                    'from_hour':from_hour,
+                    'to_hour':to_hour,
+                    'is_closed':is_closed,
+                    'csrfmiddlewaretoken':csrf_token,
+                },
+                success:function(response){
+                    console.log(response);
+                }
+            })
+        
+        
+        
+
+       
     })
 
     
