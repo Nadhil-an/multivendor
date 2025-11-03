@@ -206,57 +206,61 @@ $(document).ready(function(){
     }
 
     //add hours
-    $(document).on('click','.add_hour',function(e){
-        e.preventDefault()
+   $(document).on('click', '.add_hour', function(e) {
+    e.preventDefault();
 
-        var day = $('#id_day').val();
-        var from_hour = $('#id_from_hour').val();
-        var to_hour = $('#id_to_hour').val();
-        var is_closed = $('#id_is_closed').is(':checked');
-        var csrf_token = $('input[name=csrfmiddlewaretoken]').val();
-        var url = $(this).attr('data-url');
+    var dayValue = $('#id_day').val();
+    var dayText = $('#id_day option:selected').text(); // ✅ human-readable day
+    var from_hour = $('#id_from_hour').val();
+    var to_hour = $('#id_to_hour').val();
+    var is_closed = $('#id_is_closed').is(':checked');
+    var csrf_token = $('input[name=csrfmiddlewaretoken]').val();
+    var url = $(this).attr('data-url');
 
-        if(is_closed){
-            is_closed = 'True'
-            if(day === ''){
-                Swal.fire({title: 'Please select a day',icon: 'info',});
-                return
-            }
-        }else{
-            is_closed = 'False'
-            if(day === '' || from_hour === '' || to_hour === '' ){
-                Swal.fire({title: 'Please fill the input',icon: 'info',});
-                 return;
+    if (is_closed) {
+        is_closed = 'True';
+        if (dayValue === '') {
+            Swal.fire({title: 'Please select a day', icon: 'info'});
+            return;
+        }
+    } else {
+        is_closed = 'False';
+        if (dayValue === '' || from_hour === '' || to_hour === '') {
+            Swal.fire({title: 'Please fill the input', icon: 'info'});
+            return;
+        }
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: {
+            'day': dayValue,
+            'from_hour': from_hour,
+            'to_hour': to_hour,
+            'is_closed': is_closed,
+            'csrfmiddlewaretoken': csrf_token,
+        },
+        success: function(response) {
+            if (response.status === 'success') {
+                let html = '';
+
+                if (response.is_closed) {
+                    html = `<tr><td><b>${response.day}</b></td><td>Closed</td><td><a href="#">Remove</a></td></tr>`;
+                } else {
+                    html = `<tr><td><b>${response.day}</b></td><td>${response.from_hour} - ${response.to_hour}</td><td><a href="#">Remove</a></td></tr>`;
+                }
+
+                $('.opening_hours').append(html);
+                $('#opening_hours')[0].reset();
+                Swal.fire({ title: 'Added successfully!', icon: 'success', timer: 1000, showConfirmButton: false });
+            } else {
+                Swal.fire(response.message, '', 'error');
             }
         }
+    });
+});
 
-        
-            $.ajax({
-                type:'POST',
-                url : url,
-                data:{
-                    'day':day,
-                    'from_hour':from_hour,
-                    'to_hour':to_hour,
-                    'is_closed':is_closed,
-                    'csrfmiddlewaretoken':csrf_token,
-                },
-                success:function(response){
-                    if(response.status == 'success'){
-                        html = '<tr><td><b>'+response.day+'</b></td><td>'+response.from_hour+'-'+response.to_hour+'</td><td><a href="#">Remove</a></td></tr>'
-                        $('.opening_hours').append(html)
-                        document.getElementById('opening_hours').reset();
-                    }else{
-                        swal(response.message,'','error')
-                    }
-                }
-            })
-        
-        
-        
-
-       
-    })
 
     
 

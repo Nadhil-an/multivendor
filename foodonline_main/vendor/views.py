@@ -277,18 +277,38 @@ def add_hour(request):
             from_hour = request.POST.get('from_hour')
             to_hour = request.POST.get('to_hour')
             is_closed = request.POST.get('is_closed')
-            
+
             try:
-                hour = OpeningHour.objects.create(vendor=get_vendor(request),day=day,from_hour=from_hour,to_hour=to_hour,is_closed=is_closed)
-                response = {'status':'success'}
+                hour = OpeningHour.objects.create(
+                    vendor=get_vendor(request),
+                    day=day,
+                    from_hour=from_hour,
+                    to_hour=to_hour,
+                    is_closed=is_closed
+                )
+
+                if hour.is_closed == 'True' or hour.is_closed is True:
+                    response = {
+                        'status': 'success',
+                        'id': hour.id,
+                        'day': hour.get_day_display(), 
+                        'is_closed': True
+                    }
+                else:
+                    response = {
+                        'status': 'success',
+                        'id': hour.id,
+                        'day': hour.get_day_display(), 
+                        'from_hour': from_hour,
+                        'to_hour': to_hour,
+                        'is_closed': False
+                    }
+
                 return JsonResponse(response)
-            except ImportError as e:
-                response = {'status':'failed'}
-                return JsonResponse(response)
-        
+
+            except Exception as e:
+                return JsonResponse({'status': 'failed', 'message': str(e)})
         else:
             return HttpResponse('Invalid request')
-
-    
-
-
+    else:
+        return HttpResponse('Unauthorized', status=401)
