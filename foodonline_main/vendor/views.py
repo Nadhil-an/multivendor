@@ -278,10 +278,12 @@ def add_hour(request):
             to_hour = request.POST.get('to_hour')
             is_closed = request.POST.get('is_closed')
 
+            
+
             try:
                 hour = OpeningHour.objects.create(
                     vendor=get_vendor(request),
-                    day=day,
+                    day=int(day),
                     from_hour=from_hour,
                     to_hour=to_hour,
                     is_closed=is_closed
@@ -291,19 +293,19 @@ def add_hour(request):
                     response = {
                         'status': 'success',
                         'id': hour.id,
-                        'day': hour.get_day_display(), 
+                        'day': hour.get_day_display(),
                         'is_closed': True
                     }
                 else:
                     response = {
                         'status': 'success',
                         'id': hour.id,
-                        'day': hour.get_day_display(), 
+                        'day': hour.get_day_display(),
                         'from_hour': from_hour,
                         'to_hour': to_hour,
                         'is_closed': False
                     }
-
+                    print("Response JSON:", response)
                 return JsonResponse(response)
 
             except Exception as e:
