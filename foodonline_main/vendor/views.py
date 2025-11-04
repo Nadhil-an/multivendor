@@ -278,38 +278,48 @@ def add_hour(request):
             to_hour = request.POST.get('to_hour')
             is_closed = request.POST.get('is_closed')
 
-            
-
             try:
-                hour = OpeningHour.objects.create(
-                    vendor=get_vendor(request),
-                    day=int(day),
-                    from_hour=from_hour,
-                    to_hour=to_hour,
-                    is_closed=is_closed
-                )
+                vendor = get_vendor(request)
+                day = int(day)
+                is_closed = True if  is_closed in ['True','true',True] else False
 
-                if hour.is_closed == 'True' or hour.is_closed is True:
-                    response = {
-                        'status': 'success',
-                        'id': hour.id,
-                        'day': hour.get_day_display(),
-                        'is_closed': True
-                    }
+                if is_closed:
+                    has_open_slots= OpeningHour.objects.filter(vendor=vendor,day=day,is_closed=False).exists()
+                    if has_open_slots:
+                        return JsonResponse({
+                            'status':'failed','message':'Cannot mark as closed — this day already has open time slots!'
+                        })
+                    has_closed_slots = OpeningHour.objects.filter(vendor=vendor,day=day,is_closed=True).exists()
+                    if has_closed_slots:
+                        return JsonResponse({
+                            'status':'failed','message':'This day is already marked as closed!'
+                        })
                 else:
-                    response = {
-                        'status': 'success',
-                        'id': hour.id,
-                        'day': hour.get_day_display(),
-                        'from_hour': from_hour,
-                        'to_hour': to_hour,
-                        'is_closed': False
-                    }
-                    print("Response JSON:", response)
-                return JsonResponse(response)
+                    is_this_day_closed = OpeningHour.objects.filter(vendor=vendor,day=day,is_closed=True).exists()
+                    if is_this_day_closed:
+                        return JsonResponse({
+                            'status':'failed','message':'Cannot add a time slot — this day is marked as closed!'
+                        })
+                    exists = OpeningHour.objects.filter(vendor=vendor,day=day,from_hour=from_hour,to_hour=to_hour,is_closed=False).exists()
+                    if exists:
+                        return JsonResponse({
+                            'status': 'failed',
+                            'message': 'This time slot already exists!'
+                        })
+                    hour = OpeningHour.objects.create(vendor=vendor,day=day,from_hour=from_hour,to_hour=to_hour,is_closed=is_closed)
 
+                response={
+                    'status': 'success',
+                    'id': hour.id,
+                    'day': hour.get_day_display(),
+                    'from_hour': from_hour,
+                    'to_hour': to_hour,
+                    'is_closed': is_closed,
+                }
+                return JsonResponse(response)
             except Exception as e:
-                return JsonResponse({'status': 'failed', 'message': str(e)})
+                return JsonResponse({'status':'failed','message':str(e)})
+
         else:
             return HttpResponse('Invalid request')
     else:

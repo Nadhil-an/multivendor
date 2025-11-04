@@ -242,22 +242,47 @@ $(document).ready(function(){
             'csrfmiddlewaretoken': csrf_token,
         },
         success: function(response) {
-            if (response.status === 'success') {
-                let html = '';
+    if (response.status === 'success') {
+        let html = '';
 
-                if (response.is_closed) {
-                    html = `<tr><td><b>${response.day}</b></td><td>Closed</td><td><a href="#">Remove</a></td></tr>`;
-                } else {
-                    html = `<tr><td><b>${response.day}</b></td><td>${response.from_hour} - ${response.to_hour}</td><td><a href="#">Remove</a></td></tr>`;
-                }
-
-                $('.opening_hours').append(html);
-                $('#opening_hours')[0].reset();
-                Swal.fire({ title: 'Added successfully!', icon: 'success', timer: 1000, showConfirmButton: false });
-            } else {
-                Swal.fire(response.message, '', 'error');
-            }
+        if (response.is_closed) {
+            html = `<tr><td><b>${response.day}</b></td><td>Closed</td><td><a href="#">Remove</a></td></tr>`;
+        } else {
+            html = `<tr><td><b>${response.day}</b></td><td>${response.from_hour} - ${response.to_hour}</td><td><a href="#">Remove</a></td></tr>`;
         }
+
+        // Append new row
+        $('.opening_hours').append(html);
+
+        // ✅ Sort the table rows
+        let rows = $('.opening_hours tr').get();
+        const dayOrder = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+        rows.sort(function(a, b) {
+            const dayA = $(a).find('td:first').text().trim();
+            const dayB = $(b).find('td:first').text().trim();
+
+            const dayDiff = dayOrder.indexOf(dayA) - dayOrder.indexOf(dayB);
+            if (dayDiff !== 0) return dayDiff;
+
+            const timeA = $(a).find('td:nth-child(2)').text().trim().split('-')[0] || '';
+            const timeB = $(b).find('td:nth-child(2)').text().trim().split('-')[0] || '';
+            return timeA.localeCompare(timeB);
+        });
+
+        $.each(rows, function(index, row) {
+            $('.opening_hours').append(row);
+        });
+
+        // ✅ Reset form & show success alert
+        $('#opening_hours')[0].reset();
+        Swal.fire({ title: 'Added successfully!', icon: 'success', timer: 1000, showConfirmButton: false });
+    } else {
+        Swal.fire(response.message, '', 'error');
+    }
+}
+
+
     });
 });
 
