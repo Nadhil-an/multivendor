@@ -60,5 +60,8 @@ class OpeningHour(models.Model):
         
      def __str__(self):
           return self.get_day_display()  
+     @classmethod
+     def get_day_name_from_value(cls, day_value):
+        return dict(cls._meta.get_field('day').choices).get(day_value, 'Unknown Day')
      
      

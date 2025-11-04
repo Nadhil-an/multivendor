@@ -291,8 +291,9 @@ def add_hour(request):
                         })
                     has_closed_slots = OpeningHour.objects.filter(vendor=vendor,day=day,is_closed=True).exists()
                     if has_closed_slots:
+                        day_name =OpeningHour.get_day_name_from_value(day)
                         return JsonResponse({
-                            'status':'failed','message':'This day is already marked as closed!'
+                            'status':'failed','message':f' {day_name} is already marked as closed!'
                         })
                 else:
                     is_this_day_closed = OpeningHour.objects.filter(vendor=vendor,day=day,is_closed=True).exists()
@@ -302,9 +303,10 @@ def add_hour(request):
                         })
                     exists = OpeningHour.objects.filter(vendor=vendor,day=day,from_hour=from_hour,to_hour=to_hour,is_closed=False).exists()
                     if exists:
+                        day_name =OpeningHour.get_day_name_from_value(day)
                         return JsonResponse({
                             'status': 'failed',
-                            'message': 'This time slot already exists!'
+                            'message': f'{day_name} {from_hour} - {to_hour} already exists!'
                         })
                     hour = OpeningHour.objects.create(vendor=vendor,day=day,from_hour=from_hour,to_hour=to_hour,is_closed=is_closed)
 
