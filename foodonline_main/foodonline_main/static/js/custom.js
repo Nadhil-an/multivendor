@@ -281,10 +281,37 @@ $(document).ready(function(){
         Swal.fire(response.message, '', 'error');
     }
 }
-
-
     });
 });
+
+// remove hours
+
+$(document).on('click','.remove_hour',function(e){
+    e.preventDefault();
+
+    var url = $(this).attr('data-url');
+    $.ajax({
+        type:'GET',
+        url:url,
+        success:function(response){
+            if (response.status === 'success') {
+                $('#hour-' + response.id).fadeOut(300, function() {
+                    $(this).remove();
+                });
+                Swal.fire({
+                    title: 'Deleted!',
+                    text: 'Opening hour removed successfully.',
+                    icon: 'success',
+                    timer: 1000,
+                    showConfirmButton: false
+                });
+            }
+        }
+    })
+})
+
+
+
 
 
     
