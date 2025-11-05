@@ -7,7 +7,7 @@ from . context_processor import get_cart_counter,get_cart_amount
 from django.http import JsonResponse,HttpResponse
 from django.db.models import Q
 from django.db.models import Prefetch
-from datetime import date
+from datetime import date,datetime
 
 from django.contrib.gis.db.models.functions import Distance
 from django.contrib.gis.geos import GEOSGeometry
@@ -33,12 +33,45 @@ def marketplace(request):
 #######################
 
 def vendor_details(request,vendor_slug):
-    vendor = get_object_or_404(Vendor,vendor_slug=vendor_slug)
-    opening_hours = OpeningHour.objects.filter(vendor=vendor).order_by('day','-from_hour')
-
-    # getting current day
+     # getting current day
     today_date =date.today()
     today = today_date.isoweekday()
+    now = datetime.now()
+    current_time = now.strftime("%H:%M:%S")
+
+    is_open = None
+    vendor = get_object_or_404(Vendor,vendor_slug=vendor_slug)
+    opening_hours = OpeningHour.objects.filter(vendor=vendor).order_by('day','-from_hour')
+    current_opening_hours = OpeningHour.objects.filter(vendor=vendor,day=today)
+
+
+
+    for i in current_opening_hours:
+        # Convert to time object safely (handles both TimeField and string)
+        if isinstance(i.from_hour, str):
+            try:
+                start_time = datetime.strptime(i.from_hour, "%I:%M:%p").time()
+            except ValueError:
+                start_time = datetime.strptime(i.from_hour, "%H:%M:%S").time()
+        else:
+            start_time = i.from_hour
+
+        if isinstance(i.to_hour, str):
+            try:
+                end_time = datetime.strptime(i.to_hour, "%I:%M:%p").time()
+            except ValueError:
+                end_time = datetime.strptime(i.to_hour, "%H:%M:%S").time()
+        else:
+            end_time = i.to_hour
+
+        now = datetime.now().time()
+
+        if start_time <= now <= end_time and not i.is_closed:
+            is_open = True
+            break
+        else:
+            is_open = False
+
 
     current_opening_hours = OpeningHour.objects.filter(vendor=vendor,day=today)
     category = Category.objects.filter(vendor=vendor).prefetch_related(
@@ -61,6 +94,7 @@ def vendor_details(request,vendor_slug):
         'cart_items_dict': cart_items_dict,
         'opening_hours':opening_hours,
         'current_opening_hours':current_opening_hours,
+        'is_open':is_open,
     }
     return render(request,'marketplace/vendor_details.html',context)
 #######################

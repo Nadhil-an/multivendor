@@ -23,7 +23,7 @@
 											</figure>
 										</div>
 										<div class="text-holder">
-											<span class="restaurant-title">{{ vendor.vendor_name }}</span>
+											<span class="restaurant-title">{{ vendor.vendor_name }} {% if not is_open %} [ Closed ] {% else %} [ Open ] {% endif %}</span>
 											
 										</div>
 									</div>
