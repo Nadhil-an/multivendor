@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="main-section">
-				<div class="page-section restaurant-detail-image-section" style="background: url('{% if vendor.user_profile.cover_photo %}{{ vendor.user_profile.cover_photo.url }}{% else %}{% static 'images/black.jpg' %}{% endif %}') no-repeat center center/cover;"
+				<div class="page-section restaurant-detail-image-section" style="background: url('{% if vendor.user_profile.cover_photo %}{{ vendor.user_profile.cover_photo.url }}{% else %}{% static 'images/black.jpg' %}{% endif %}') no-repeat center center/cover;">
 
 					<!-- Container Start -->
 					<div class="container">
@@ -23,7 +23,7 @@
 											</figure>
 										</div>
 										<div class="text-holder">
-											<span class="restaurant-title">{{ vendor.vendor_name }} {% if not is_open %} [ Closed ] {% else %} [ Open ] {% endif %}</span>
+											<span class="restaurant-title">{{ vendor.vendor_name }} {% if not vendor.is_open %} [ Closed ] {% else %} [ Open ] {% endif %}</span>
 											
 										</div>
 									</div>

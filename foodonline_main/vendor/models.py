@@ -2,10 +2,9 @@ from django.db import models
 from accounts.models import User,UserProfile
 from accounts.utilis import send_approve_mail
 from django.template.defaultfilters import slugify
-from datetime import time
+from datetime import time,datetime,date
 
 # Create your models here.
-
 class Vendor(models.Model):
     user = models.OneToOneField(User, related_name='user', on_delete=models.CASCADE)
     user_profile = models.OneToOneField(UserProfile, related_name='userProfile', on_delete=models.CASCADE)
@@ -18,6 +17,39 @@ class Vendor(models.Model):
 
     def __str__(self):
         return self.vendor_name
+
+    def is_open(self):
+        """Check if the vendor is open based on today's hours."""
+        today = date.today().isoweekday()
+        now = datetime.now().time()
+        current_opening_hours = OpeningHour.objects.filter(vendor=self, day=today)
+
+        for i in current_opening_hours:
+            # Convert stored string time to time object if needed
+            if isinstance(i.from_hour, str):
+                try:
+                    start_time = datetime.strptime(i.from_hour, "%I:%M:%p").time()
+                except ValueError:
+                    start_time = datetime.strptime(i.from_hour, "%H:%M:%S").time()
+            else:
+                start_time = i.from_hour
+
+            if isinstance(i.to_hour, str):
+                try:
+                    end_time = datetime.strptime(i.to_hour, "%I:%M:%p").time()
+                except ValueError:
+                    end_time = datetime.strptime(i.to_hour, "%H:%M:%S").time()
+            else:
+                end_time = i.to_hour
+
+            # Check if the vendor is open now
+            if start_time <= now <= end_time and not i.is_closed:
+                return True  # ✅ vendor is open
+
+        return False  
+
+
+
     def save(self, *args, **kwargs):
             # Auto-generate slug if it doesn't exist
             if not self.vendor_slug and self.user_id:  # ensure user exists

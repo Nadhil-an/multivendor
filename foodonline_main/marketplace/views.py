@@ -31,7 +31,6 @@ def marketplace(request):
 # vendor_details
 #
 #######################
-
 def vendor_details(request,vendor_slug):
      # getting current day
     today_date =date.today()
