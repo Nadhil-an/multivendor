@@ -2,10 +2,12 @@ from django.shortcuts import render,get_object_or_404,redirect
 from vendor.models import Vendor
 from menu.models import Category,FoodItem
 from .models import Cart
+from vendor.models import OpeningHour
 from . context_processor import get_cart_counter,get_cart_amount
 from django.http import JsonResponse,HttpResponse
 from django.db.models import Q
 from django.db.models import Prefetch
+from datetime import date
 
 from django.contrib.gis.db.models.functions import Distance
 from django.contrib.gis.geos import GEOSGeometry
@@ -32,6 +34,13 @@ def marketplace(request):
 
 def vendor_details(request,vendor_slug):
     vendor = get_object_or_404(Vendor,vendor_slug=vendor_slug)
+    opening_hours = OpeningHour.objects.filter(vendor=vendor).order_by('day','-from_hour')
+
+    # getting current day
+    today_date =date.today()
+    today = today_date.isoweekday()
+
+    current_opening_hours = OpeningHour.objects.filter(vendor=vendor,day=today)
     category = Category.objects.filter(vendor=vendor).prefetch_related(
         Prefetch(
             'fooditems',
@@ -49,7 +58,9 @@ def vendor_details(request,vendor_slug):
         'vendor':vendor,
         'category':category,
         'cart_items':cart_items,
-        'cart_items_dict': cart_items_dict
+        'cart_items_dict': cart_items_dict,
+        'opening_hours':opening_hours,
+        'current_opening_hours':current_opening_hours,
     }
     return render(request,'marketplace/vendor_details.html',context)
 #######################
@@ -81,11 +92,11 @@ def add_to_cart(request,food_id=None):
 
     else:
         return JsonResponse({'status':'login_required','message':'Please login to continue'})
-#######################
+########################
 #
 # decrease_cart
 #
-#######################
+########################
 def decrease_cart(request,food_id=None):
     if request.user.is_authenticated:
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
