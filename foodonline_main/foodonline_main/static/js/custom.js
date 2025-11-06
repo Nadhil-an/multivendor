@@ -197,11 +197,12 @@ $(document).ready(function(){
         }
     }
 
-    function applyamount(subtotal,tax,grand_total){
+    function applyamount(subtotal,tax_dict,grand_total){
         if (window.location.pathname = '/cart/'){
             $('#subtotal').html(subtotal)
             $('#tax').html(tax)
             $('#grand_total').html(grand_total)
+            
         }
     }
 
