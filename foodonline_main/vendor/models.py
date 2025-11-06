@@ -44,7 +44,7 @@ class Vendor(models.Model):
 
             # Check if the vendor is open now
             if start_time <= now <= end_time and not i.is_closed:
-                return True  # ✅ vendor is open
+                return True 
 
         return False  
 
