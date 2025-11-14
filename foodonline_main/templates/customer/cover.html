@@ -10,15 +10,20 @@
 								<div class="company-info">
 									<div class="img-holder">
 										<figure>
-											<img src="assets/extra-images/listing-logo18.png" alt="">
+											{% if user_profile.cover_photo %}
+											<img src="{{ user_profile.profile_picture.url }}" alt="cover_photo">
+											{% else %}
+											<img src="images/default.jpg" alt="default_image">
+
+											{% endif %}
 										</figure>
 									</div>
 
 									<div class="text-holder">
-										<span class="restaurant-title">Nadil</span>
+										<span class="restaurant-title">{{ user.first_name}} {{ user.last_name}}</span>
 										<div class="text">
-											<i class="icon-location"></i>
-											<p>Mark ricardo road, lane 27, Austin, Texas, USA.</p>
+											<i class="icon-phone"></i>
+											<p>+91 {{ user.phone_number }}</p>
 										</div>
 									</div>
 								</div>
