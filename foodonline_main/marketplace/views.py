@@ -246,3 +246,6 @@ def search(request):
     }
 
     return render(request, 'marketplace/listing.html', context)
+
+def checkout(request):
+    return render(request,'marketplace/checkout.html')
