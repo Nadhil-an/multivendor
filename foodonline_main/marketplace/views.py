@@ -3,12 +3,15 @@ from vendor.models import Vendor
 from menu.models import Category,FoodItem
 from .models import Cart
 from vendor.models import OpeningHour
+from accounts.models import UserProfile
 from orders.forms import OrderForm
 from . context_processor import get_cart_counter,get_cart_amount
 from django.http import JsonResponse,HttpResponse
 from django.db.models import Q
 from django.db.models import Prefetch
 from datetime import date,datetime
+from django.contrib.auth.decorators import login_required
+
 
 from django.contrib.gis.db.models.functions import Distance
 from django.contrib.gis.geos import GEOSGeometry
@@ -248,14 +251,40 @@ def search(request):
 
     return render(request, 'marketplace/listing.html', context)
 
+
+@login_required(login_url='login')
 def checkout(request):
+    # Fetch the user's cart items
     cart_items = Cart.objects.filter(user=request.user).order_by('created_at')
     cart_count = cart_items.count()
-    if cart_count < 0:
+
+    # If cart is empty, redirect user
+    if cart_count == 0:
         return redirect('marketplace')
-    form = OrderForm()
-    context ={
-        'form':form,
-        'cart_items':cart_items,
+
+    # Get user profile safely
+    user_profile = get_object_or_404(UserProfile, user=request.user)
+
+    # Default values for pre-filled form
+    default_values = {
+        'first_name': request.user.first_name,
+        'last_name': request.user.last_name,
+        'phone': request.user.phone_number,
+        'email': request.user.email,
+        'address': user_profile.address,
+        'country': user_profile.country,
+        'state': user_profile.state,
+        'city': user_profile.city,
+        'pin_code': user_profile.pin_code,
     }
-    return render(request,'marketplace/checkout.html',context)
+
+    # Pre-filled order form
+    form = OrderForm(initial=default_values)
+
+    # Context
+    context = {
+        'form': form,
+        'cart_items': cart_items,
+    }
+
+    return render(request, 'marketplace/checkout.html', context)
