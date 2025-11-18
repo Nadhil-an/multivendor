@@ -86,14 +86,11 @@
                                 </a>
                             </li>
                         </ul>
-
-                        
-
                         <div class="tab-content">
                             <div id="order" class="tab-pane in active">
                                 <div class="menu-item-holder">
                                     <div id="menu-item-list-6272" class="menu-item-list">
-                                        {% if cart_items %}
+                                        
                                         <ul>
                                             {% for cart in cart_items %}
                                             <li id="cart-item-{{cart.id }}"
@@ -121,11 +118,7 @@
                                             </li>
                                             {% endfor %}
                                         </ul>
-                                        {% else %}
-                                        <div class="text-center p-5">
-                                            <h5>Cart is Empty</h5>
-                                        </div>
-                                        {% endif %}
+                                        
                                     </div>
                                     <ul style="padding: 15px;">
                                         <li style="list-style-type: none; margin-bottom: 10px;">
@@ -152,6 +145,20 @@
                                                 ₹<span id="total">{{ grand_total }}</span>
                                             </span>
                                         </li>
+                                        <hr>
+
+                                        <h5>SELECT PAYMENT METHOD</h5>
+                                        <div class="payment-method">
+                                            <label> 
+                                                <input type="radio" name="payment-method" value="PayPal">
+                                                <img src="{% static 'images/PayPal.png' %}" alt="PayPal" width="100">
+                                            </label>
+                                            &emsp;
+                                            <label> 
+                                                <input type="radio" name="payment-method" value="RazorPay">
+                                                <img src="{% static 'images/razorpay.png' %}" alt="RazoRPay" width="100">
+                                            </label>
+                                        </div>
 
                                         <button type="submit" class="btn btn-danger w-100 p-2 mt-3">PLACE ORDER</button>
                                     </ul>
