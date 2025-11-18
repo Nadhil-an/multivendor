@@ -1,1 +1,171 @@
-<h4>checkoutpage</h4>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="main-section">
+    <div class="page-section pt-5">
+        <div class="container">
+            <div class="row">
+
+                <!--  Cart Items -->
+                <div class="col-lg-6 col-md-6 col-sm-8 ">
+                    <div class="tabs-holder horizontal">
+                        <ul class="stickynav-tabs nav nav-tabs">
+                            <li class="active">
+                                <a data-toggle="tab" href="#cart">
+                                    <i class="fa fa-shopping-cart text-danger"></i>  Billing Address
+                                </a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content p-3">
+                            <div id="cart" class="tab-pane in active">
+                                <div class="menu-item-holder">
+                                    <div id="menu-item-list-6272" class="menu-item-list">
+                                        <form action="#" method="POST">
+                                            {% csrf_token %}
+                                            <div class="row">
+                                                <div class="form-group col-md-6 col-sm-12 col-lg-6">
+                                                    First Name: {{ form.first_name }}
+
+                                                </div>
+
+                                                <div class="form-group col-md-6 col-sm-12 col-lg-6">
+                                                    Last Name : {{ form.last_name }}
+                                                    
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                 <div class="form-group col-md-6 col-sm-12 col-lg-6">
+                                                    Email: {{ form.email }}
+                                                </div>
+
+                                                <div class="form-group col-md-6 col-sm-12 col-lg-6">
+                                                    Phone : {{ form.phone }}            
+                                                </div>
+                                            </div>
+
+                                            <div class="row">                   
+                                                <div class="form-group col-md-12 col-sm-12 col-lg-12">
+                                                    Address: {{ form.address }}
+                                                </div>
+                                            </div>
+
+                                            <div class="row">                   
+                                                <div class="form-group col-md-6 col-sm-12 col-lg-6">
+                                                    Country: {{ form.country }}
+                                                </div>
+                                                <div class="form-group col-md-6 col-sm-12 col-lg-6">
+                                                    State: {{ form.state }}
+                                                </div>
+                                            </div>
+
+                                            <div class="row">                   
+                                                <div class="form-group col-md-6 col-sm-12 col-lg-6">
+                                                    City: {{ form.city }}
+                                                </div>
+                                                <div class="form-group col-md-6 col-sm-12 col-lg-6">
+                                                    Pin Code: {{ form.pin_code }}
+                                                </div>
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--  Your Order Summary -->
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="tabs-holder horizontal">
+                        <ul class="stickynav-tabs nav nav-tabs">
+                            <li class="active">
+                                <a data-toggle="tab" href="#order">
+                                    <i class="icon-room_service"></i> Your Order
+                                </a>
+                            </li>
+                        </ul>
+
+                        
+
+                        <div class="tab-content">
+                            <div id="order" class="tab-pane in active">
+                                <div class="menu-item-holder">
+                                    <div id="menu-item-list-6272" class="menu-item-list">
+                                        {% if cart_items %}
+                                        <ul>
+                                            {% for cart in cart_items %}
+                                            <li id="cart-item-{{cart.id }}"
+                                            style="display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee;">
+                                                <div class="image-holder" style="flex: 0 0 80px;">
+                                                    <a href="{{ cart.fooditem.image.url }}">
+                                                        <img src="{{ cart.fooditem.image.url }}"
+                                                            alt="{{ cart.fooditem.food_title }}"
+                                                            style="width: 70px; height: 70px; object-fit: cover; border-radius: 8px;">
+                                                    </a>
+                                                </div>
+
+                                                <div class="text-holder" style="flex: 1; margin-left: 15px;">
+                                                    <h6 style="margin: 0; font-size: 16px;">{{ cart.fooditem.food_title }}</h6>
+                                                    <span style="font-size: 13px; color: #777;">{{ cart.fooditem.description }}</span>
+                                                    <a href="{% url 'vendor_details' cart.fooditem.vendor.vendor_slug%}" class="badge badge-warning">{{ cart.fooditem.vendor }}</a>
+                                                </div>
+
+                                                <div class="price-holder" style="text-align: right;">
+                                                    
+                                                    <div style="margin-top: 5px;">
+                                                        <span class="price">${{ cart.fooditem.price}}</span>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                        {% else %}
+                                        <div class="text-center p-5">
+                                            <h5>Cart is Empty</h5>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    <ul style="padding: 15px;">
+                                        <li style="list-style-type: none; margin-bottom: 10px;">
+                                            Subtotal
+                                            <span class="price float-right">
+                                                ₹<span id="subtotal">{{ subtotal}}</span>
+                                            </span>
+                                        </li>
+
+                                        {% for key, value in tax_dict.items %}
+                                           {% for i,j in value.items %}
+                                        <li style="list-style-type: none; margin-bottom: 10px;">
+                                            {{ key }} <small>({{ i }}%)</small>
+                                            <span class="price float-right">
+                                                <span class="currency"></span>
+                                                ₹<span id="tax-{{key}}">{{ j }}</span>
+                                            </span>
+                                        </li>
+                                        {% endfor %}
+                                        {% endfor %}
+                                        <li style="list-style-type: none; font-weight: 600;">
+                                            TOTAL
+                                            <span class="price float-right">
+                                                ₹<span id="total">{{ grand_total }}</span>
+                                            </span>
+                                        </li>
+
+                                        <button type="submit" class="btn btn-danger w-100 p-2 mt-3">PLACE ORDER</button>
+                                    </ul>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div> <!--  row closed properly here -->
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

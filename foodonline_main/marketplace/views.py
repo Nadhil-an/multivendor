@@ -3,6 +3,7 @@ from vendor.models import Vendor
 from menu.models import Category,FoodItem
 from .models import Cart
 from vendor.models import OpeningHour
+from orders.forms import OrderForm
 from . context_processor import get_cart_counter,get_cart_amount
 from django.http import JsonResponse,HttpResponse
 from django.db.models import Q
@@ -248,4 +249,13 @@ def search(request):
     return render(request, 'marketplace/listing.html', context)
 
 def checkout(request):
-    return render(request,'marketplace/checkout.html')
+    cart_items = Cart.objects.filter(user=request.user).order_by('created_at')
+    cart_count = cart_items.count()
+    if cart_count < 0:
+        return redirect('marketplace')
+    form = OrderForm()
+    context ={
+        'form':form,
+        'cart_items':cart_items,
+    }
+    return render(request,'marketplace/checkout.html',context)
