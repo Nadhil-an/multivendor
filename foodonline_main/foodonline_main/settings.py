@@ -162,8 +162,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 #Google map api
-GOOGLE_API_KEY = 'AIzaSyDjN20zspuKLchIPTS6GpiCVmeiZVjgKPo'
-
+GOOGLE_API_KEY = config('GOOGLE_API')
 
 
 
@@ -181,3 +180,8 @@ DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
 os.environ['PATH'] = os.path.join(BASE_DIR.parent, 'env', 'Lib', 'site-packages', 'osgeo') + ';' + os.environ['PATH']
 os.environ['PROJ_LIB'] = os.path.join(BASE_DIR.parent, 'env', 'Lib', 'site-packages', 'osgeo', 'data', 'proj')
 GDAL_LIBRARY_PATH = os.path.join(BASE_DIR.parent, 'env', 'Lib', 'site-packages', 'osgeo', 'gdal.dll')
+
+
+
+#PAYPAL API
+PAYPAL_ID = config('PAYPAL_CLIENTID')
