@@ -42,7 +42,7 @@ def place_order(request):
             order.save()
             context = {
                 'order':order,
-                'cart_items':cart_items
+                'cart_items':cart_items,
             }
             return render(request,'orders/place_order.html',context)
         else:

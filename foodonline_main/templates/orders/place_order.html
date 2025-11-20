@@ -23,6 +23,17 @@
                             <div id="cart" class="tab-pane in active">
                                 <div class="menu-item-holder">
                                     <div id="menu-item-list-6272" class="menu-item-list">
+                                        <div class="billing-address">
+                                            <div><b>{{ order.name}}</b></div>
+                                            <div>{{ order.address }}</div>
+                                            <div>{{ order.city}} -  {{ order.pin_code}}</div>
+                                            <div>{{ order.state}} - {{ order.country}}</div>
+                                            <div><b>Phone:</b>{{ order.phone }}</div>
+                                            <div><b>Email:</b>{{ order.email }}</div>
+                                            <div><b>Payment:</b>{{ order.payment_method }}</div>
+                                            <br>
+                                            <div><a href="{% url 'checkout' %}" class="btn btn-outline-danger">Edit</a></div>
+                                        </div> 
 
                                     </div>
                                 </div>
@@ -45,34 +56,10 @@
                             <div id="order" class="tab-pane in active">
                                 <div class="menu-item-holder">
                                     <div id="menu-item-list-6272" class="menu-item-list">
+
                                         
-                                        <ul>
-                                            {% for cart in cart_items %}
-                                            <li id="cart-item-{{cart.id }}"
-                                            style="display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee;">
-                                                <div class="image-holder" style="flex: 0 0 80px;">
-                                                    <a href="{{ cart.fooditem.image.url }}">
-                                                        <img src="{{ cart.fooditem.image.url }}"
-                                                            alt="{{ cart.fooditem.food_title }}"
-                                                            style="width: 70px; height: 70px; object-fit: cover; border-radius: 8px;">
-                                                    </a>
-                                                </div>
-
-                                                <div class="text-holder" style="flex: 1; margin-left: 15px;">
-                                                    <h6 style="margin: 0; font-size: 16px;">{{ cart.fooditem.food_title }}</h6>
-                                                    <span style="font-size: 13px; color: #777;">{{ cart.fooditem.description }}</span>
-                                                    <a href="{% url 'vendor_details' cart.fooditem.vendor.vendor_slug%}" class="badge badge-warning">{{ cart.fooditem.vendor }}</a>
-                                                </div>
-
-                                                <div class="price-holder" style="text-align: right;">
-                                                    
-                                                    <div style="margin-top: 5px;">
-                                                        <span class="price">${{ cart.fooditem.price}}</span>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            {% endfor %}
-                                        </ul>
+                                        
+                    
                                         
                                     </div>
                                     <ul style="padding: 15px;">
@@ -100,10 +87,7 @@
                                                 ₹<span id="total">{{ grand_total }}</span>
                                             </span>
                                         </li>
-                                        <hr>
-
-                                        
-                                        
+                                        <hr>     
                                         <span class="text-danger" id="payment-method-error"></span>
 
                                         <div id="paypal-button-container"></div>
