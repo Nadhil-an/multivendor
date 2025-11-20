@@ -1,4 +1,5 @@
 from django.shortcuts import render,redirect
+from django.http import HttpResponse    
 from marketplace.models import Cart
 from marketplace.context_processor import get_cart_amount
 from . forms import OrderForm
@@ -39,7 +40,14 @@ def place_order(request):
             order.save()
             order.order_number = generate_order_number(order.id)
             order.save()
-            return redirect('place_order')
+            context = {
+                'order':order,
+                'cart_items':cart_items
+            }
+            return render(request,'orders/place_order.html',context)
         else:
             print(form.errors)
     return render(request,'orders/place_order.html')
+
+def payments(request):
+    return HttpResponse('Payments view')

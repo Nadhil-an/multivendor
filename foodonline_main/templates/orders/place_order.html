@@ -120,8 +120,26 @@
     </div>
 </div>
 <script>
+    function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + "=")) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+    }
+
+    const csrfToken = getCookie("csrftoken");
     // Render the PayPal button into #paypal-button-container
     var total_amount = "{{ grand_total }}"
+    var url = "{% url 'payments' %}"
+    var order_number = "{{ order.order_number }}"
     paypal.Buttons({
 
         // Set up the transactionx
@@ -139,15 +157,36 @@
         onApprove: function(data, actions) {
             return actions.order.capture().then(function(orderData) {
                 // Successful capture!
-                console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+                console.log(orderData);
                 var transaction = orderData.purchase_units[0].payments.captures[0];
-                alert('Transaction ' + transaction.status + ': ' + transaction.id +
-                    '\n\nSee console for all available details');
+                var transaction_id = transaction.id
+                var status = orderData.status
+                var payment_method = 'PayPal'
+                sendTransaction(transaction_id,payment_method,status)
+                console.log(transaction.id);
             });
         }
 
     }).render('#paypal-button-container');
-</script>+
+
+    function sendTransaction(transaction_id,payment_method,status){
+        $.ajax({
+            type:'POST',
+            url:url,
+            data :{
+                'order_number':order_number,
+                'transaction_id':transaction_id,
+                'payment_method':payment_method,
+                'status':status,
+                'csrfmiddlewaretoken':csrfToken
+            },
+            success: function(response){
+                console.log('response==>',response);
+            }
+        })
+    }
+
+</script>
 
 
 
