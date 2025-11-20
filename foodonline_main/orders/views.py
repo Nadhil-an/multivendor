@@ -3,9 +3,10 @@ from django.http import HttpResponse
 from marketplace.models import Cart
 from marketplace.context_processor import get_cart_amount
 from . forms import OrderForm
-from . models import  Order
+from . models import  Order,Payment
 import simplejson   as json
 from . utlis import generate_order_number
+
 # Create your views here.
 def place_order(request):
     cart_items = Cart.objects.filter(user=request.user).order_by('created_at')
@@ -50,4 +51,38 @@ def place_order(request):
     return render(request,'orders/place_order.html')
 
 def payments(request):
+    #check if the request is ajax or not
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest' and request.method == 'POST':
+        order_number = request.POST.get('order_number')
+        transaction_id = request.POST.get('transaction_id')
+        payment_method = request.POST.get('payment_method')
+        status = request.POST.get('status')
+
+        order = order.objects.get(user=request.user,order_number=order_number)
+        payment = Payment(
+            user=request.user,
+            transaction_id=transaction_id,
+            payment_method=payment_method,
+            amount =order.total,
+            status=status
+        )
+        payment.save()
+    #update the order model
+    order.payment = payment
+    order.is_ordered = True
+    order.save()
+
+
+
+    #move the cart items to ordered food models
+
+
+    #send confirmation email  to the customer
+
+
+    #send order recieve email to vendor
+
+    #clear the cart if the payment is success
+
+    #return back to ajax  with the status success or failure
     return HttpResponse('Payments view')
