@@ -189,7 +189,4 @@ GDAL_LIBRARY_PATH = os.path.join(BASE_DIR.parent, 'env', 'Lib', 'site-packages',
 PAYPAL_ID = config('PAYPAL_CLIENTID')
 
 
-SECURE_CROSS_ORIGIN_OPENER_POLICY = None
-SECURE_CROSS_ORIGIN_EMBEDDER_POLICY = None
-SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
 SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"

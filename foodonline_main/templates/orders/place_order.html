@@ -120,37 +120,33 @@
     </div>
 </div>
 <script>
-paypal.Buttons({
+    // Render the PayPal button into #paypal-button-container
+    paypal.Buttons({
 
-    createOrder: function (data, actions) {
-        return fetch("/create-order/", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": "{{ csrf_token }}"
-            }
-        })
-        .then(res => res.json())
-        .then(data => data.id);
-    },
+        // Set up the transaction
+        createOrder: function(data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: '88.44'
+                    }
+                }]
+            });
+        },
 
-    onApprove: function (data, actions) {
-        return fetch(`/capture-order/${data.orderID}/`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": "{{ csrf_token }}"
-            }
-        })
-        .then(res => res.json())
-        .then(order => {
-            console.log(order);
-            alert("Payment Successful!");
-        });
-    }
+        // Finalize the transaction
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(function(orderData) {
+                // Successful capture!
+                console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+                var transaction = orderData.purchase_units[0].payments.captures[0];
+                alert('Transaction ' + transaction.status + ': ' + transaction.id +
+                    '\n\nSee console for all available details');
+            });
+        }
 
-}).render('#paypal-button-container');
-</script>
+    }).render('#paypal-button-container');
+</script>+
 
 
 
