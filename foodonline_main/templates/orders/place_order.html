@@ -102,21 +102,11 @@
                                         </li>
                                         <hr>
 
-                                        <h5>SELECT PAYMENT METHOD</h5>
-                                        <div class="payment-method">
-                                            <label> 
-                                                <input type="radio" name="payment_method" value="PayPal">
-                                                <img src="{% static 'images/PayPal.png' %}" alt="PayPal" width="100">
-                                            </label>
-                                            &emsp;
-                                            <label> 
-                                                <input type="radio" name="payment_method" value="RazorPay">
-                                                <img src="{% static 'images/razorpay_logo.png' %}" alt="RazorPay" width="100">
-                                            </label>
-                                        </div>
+                                        
+                                        
                                         <span class="text-danger" id="payment-method-error"></span>
 
-                                        <button onclick="return payMethodConfirm()" type="submit" class="btn btn-danger w-100 p-2 mt-3">PLACE ORDER</button>
+                                        <div id="paypal-button-container"></div>
                                     </ul>
                                     </form>
                                 </div>
@@ -129,6 +119,39 @@
         </div>
     </div>
 </div>
+<script>
+paypal.Buttons({
+
+    createOrder: function (data, actions) {
+        return fetch("/create-order/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}"
+            }
+        })
+        .then(res => res.json())
+        .then(data => data.id);
+    },
+
+    onApprove: function (data, actions) {
+        return fetch(`/capture-order/${data.orderID}/`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}"
+            }
+        })
+        .then(res => res.json())
+        .then(order => {
+            console.log(order);
+            alert("Payment Successful!");
+        });
+    }
+
+}).render('#paypal-button-container');
+</script>
+
 
 
 

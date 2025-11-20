@@ -18,3 +18,7 @@ def get_user_profile(request):
     except:
         user_profile=None
     return dict(user_profile=user_profile)
+
+
+def paypal_button(request):
+    return {'paypal_button': settings.PAYPAL_ID}
