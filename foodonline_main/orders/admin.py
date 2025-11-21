@@ -1,9 +1,9 @@
 from django.contrib import admin
-from . models import Payment,Order,OrderedFood
+from .models import Payment, Order, OrderedFood
 
 
 class OrderFoodInline(admin.TabularInline):
-    models = OrderedFood
+    model = OrderedFood
     readonly_fields = ('order','payment','user','fooditem','quantity','price','amount')
     extra = 0
 
@@ -11,7 +11,16 @@ class OrderFoodInline(admin.TabularInline):
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['order_number','name','phone','email','total','payment_method','status','is_ordered']
     inlines = [OrderFoodInline]
-# Register your models here.
-admin.site.register(Payment)
-admin.site.register(Order)
-admin.site.register(OrderedFood)
+
+
+@admin.register(Payment)
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = ['user', 'transaction_id', 'payment_method', 'amount', 'status']
+
+
+@admin.register(OrderedFood)
+class OrderedFoodAdmin(admin.ModelAdmin):
+    list_display = ['order', 'fooditem', 'quantity', 'price', 'amount']
+
+
+admin.site.register(Order, OrderAdmin)
