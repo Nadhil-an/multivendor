@@ -8,6 +8,9 @@ import simplejson as json
 from .utlis import generate_order_number
 from accounts.utilis import send_notification
 from django.contrib.auth.decorators import login_required
+from marketplace.models import Cart
+from django.http import JsonResponse
+
 
 @login_required(login_url='login')
 def place_order(request):
@@ -81,7 +84,7 @@ def payments(request):
         order.save()
 
         # Move cart items to OrderedFood
-        cart_items = Cart.objects.filter(user=request.user)
+        cart_items = list(Cart.objects.filter(user=request.user))
         for item in cart_items:
             ordered_food = OrderedFood()
             ordered_food.order = order
@@ -92,16 +95,37 @@ def payments(request):
             ordered_food.price = item.fooditem.price
             ordered_food.amount = item.fooditem.price * item.quantity
             ordered_food.save()
-        #send order confirmation email to customer
-        mail_subject = 'Thank you for ordering with us.'
-        mail_template = 'orders/order_confirmation_email.html'
-        context = {
-            'user':request.user,
-            'order':order,
-            'to_email':order.email, 
-        }
-        send_notification(mail_subject,mail_template,context)
+        # #send order confirmation email to customer
+        # mail_subject = 'Thank you for ordering with us.'
+        # mail_template = 'orders/order_confirmation_email.html'
+        # context = {
+        #     'user':request.user,
+        #     'order':order,
+        #     'to_email':order.email, 
+        # }
+        # send_notification(mail_subject,mail_template,context)
 
         #send order recieve email to vendor
+        # mail_subject ='You have recieved a new order'
+        # mail_template = 'orders/new_order_recieved.html'
+        # to_emails = []
+        # for i in cart_items:
+        #     if i.fooditem.vendor.user.email not in to_emails:
+        #         to_emails.append(i.fooditem.vendor.user.email)
+        # context ={
+        #     'order':order,
+        #     'to_email':to_emails
+        # }
+        # send_notification(mail_subject,mail_template,context)
 
-    return HttpResponse('Payments view')
+        #delete cart_items
+        response = {
+            'transaction_id':transaction_id,
+            'order_number':order_number,
+        }
+        return JsonResponse(response)
+
+def order_complete(request):
+    return render(request,'orders/order_complete.html')
+
+    
