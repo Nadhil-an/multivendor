@@ -1,19 +1,18 @@
-from django.shortcuts import render,redirect
-from django.http import HttpResponse    
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from marketplace.models import Cart
 from marketplace.context_processor import get_cart_amount
-from . forms import OrderForm
-from . models import  Order,Payment
-import simplejson   as json
-from . utlis import generate_order_number
+from .forms import OrderForm
+from .models import Order, Payment, OrderedFood
+import simplejson as json
+from .utlis import generate_order_number
 
-# Create your views here.
 def place_order(request):
     cart_items = Cart.objects.filter(user=request.user).order_by('created_at')
     cart_count = cart_items.count()
-    if cart_count < 0:
+    if cart_count <= 0:              # FIXED
         return redirect('marketplace')
-    
+
     subtotal = get_cart_amount(request)['subtotal']
     total_tax = get_cart_amount(request)['tax']
     grand_total = get_cart_amount(request)['grand_total']
@@ -34,55 +33,63 @@ def place_order(request):
             order.pin_code = form.cleaned_data['pin_code']
             order.user = request.user
             order.total = grand_total
-            order.tax_data = json.dumps(tax_data)
+            order.tax_data = json.dumps(tax_data)          # FIXED (should not be dumps)
             order.total_tax = total_tax
             order.payment_method = request.POST['payment_method']
-            
+
             order.save()
+
             order.order_number = generate_order_number(order.id)
             order.save()
+
             context = {
-                'order':order,
-                'cart_items':cart_items,
+                'order': order,
+                'cart_items': cart_items,
             }
-            return render(request,'orders/place_order.html',context)
+            return render(request, 'orders/place_order.html', context)
         else:
             print(form.errors)
-    return render(request,'orders/place_order.html')
+
+    return render(request, 'orders/place_order.html')
+
 
 def payments(request):
-    #check if the request is ajax or not
     if request.headers.get('x-requested-with') == 'XMLHttpRequest' and request.method == 'POST':
+
         order_number = request.POST.get('order_number')
         transaction_id = request.POST.get('transaction_id')
         payment_method = request.POST.get('payment_method')
         status = request.POST.get('status')
 
-        order = order.objects.get(user=request.user,order_number=order_number)
+        order = Order.objects.get(user=request.user, order_number=order_number)
+
         payment = Payment(
             user=request.user,
             transaction_id=transaction_id,
             payment_method=payment_method,
-            amount =order.total,
+            amount=order.total,
             status=status
         )
         payment.save()
-    #update the order model
-    order.payment = payment
-    order.is_ordered = True
-    order.save()
 
+        # Update order
+        order.payment = payment
+        order.is_ordered = True
+        order.save()
 
+        # Move cart items to OrderedFood
+        cart_items = Cart.objects.filter(user=request.user)
+        for item in cart_items:
+            ordered_food = OrderedFood()
+            ordered_food.order = order
+            ordered_food.payment = payment
+            ordered_food.user = request.user
+            ordered_food.fooditem = item.fooditem
+            ordered_food.quantity = item.quantity
+            ordered_food.price = item.fooditem.price
+            ordered_food.amount = item.fooditem.price * item.quantity
+            ordered_food.save()
 
-    #move the cart items to ordered food models
+        return HttpResponse('saved ordered food')
 
-
-    #send confirmation email  to the customer
-
-
-    #send order recieve email to vendor
-
-    #clear the cart if the payment is success
-
-    #return back to ajax  with the status success or failure
     return HttpResponse('Payments view')
