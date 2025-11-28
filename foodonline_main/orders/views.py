@@ -4,7 +4,7 @@ from marketplace.models import Cart
 from marketplace.context_processor import get_cart_amount
 from .forms import OrderForm
 from .models import Order, Payment, OrderedFood
-import simplejson as json
+import simplejson" as json
 from .utlis import generate_order_number
 from accounts.utilis import send_notification
 from django.contrib.auth.decorators import login_required
