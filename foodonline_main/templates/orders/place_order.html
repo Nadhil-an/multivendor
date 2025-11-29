@@ -177,6 +177,19 @@
         "description": "Foodonline - Multi Vendor Resturant Marketplace",
         "image": "{% static 'logo/foodonlineLogo.png' %}",
         "order_id": "{{ rzp_id }}", // This is a sample Order ID. Replace with actual order_id from backend
+        "handler":function(response){
+            const element = document.getElementById('rzp_payment_button')
+            element.innerHTML ='';
+            element.innerHTML ='<h4 class="text-center"><i class="fa fa-spinner fa-spin"></i>Please Wait.....</h4>'
+            var transaction_id = response.razorpay_payment_id
+            var payment_method = 'RazorPay'
+            var status = 'Success'
+            sendTransaction(transaction_id,payment_method,status)
+
+        },
+
+
+
         "callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
         "prefill": {  // Prefill customer info
             "name": "{{ order.name}}",
