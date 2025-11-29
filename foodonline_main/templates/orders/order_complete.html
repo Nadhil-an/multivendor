@@ -1,110 +1,125 @@
 {% extends 'base.html' %}
 {% load static %}
 
-
 {% block content %}
 
 <div class="container mt-5 mb-5">
-    <div class="justify-content-center row">
-        <div class="col-md-8">
-            <div class="bg-white p-3">
-                <img src="{% static 'logo/foodonlineLogo.png'%}" alt="foodonline Logo" width="300">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="bg-white p-4">
+
+                <img src="{% static 'logo/foodonlineLogo.png' %}" width="250" class="mb-3">
+
+                <!-- HEADER -->
                 <div class="row">
                     <div class="col-md-6">
-                        <h4 class="mt-2 mb-3">Thank you for your order.</h4>
+                        <h4>Thank you for your order.</h4>
                     </div>
                     <div class="col-md-6 text-right">
-                        <p class="mb-0">{{ order.name }}</p>
+                        <p class="mb-0"><b>{{ order.name }}</b></p>
                         <p class="mb-0">{{ order.address }}</p>
                         <p class="mb-0">{{ order.phone }}</p>
-                        <p class="mb-0">{{ order.email}}</p>
+                        <p class="mb-0">{{ order.email }}</p>
                     </div>
                 </div>
-                
-                <h6>Hello {{order.name}},</h6><span>Review your order details below.</span>
+
                 <hr>
 
+                <h6>Hello {{ order.name }},</h6>
+                <p>Review your order details below.</p>
+
+                <!-- ORDER INFO -->
+                <div class="row text-center mb-3">
+                    <div class="col-md-3">
+                        <span class="d-block">Order Date:</span>
+                        <b>{{ order.created_at }}</b>
+                    </div>
+                    <div class="col-md-3">
+                        <span class="d-block">Order No:</span>
+                        <b>{{ order.order_number }}</b>
+                    </div>
+                    <div class="col-md-3">
+                        <span class="d-block">Payment Method:</span>
+                        <b>{{ order.payment_method }}</b>
+                    </div>
+                    <div class="col-md-3">
+                        <span class="d-block">Transaction ID:</span>
+                        <b>{{ order.payment.transaction_id }}</b>
+                    </div>
+                </div>
+
+                <hr>
+
+                <!-- ORDERED ITEMS TABLE -->
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Item</th>
+                            <th>Qty</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for item in ordered_food %}
+                        <tr>
+                            <td><img src="{{ item.fooditem.image.url }}" width="40"></td>
+                            <td>
+                                {{ item.fooditem }}
+                                <br>
+                                <small class="text-muted">{{ item.fooditem.vendor.vendor_name }}</small>
+                            </td>
+                            <td>{{ item.quantity }}</td>
+                            <td>₹{{ item.fooditem.price }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <!-- PAYMENT SUMMARY -->
+                <div class="row mt-4">
+                    <div class="col-md-6 text-center">
+                        <img src="{% static 'image/paid.png' %}" width="200">
+                    </div>
+
+                    <div class="col-md-6">
+                        <ul class="list-unstyled">
+                            <li class="mb-2">
+                                Subtotal
+                                <span class="float-right">₹{{ subtotal }}</span>
+                            </li>
+
+                            {% for key, value in tax_data.items %}
+                                {% for rate, amount in value.items %}
+                                    <li class="mb-2">
+                                        {{ key }} ({{ rate }}%)
+                                        <span class="float-right">₹{{ amount }}</span>
+                                    </li>
+                                {% endfor %}
+                            {% endfor %}
+
+                            <li class="font-weight-bold">
+                                TOTAL
+                                <span class="float-right">₹{{ order.total }}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <hr>
+
+                <!-- FOOTER -->
                 <div class="d-flex justify-content-between">
                     <div>
-                        <span class="d-block">Order Date:</span><span class="font-weight-bold">{{ order.created_at}}</span>
-                    </div>
-                    <div>
-                        <span class="d-block">Order No:</span><span class="font-weight-bold">{{ order.order_number}}</span>
-                    </div>
-                    <div>
-                        <span class="d-block">Payment Method:</span><span class="font-weight-bold">{{ order.payment_method}}</span>
-                    </div>
-                    <div>
-                        <span class="d-block">Transaction ID:</span><span class="font-weight-bold">{{ order.payment.transaction_id}}</span>
-                    </div>
-                    <div>
-                        <span class="d-block">Order Date:</span><span class="font-weight-bold">{{ order.created_at}}</span>
-                    </div>
-                    <hr>
-                    <table class="table">
-                        <tbody>
-                            {% for item in ordered_food %}
-                            <tr>
-                                <td><img src="{{ item.fooditem.image.url }}" alt="Food Image" width="40"></td>
-                                <td>
-                                    <p class="mb-0">{{ item.fooditem }}</p>
-                                    <a class="text-muted" href="{% url 'vendor_detail' item.fooditem.vendor.vendor_slug %}">{{ item.fooditem.vendor.vendor_name}}</a>
-                                
-                                
-                                </td>
-                                <td>{{ item.quantity }}qty</td>
-                                <td>${{ item.fooditem.price }}</td>
-                            </tr>
-                            {% endfor%}
-                        </tbody>
-                    </table>
-
-                    <div class="row mt-5">
-                        <div class="d-flex justify-content-center col-md-6">
-                            <img src="{% static 'image/paid.png'%}" alt="" width="200">
-                        </div>
-                        <div class="col-md-6">
-                            <ul style="padding: 15px;">
-                                        <li style="list-style-type: none; margin-bottom: 10px;">
-                                            Subtotal
-                                            <span class="price float-right">
-                                                ₹<span id="subtotal">{{ subtotal}}</span>
-                                            </span>
-                                        </li>
-
-                                        {% for key, value in tax_data.items %}
-                                           {% for i,j in value.items %}
-                                        <li style="list-style-type: none; margin-bottom: 10px;">
-                                            {{ key }} <small>({{ i }}%)</small>
-                                            <span class="price float-right">
-                                                <span class="currency"></span>
-                                                ₹<span id="tax-{{key}}">{{ j }}</span>
-                                            </span>
-                                        </li>
-                                        {% endfor %}
-                                        {% endfor %}
-                                        <li style="list-style-type: none; font-weight: 600;">
-                                            TOTAL
-                                            <span class="price float-right">
-                                                ₹<span id="total">{{ order.total }}</span>
-                                            </span>
-                                        </li>
-                                        <hr>     
-                                        <span class="text-danger" id="payment-method-error"></span>
-                                    </ul>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <span class="d-block font-weight-bold">Thanks for ordering with us.</span>
-                            <span>Foodonline Team</span>
-                        </div>
-                        <div class="d-flex justify-content-end align-items-end"></div>
-                        <span class="d-block font-weight-bold">Need help?</span>
-                        <span>Call - +91 0001234232</span>
+                        <strong>Thanks for ordering with us.</strong><br>
+                        FoodOnline Team
                     </div>
 
+                    <div class="text-right">
+                        <strong>Need help?</strong><br>
+                        Call - +91 0001234232
+                    </div>
                 </div>
 
             </div>
@@ -112,9 +127,4 @@
     </div>
 </div>
 
-
-
-
-
-
-{% endblock%}
+{% endblock %}

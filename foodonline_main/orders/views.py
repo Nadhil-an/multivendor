@@ -4,7 +4,7 @@ from marketplace.models import Cart
 from marketplace.context_processor import get_cart_amount
 from .forms import OrderForm
 from .models import Order, Payment, OrderedFood
-import simplejson" as json
+import simplejson as json
 from .utlis import generate_order_number
 from accounts.utilis import send_notification
 from django.contrib.auth.decorators import login_required
@@ -128,27 +128,32 @@ def payments(request):
 def order_complete(request):
     order_number = request.GET.get('order_no')
     transaction_id = request.GET.get('transaction_id')
+
     try:
-     order = Order.objects.get(order_number=order_number,payment_transaction=transaction_id,is_ordered=True)
-     ordered_food = OrderedFood.objects.filter(order=order)
-     subtotal = 0
-     for item in ordered_food:
-         subtotal += (item.price * item.quantity)
-    
-    
+        order = Order.objects.get(
+            order_number=order_number,
+            payment__transaction_id=transaction_id,
+            is_ordered=True
+        )
 
-     tax_data = json.load(order.tax_data) 
-     context = {
-         'order':order,
-         'ordered_food':ordered_food,
-         'subtotal':subtotal,
-         'tax_data':tax_data,
-     }
+        ordered_food = OrderedFood.objects.filter(order=order)
 
-    
-        
-     return render(request,'orders/order_complete.html',context)
-    except:
+        subtotal = sum(item.price * item.quantity for item in ordered_food)
+
+        tax_data = order.tax_data
+
+
+        context = {
+            'order': order,
+            'ordered_food': ordered_food,
+            'subtotal': subtotal,
+            'tax_data': tax_data,
+        }
+
+        return render(request, 'orders/order_complete.html', context)
+
+    except Order.DoesNotExist:
         return redirect('home')
+
 
     
