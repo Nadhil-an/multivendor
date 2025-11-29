@@ -1,22 +1,23 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import JsonResponse,HttpResponse
+from django.contrib.auth.decorators import login_required
 from marketplace.models import Cart
 from marketplace.context_processor import get_cart_amount
 from .forms import OrderForm
 from .models import Order, Payment, OrderedFood
-import simplejson as json
 from .utlis import generate_order_number
-from accounts.utilis import send_notification
-from django.contrib.auth.decorators import login_required
-from marketplace.models import Cart
-from django.http import JsonResponse
+import simplejson as json
+from django.conf import settings
+import requests
+from requests.auth import HTTPBasicAuth
 
 
 @login_required(login_url='login')
 def place_order(request):
+
     cart_items = Cart.objects.filter(user=request.user).order_by('created_at')
     cart_count = cart_items.count()
-    if cart_count <= 0:              # FIXED
+    if cart_count <= 0:
         return redirect('marketplace')
 
     subtotal = get_cart_amount(request)['subtotal']
@@ -27,6 +28,8 @@ def place_order(request):
     if request.method == 'POST':
         form = OrderForm(request.POST)
         if form.is_valid():
+
+            # ---------------- SAVE ORDER ----------------
             order = Order()
             order.first_name = form.cleaned_data['first_name']
             order.last_name = form.cleaned_data['last_name']
@@ -38,25 +41,64 @@ def place_order(request):
             order.city = form.cleaned_data['city']
             order.pin_code = form.cleaned_data['pin_code']
             order.user = request.user
-            order.total = grand_total
-            order.tax_data = json.dumps(tax_data)          # FIXED (should not be dumps)
+            order.total = float(grand_total)           # Ensure float
+            order.tax_data = json.dumps(tax_data)
             order.total_tax = total_tax
             order.payment_method = request.POST['payment_method']
 
             order.save()
-
             order.order_number = generate_order_number(order.id)
             order.save()
+            # -----------------------------------------------------
+
+            # ---------------- RAZORPAY ORDER CREATION ----------------
+            amount_value = float(order.total)
+
+            DATA = {
+                "amount": int(amount_value * 100),    # Convert rupees → paisa
+                "currency": "INR",
+                "receipt": order.order_number,
+                "notes": {
+                    "customer": order.first_name
+                }
+            }
+
+            print("\nRAZORPAY DATA =>", DATA)
+
+            # --- Manual API call (bypassing SDK) ---
+            response = requests.post(
+                "https://api.razorpay.com/v1/orders",
+                auth=HTTPBasicAuth(settings.RZP_KEY_ID, settings.RZP_KEY_SECRET),
+                json=DATA
+            )
+
+            print("\nRAZORPAY RAW RESPONSE =>", response.text)
+
+            rzp_data = response.json()
+
+            if "error" in rzp_data:
+                return HttpResponse("Razorpay Error: " + str(rzp_data["error"]), status=400)
+
+            rzp_id = rzp_data["id"]
+            # ---------------------------------------------------------------------
 
             context = {
                 'order': order,
                 'cart_items': cart_items,
+                'rzp_id': rzp_id,
+                'RZP_KEY_ID': settings.RZP_KEY_ID,
+                'subtotal': subtotal,
+                'tax_dict': tax_data,
+                'grand_total': grand_total
             }
+
             return render(request, 'orders/place_order.html', context)
+
         else:
-            print(form.errors)
+            print("FORM ERRORS =>", form.errors)
 
     return render(request, 'orders/place_order.html')
+
 
 @login_required(login_url='login')
 def payments(request):

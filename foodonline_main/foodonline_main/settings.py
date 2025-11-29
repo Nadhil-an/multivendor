@@ -191,5 +191,8 @@ PAYPAL_ID = config('PAYPAL_CLIENTID')
 
 SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
 
+#razorpay integration
+
+
 RZP_KEY_ID = config('RZP_KEY_ID')
 RZP_KEY_SECRET = config('RZP_KEY_SECRET')
