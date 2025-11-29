@@ -90,7 +90,14 @@
                                         <hr>     
                                         <span class="text-danger" id="payment-method-error"></span>
 
-                                        <div id="paypal-button-container"></div>
+                                        {% if order.payment_method == "PayPal" %}
+                                            <div id="paypal-button-container"></div>
+
+                                        {% elif order.payment_method == "RazorPay" %}
+                                            <button class="btn btn-danger w-100">Pay with Razorpay</button>
+
+                                        {% endif %}
+
                                     </ul>
                                     </form>
                                 </div>
