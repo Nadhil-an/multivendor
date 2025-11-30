@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from accounts.forms import UserProfileForm,UserInfoForm
 from accounts.models import UserProfile
 from django.contrib import messages
+from orders.models import Order
 # Create your views here.
 @login_required(login_url='login')
 def cprofile(request):
@@ -30,3 +31,12 @@ def cprofile(request):
     }
 
     return render(request,'customer/cprofile.html',context)
+
+def order_details(request):
+    recent_orders = Order.objects.filter(user=request.user,is_ordered=True).order_by('-created_at')
+
+
+    context={
+        'recent_orders':recent_orders,
+    }
+    return render(request,'customer/myorder.html',context)
