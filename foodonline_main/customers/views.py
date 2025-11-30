@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from accounts.forms import UserProfileForm,UserInfoForm
 from accounts.models import UserProfile
 from django.contrib import messages
-from orders.models import Order
+from orders.models import Order,OrderedFood
 # Create your views here.
 @login_required(login_url='login')
 def cprofile(request):
@@ -32,11 +32,22 @@ def cprofile(request):
 
     return render(request,'customer/cprofile.html',context)
 
-def order_details(request):
+def my_order(request):
     recent_orders = Order.objects.filter(user=request.user,is_ordered=True).order_by('-created_at')
-
-
     context={
         'recent_orders':recent_orders,
     }
     return render(request,'customer/myorder.html',context)
+
+def order_details(request,order_number):
+    try:
+        order = Order.objects.get(order_number=order_number, is_ordered=True)
+        ordered_food = OrderedFood.objects.filter(order=order)
+        context = {
+            'order':order,
+            'ordered_food':ordered_food,
+        }
+    except:
+        return redirect('customer')
+    return render(request,'customer/orderdetails.html',context)
+
