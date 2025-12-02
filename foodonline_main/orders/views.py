@@ -51,6 +51,9 @@ def place_order(request):
             order.save()
             # -----------------------------------------------------
 
+
+           
+
             # ---------------- RAZORPAY ORDER CREATION ----------------
             amount_value = float(order.total)
 
@@ -119,10 +122,23 @@ def payments(request):
             status=status
         )
         payment.save()
+        
+       
 
         # Update order
         order.payment = payment
         order.is_ordered = True
+        order.save()
+
+        # ------------------------------
+        # ✅ SAVE VENDORS INTO THE ORDER
+        # ------------------------------
+        cart_items = Cart.objects.filter(user=request.user)
+        vendor_ids = set()
+
+        for item in cart_items:
+            vendor_ids.add(item.fooditem.vendor.id)
+        order.vendor.set(vendor_ids)
         order.save()
 
         # Move cart items to OrderedFood

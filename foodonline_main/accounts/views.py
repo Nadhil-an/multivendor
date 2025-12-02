@@ -140,8 +140,13 @@ def logout(request):
 @user_passes_test(check_role_vendor)
 def vendorDashboard(request):
     vendor = Vendor.objects.get(user=request.user)
+    orders = Order.objects.filter(vendor__in=[vendor.id],is_ordered=True).order_by('-created_at')
+
+
     context = {
-        'vendor':vendor
+        'vendor':vendor,
+        'orders':orders,
+        'orders_count':orders.count(),
     }
     return render(request, 'accounts/vendorDashboard.html',context)
 

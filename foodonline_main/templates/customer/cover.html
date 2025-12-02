@@ -10,11 +10,10 @@
 								<div class="company-info">
 									<div class="img-holder">
 										<figure>
-											{% if user_profile.cover_photo %}
-											<img src="{{ user_profile.profile_picture.url }}" alt="cover_photo">
+											{% if user_profile.profile_picture %}
+												<img src="{{ user_profile.profile_picture.url }}" alt="profile_photo">
 											{% else %}
-											<img src="images/default.jpg" alt="default_image">
-
+												<img src="/static/images/default.jpg" alt="default_image">
 											{% endif %}
 										</figure>
 									</div>
