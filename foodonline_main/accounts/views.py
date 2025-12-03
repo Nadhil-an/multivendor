@@ -141,12 +141,14 @@ def logout(request):
 def vendorDashboard(request):
     vendor = Vendor.objects.get(user=request.user)
     orders = Order.objects.filter(vendor__in=[vendor.id],is_ordered=True).order_by('-created_at')
+    recent_orders = orders[:5]
 
 
     context = {
         'vendor':vendor,
         'orders':orders,
         'orders_count':orders.count(),
+        'recent_orders':recent_orders
     }
     return render(request, 'accounts/vendorDashboard.html',context)
 

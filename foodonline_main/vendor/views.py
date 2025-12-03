@@ -12,7 +12,7 @@ from menu.models import Category,FoodItem
 from menu.forms import CategoryForm,FoodItemForm
 from django.template.defaultfilters import slugify  
 from django.views.decorators.cache import never_cache
-
+from orders.models import Order,OrderedFood
 
 
 ##################################
@@ -358,14 +358,6 @@ def add_hour(request):
 
 
 
-
-
-
-
-
-
-
-
 def removing_opening_hour(request,pk=None):
     if request.user.is_authenticated:
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
@@ -381,5 +373,19 @@ def removing_opening_hour(request,pk=None):
     else:
         return HttpResponse('Unauthorized', status=401)
 
-
     pass
+
+
+def vendor_order_details(request,order_number):
+    try:
+        order = Order.objects.get(order_number=order_number,is_ordered=True)
+        ordered_food = OrderedFood.objects.filter(order=order,fooditem__vendor=get_vendor(request))
+        context = {
+            'order':order,
+            'ordered_food':ordered_food,
+        }
+    except:
+        return redirect('vendor')
+
+
+    return  render(request,'vendor/vendor_order_details.html',context)
