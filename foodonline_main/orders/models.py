@@ -2,6 +2,9 @@ from django.db import models
 from accounts.models import User
 from menu.models import FoodItem
 from vendor.models import Vendor
+import json
+
+request_objects = ''
 
 # Create your models here.
 class Payment(models.Model):
@@ -58,6 +61,13 @@ class Order(models.Model):
     
     def order_placed_to(self):
         return ", ".join([str(i) for i in self.vendor.all()])
+    
+    def get_total_by_vendor(self):
+        vendor = Vendor.objects.get(user=request_objects.user)
+        if self.total_data:
+            total_data = json.loads(self.total_data)
+            data = total_data.get(str(vendor.id))
+        return vendor
     
 class OrderedFood(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
