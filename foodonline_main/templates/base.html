@@ -42,6 +42,16 @@
 
 	<script src="https://www.paypal.com/sdk/js?client-id={{ paypal_button }}&currency=USD"></script>
 
+	<!-- data table plugin -->
+	<link rel="stylesheet" href=" //cdn.datatables.net/2.3.5/css/dataTables.dataTables.min.css">
+	<script src="//cdn.datatables.net/2.3.5/js/dataTables.min.js"></script>
+	<script>
+		document.addEventListener("DOMContentLoaded", function() {
+        let table = new DataTable('#datatable');
+    });
+	</script>
+
+
 </head>
 
 <body>
