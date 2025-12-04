@@ -64,29 +64,38 @@ class Order(models.Model):
     
     def get_total_by_vendor(self):
         vendor = Vendor.objects.get(user=request_objects.user)
+
+        # Initialize defaults
+        sub_total = 0
+        tax = 0
+        tax_dict = {}
+
         if self.total_data:
             total_data = json.loads(self.total_data)
             data = total_data.get(str(vendor.id))
 
-            sub_total = 0
-            tax = 0
-            tax_dict = {}
-            for key, val in data.items():
-                sub_total += float(key)
-                val = val.replace("'",'"')
-                val = json.loads(val)
-                tax_dict.update(val)
-                
-                for i in val:
-                    for j in val[i]:
-                        tax += float(val[i][j])
-            grand_total = float(sub_total)+float(tax)
-            context = {
-                'subtotal':sub_total,
-                'tax_dict':tax_dict,
-                'grand_total':grand_total,
-            }
-            return context
+            if data:  # Prevent crash if vendor has no entry
+                for key, val in data.items():
+                    sub_total += float(key)
+
+                    val = val.replace("'", '"')
+                    val = json.loads(val)
+                    tax_dict.update(val)
+
+                    for i in val:
+                        for j in val[i]:
+                            tax += float(val[i][j])
+
+        grand_total = sub_total + tax
+
+        context =  {
+            'sub_total': sub_total,
+            'tax_dict': tax_dict,
+            'grand_total': grand_total,
+        }
+        return context
+
+        
 
 
         return vendor
