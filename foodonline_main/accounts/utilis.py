@@ -35,6 +35,7 @@ def send_approve_mail(mail_template,context,mail_subject):
     message = render_to_string(mail_template,context)
     to_email = context['user'].email
     mail = EmailMessage(mail_subject,message,from_email,to=[to_email])
+    mail.content_subtype = 'html'
     mail.send()
 
 def send_notification(mail_subject,mail_template,context):
@@ -46,6 +47,7 @@ def send_notification(mail_subject,mail_template,context):
     else:
         to_email = context['order.email'].email
     mail = EmailMessage(mail_subject, message, from_email,to=[to_email])
+    mail.content_subtype = 'html'
     mail.send()
 
 
