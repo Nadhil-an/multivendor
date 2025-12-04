@@ -5,7 +5,10 @@
 
 		<!-- Main Section Start -->
 		<div class="main-section">
-			{% include 'vendor/cover.html' %}
+
+			{% include 'vendor/cover.html'%}
+
+
 			<div class="page-section account-header buyer-logged-in">
 				<div class="container">
 					<div class="row">
@@ -17,53 +20,16 @@
 						<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
 							<div class="user-dashboard loader-holder">
 								<div class="user-holder">
-									<h5 class="text-uppercase">Overview</h5>
-
-									<div class="row">
-										<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-											<div class="card">
-												<div class="card-header">
-													Total Order
-												</div>
-												<div class="card-body text-center">
-													<a href=""><h5>{{ orders_count }}</h5></a>
-												</div>
-											</div>
-										</div>
-
-										<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-											<div class="card">
-												<div class="card-header">
-													Total Revenue
-												</div>
-												<div class="card-body text-center">
-													<a href=""><h5>${{ total_revenue | floatformat:2 }}</h5></a>
-												</div>
-											</div>
-										</div>
-
-										<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-											<div class="card">
-												<div class="card-header">
-													This Month
-												</div>
-												<div class="card-body text-center">
-													<a href=""><h5>${{ current_month_revenue |floatformat:2 }}</h5></a>
-												</div>
-											</div>
-										</div>
-									</div>
-
-									<br>
-									<br>
-
 									
 
+
+									
 									
 									<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 										<div class="row">
 											<div class="element-title has-border right-filters-row">
 												<h5>Recent Orders</h5>
+												
 												
 											</div>
 										</div>
@@ -85,9 +51,9 @@
 															</tr>
 														</thead>
 														<tbody>
-															{% for order in recent_orders %}
+															{% for order in order %}
 															<tr>
-															<th><a href="{% url 'vendor_order_details' order.order_number %}">{{order.order_number}}</a></th>
+															<th ><a href="{% url 'vendor_order_details' order.order_number %}">{{order.order_number}}</a></th>
 															<td>{{order.name}}</td>
 															<td>{{order.phone}}</td>
 															<td>{{order.get_total_by_vendor.grand_total }}</td>
@@ -99,8 +65,6 @@
 															
 														</tbody>
 														</table>
-													
-												
 
 												</div>												
 											</div>

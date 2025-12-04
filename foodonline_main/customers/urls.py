@@ -7,6 +7,7 @@ urlpatterns = [
     path('profile/',views.cprofile,name='cprofile'),
     path('my_order/',views.my_order,name='my_order'),
     path('order_details/<int:order_number>/', views.order_details, name='order_details'),
+    
 
 
 ]

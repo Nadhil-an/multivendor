@@ -392,3 +392,13 @@ def vendor_order_details(request,order_number):
 
 
     return  render(request,'vendor/vendor_order_details.html',context)
+
+def vendor_orders(request):
+    vendor = Vendor.objects.get(user=request.user)
+    order = Order.objects.filter(vendor__in=[vendor.id],is_ordered=True).order_by('-created_at')
+    context = {
+        'order':order,
+        
+    }
+
+    return render(request,'vendor/vendor_orders.html',context)

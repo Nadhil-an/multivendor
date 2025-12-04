@@ -6,33 +6,11 @@
 
 		<!-- Main Section Start -->
 		<div class="main-section">
-			<div class="page-section restaurant-detail-image-section" style="background: url('{% if profile.cover_photo %}{{ profile.cover_photo.url }}{% else %}/images/cover-photo-1.PNG{% endif %}') no-repeat scroll 0 0 / cover;">
-				<!-- Container Start -->
-				<div class="container">
-					<!-- Row Start -->
-					<div class="row">
-						<!-- Column Start -->
-						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-							<div class="company-info-detail">
-								<div class="company-info">
-									
+			
+			
+			{% include 'vendor/cover.html' %}
 
-									<div class="text-holder">
-										<span class="restaurant-title">{{ profile.name}} </span>
-										<div class="text">
-											
-											<p>{{ profile.full_name}}</p>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<!-- Column End -->
-					</div>
-					<!-- Row End -->
-				</div>
-				<!-- Container End -->
-			</div>
+
 			<div class="page-section account-header buyer-logged-in">
 				<div class="container">
 					<div class="row">
