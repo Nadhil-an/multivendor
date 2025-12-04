@@ -38,15 +38,26 @@ def send_approve_mail(mail_template,context,mail_subject):
     mail.content_subtype = 'html'
     mail.send()
 
-def send_notification(mail_subject,mail_template,context):
+def send_notification(mail_subject, mail_template, context):
     from_email = settings.DEFAULT_FROM_EMAIL
+
+    # Render template properly so {% for %} works
     message = render_to_string(mail_template, context)
-    if(isinstance(context['to_email'],str)):
-        to_email =[]
-        to_email.append(context['to_email'])
+
+    # Get receiver email
+    if isinstance(context['to_email'], str):
+        to_email = [context['to_email']]
     else:
-        to_email = context['order.email'].email
-    mail = EmailMessage(mail_subject, message, from_email,to=[to_email])
+        to_email = [context['to_email'].email]
+
+    # Send email
+    mail = EmailMessage(
+        subject=mail_subject,
+        body=message,
+        from_email=from_email,
+        to=to_email     # <-- correct
+    )
+    
     mail.content_subtype = 'html'
     mail.send()
 
