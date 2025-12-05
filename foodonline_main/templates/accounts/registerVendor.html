@@ -1,6 +1,106 @@
-{% extends 'base.html'%}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block content %}
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>FoodOnline</title>
+
+	<!-- Google Fonts -->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800">
+
+	<!-- ================= CSS ================= -->
+	<link href="{% static 'css/iconmoon.css' %}" rel="stylesheet">
+	<link href="{% static 'css/style.css' %}" rel="stylesheet">
+	<link href="{% static 'css/cs-foodbakery-plugin.css' %}" rel="stylesheet">
+	<link href="{% static 'css/bootstrap-slider.css' %}" rel="stylesheet">
+	<link href="{% static 'css/custom.css' %}" rel="stylesheet">
+
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+	<!-- ================= JavaScript ================= -->
+
+	<!-- jQuery (Load FIRST) -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+	<!-- Bootstrap JS (After jQuery) -->
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+	<!-- SweetAlert2 -->
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+	
+	</script>
+
+
+</head>
+
+<header id="header">
+    <div class="main-header">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Logo & Location -->
+                <div class="col-lg-8 col-md-8 col-sm-12">
+                    <div class="logo">
+                        <figure>
+                            <a href="{% url 'home' %}" class="light-logo">
+                                <img src="{% static 'logo/foodOnlineLogo.png' %}" alt="FoodBakery" width="250">
+                            </a>
+                        </figure>
+                    </div>
+
+                    
+                </div>
+
+                <!-- Right Side: Login / Cart / Marketplace -->
+                <div class="col-lg-4 col-md-4 col-sm-12">
+                    <div class="login-option">
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'cart' %}">
+                            <i class="fa fa-shopping-cart text-danger" style="font-size: 20px;"></i>
+                            <span class="badge badge-warning" id="cart_counter" 
+                                  style="border-radius:50px; position:relative; bottom: 10px;">
+                                  {{ cart_count }}
+                            </span>
+                        </a>
+                        {% endif %}
+
+                        <a href="{% url 'marketplace' %}" 
+                           class="btn btn-outline-danger text-uppercase font-weight-bold">
+                           Marketplace
+                        </a>
+
+                        {% if user.is_authenticated %}
+                        <a class="cs-color cs-popup-joinus-btn login-popup" href="{% url 'myaccount' %}">
+                            My Account
+                        </a>
+                        <a class="cs-color cs-popup-joinus-btn login-popup text-danger" href="{% url 'logout' %}">
+                            Logout
+                        </a>
+                        {% else %}
+                        <a class="cs-color cs-popup-joinus-btn login-popup" href="{% url 'loginUser' %}">Login/</a>
+                        <span>
+                            <a href="{% url 'registerUser' %}" 
+                               class="cs-color cs-popup-joinus-btn login-popup ml-0">
+                               Register
+                            </a>
+                        </span>
+                        <a class="get-start-btn" href="{% url 'registerVendor' %}">
+                            Register Restaurant
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
 		
 <!-- Main Section Start -->
 		<div class="main-section">
@@ -114,4 +214,3 @@
 		<!-- Main Section End -->
 
 
-{% endblock %}
