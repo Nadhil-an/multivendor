@@ -12,6 +12,7 @@ import requests
 from requests.auth import HTTPBasicAuth
 from orders.models import FoodItem
 from django.contrib.sites.shortcuts import get_current_site
+from accounts.utilis import send_approve_mail,send_notification,send_verification_email
 
 
 
@@ -184,40 +185,44 @@ def payments(request):
             ordered_food.price = item.fooditem.price
             ordered_food.amount = item.fooditem.price * item.quantity
             ordered_food.save()
+
         # #send order confirmation email to customer
         # mail_subject = 'Thank you for ordering with us.'
         # mail_template = 'orders/email/order_confirmation_email.html'
-        ordered_food = OrderedFood.objects.filter(order=order)
-        customer_subtotal = 0
-        for item in ordered_food:
-             customer_subtotal += (item.price * item.quantity)
-        tax_data = json.loads(order.tax_data)
+        # ordered_food = OrderedFood.objects.filter(order=order)
+        # customer_subtotal = 0
+        # for item in ordered_food:
+        #      customer_subtotal += (item.price * item.quantity)
+        # tax_data = json.loads(order.tax_data)
         # context = {
         #     'user':request.user,
         #     'order':order,
         #     'to_email':order.email,
         #     'ordered_food':ordered_food,
         #     'domain':get_current_site(request),
-        #     'customer_subtotal' = customer_subtotal,
-        #     'tax_data' = tax_data
-        #
+        #     'customer_subtotal' : customer_subtotal,
+        #     'tax_data' : tax_data,
+        
         # }
         # send_notification(mail_subject,mail_template,context)
 
-        #send order recieve email to vendor
+        # # send order recieve email to vendor
         # mail_subject ='You have recieved a new order'
-        # mail_template = 'orders/new_order_recieved.html'
+        # mail_template = 'orders/email/vendor_order_confirmation.html'
         # to_emails = []
         # for i in cart_items:
         #     if i.fooditem.vendor.user.email not in to_emails:
         #         to_emails.append(i.fooditem.vendor.user.email)
-        # context ={
-        #     'order':order,
-        #     'to_email':to_emails
-        # }
-        # send_notification(mail_subject,mail_template,context)
+        #         ordered_food_to_vendor = OrderedFood.objects.filter(order=order,fooditem__vendor=i.fooditem.vendor)
 
-        #delete cart_items
+        #         context ={
+        #             'order':order,
+        #             'to_email':i.fooditem.vendor.user.email,
+        #             'ordered_food_to_vendor':ordered_food_to_vendor,
+        #         }
+        #         send_notification(mail_subject,mail_template,context)
+
+                
         response = {
             'transaction_id':transaction_id,
             'order_number':order_number,
