@@ -1,56 +1,31 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>FoodOnline</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<!-- Google Fonts -->
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700">
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800">
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800">
 
-	<!-- ================= CSS ================= -->
-	<link href="{% static 'css/iconmoon.css' %}" rel="stylesheet">
-	<link href="{% static 'css/style.css' %}" rel="stylesheet">
-	<link href="{% static 'css/cs-foodbakery-plugin.css' %}" rel="stylesheet">
-	<link href="{% static 'css/bootstrap-slider.css' %}" rel="stylesheet">
-	<link href="{% static 'css/custom.css' %}" rel="stylesheet">
-
-	<!-- Bootstrap CSS -->
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-
-	<!-- Font Awesome -->
-     <!-- Font Awesome 6 -->
+    <!-- Bootstrap + Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-
-	<!-- ================= JavaScript ================= -->
-
-	<!-- jQuery (Load FIRST) -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
-	<!-- Bootstrap JS (After jQuery) -->
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
-	<!-- SweetAlert2 -->
-	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-	
-	</script>
-
-
+    
+    <title>Dashboard</title>
 </head>
+
 <body>
-	
+
 <div class="main-container">
 
     <div class="dashboard-container">
 
-		 {% include 'includes/v_sidebar.html' %}
+        
+        {% include 'includes/sideventor.html' %}
 
         <!-- RIGHT CONTENT -->
         <div class="content">
@@ -58,7 +33,7 @@
             <!-- TOP BAR -->
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h3 class="fw-bold">Dashboard</h3>
-                <a href=""><img src="{{ vendor.user_profile.profile_picture.url }}" width="35" height="35" class="rounded-circle"></a>
+                <a href=""><img src="https://i.pravatar.cc/40" width="35" height="35" class="rounded-circle"></a>
             </div>
 
             <!-- OVERVIEW CARDS -->
@@ -71,7 +46,7 @@
                         <div class="card h-100">
                             <div class="card-header">Total Order</div>
                             <div class="card-body text-center">
-                                <h5>{{ orders_count }}</h5>
+                                <h5>10</h5>
                             </div>
                         </div>
                     </div>
@@ -80,7 +55,7 @@
                         <div class="card h-100">
                             <div class="card-header">Total Revenue</div>
                             <div class="card-body text-center">
-                                <h5>{{ total_revenue }}</h5>
+                                <h5>$780</h5>
                             </div>
                         </div>
                     </div>
@@ -89,7 +64,7 @@
                         <div class="card h-100">
                             <div class="card-header">This Month</div>
                             <div class="card-body text-center">
-                                <h5>{{ current_month_revenue }}</h5>
+                                <h5>890</h5>
                             </div>
                         </div>
                     </div>
@@ -116,17 +91,15 @@
                         </thead>
 
                         <tbody>
-                            {% for orders in recent_orders %}
                         <tr>
-                            <td>{{ orders.order_number }}</td>
-                            <td>{{ orders.first_name }}</td>
-                            <td>{{ orders.phone }}</td>
-                            <td>{{ orders.total }}</td>
-                            <td>{{ orders.status }}</td>
-                            <td>{{ orders.created_at|date:"d F Y" }} </td>
-                            <td><a href="#" class="Details" style="color: red;">Details</a></td>
+                            <td>001</td>
+                            <td>John</td>
+                            <td>9876543210</td>
+                            <td>$25</td>
+                            <td>Delivered</td>
+                            <td>2024-03-01</td>
+                            <td><a href="#" class="btn btn-sm btn-primary">Details</a></td>
                         </tr>
-                        {% endfor %}
                         </tbody>
                     </table>
                 </div>
@@ -138,14 +111,7 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-
-	<!-- ================= Custom JS (Load LAST) ================= -->
-	<script src="{% static 'js/modernizr.js' %}"></script>
-	<script src="{% static 'js/bootstrap.js' %}"></script>
-	<script src="{% static 'js/custom.js' %}"></script>
-
-	<!-- Debug/Test -->
-	
 </body>
 </html>

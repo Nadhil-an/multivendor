@@ -165,10 +165,6 @@ def vendorDashboard(request):
         'recent_orders':recent_orders,
         'total_revenue':total_revenue,
         'current_month_revenue':current_month_revenue,
-        
-    
-        
-        
     }
     return render(request, 'accounts/vendorDashboard.html',context)
 

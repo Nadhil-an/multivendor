@@ -45,6 +45,76 @@
 }
 
 
+/* updates template */
+
+/* MAIN LAYOUT */
+.main-container {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.dashboard-container {
+    display: flex;
+    height: 100%;
+}
+
+/* LEFT SIDEBAR STATIC */
+.sidebar {
+    width: 250px;
+    background: #ffffff;
+    border-right: 1px solid #ddd;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+}
+
+/* OPTIONAL: improve sidebar look */
+.sidebar .nav-link {
+    color: #333;
+    font-weight: 500;
+}
+
+.sidebar .nav-link:hover {
+    background: #f1f1f1;
+    border-radius: 8px;
+}
+
+/* ACTIVE menu highlight */
+.sidebar-menu .active > .nav-link {
+    background: #f1f1f1 !important;
+    border-radius: 8px;
+    font-weight: 600;
+    color: #000 !important;
+}
+
+
+/* RIGHT CONTENT DYNAMIC */
+.content {
+    flex: 1; 
+    background: #f7f8fa;
+    height: 100vh;
+    overflow-y: auto;
+    border-radius: 0 20px 20px 0;
+    padding: 20px;
+}
+
+
+/* For cards */
+.card {
+    border-radius: 10px;
+}
+/* Remove dots from sidebar menu */
+.sidebar-menu,
+.sidebar-menu li {
+    list-style: none !important;
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+}
+
+
 @media only screen and (max-width:480px){
     
 a.get-start-btn {
