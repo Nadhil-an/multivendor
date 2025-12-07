@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,10 +21,8 @@
 
         <!-- LOGO -->
         <a class="navbar-brand" href="/home/">
-            <img src="/static/logo/foodOnlineLogo.png"
-                 width="200"
-                 class="img-fluid"
-                 alt="FoodOnline">
+            <img  style="width: 150px; height: 80px; border-radius: 10px;" src="{{ vendor.user_profile.profile_picture.url }}"
+                 alt="FoodOnline">              
         </a>
 
         
@@ -31,28 +30,23 @@
         <!-- NAV ITEMS -->
         <div class="collapse navbar-collapse" id="navbarContent">
 
-           
-
             <!-- RIGHT SIDE MENU -->
             <ul class="navbar-nav ms-auto d-flex align-items-center">
 
                 
 
-                <!-- Marketplace -->
+                 {% if user.is_authenticated %}
                 <li class="nav-item me-3">
-                    <a href="/marketplace/" class="btn btn-outline-danger fw-bold px-3">
-                        Marketplace
+                    <a href="{% url 'vendor' %}" class="btn  fw-bold px-3">
+                        My Account
                     </a>
                 </li>
 
-                <!-- Authenticated User -->
-                {% if user.is_authenticated %}
-                <li class="nav-item me-3">
-                    <a href="/myaccount/" class="nav-link fw-semibold">My Account</a>
-                </li>
+                
+               
 
-                <li class="nav-item">
-                    <a href="/logout/" class="nav-link text-danger fw-semibold">Logout</a>
+                <li class="nav-item me-3">
+                    <a href="{% url 'logout' %}" class="btn btn-outline-danger fw-bold px-3">Logout</a>
                 </li>
 
                 <!-- Not Logged In -->
@@ -76,8 +70,51 @@
 
 <!-- ================= MAIN CONTENT ================= -->
 <div class="container mt-5">
-    <h3>Your Page Content Goes Here...</h3>
+    <div class="row g-4">
+
+        <!-- CARD 1 -->
+        <div class="col-12 col-sm-6 col-lg-4">
+            <div class="card shadow-sm">
+                <img src="https://via.placeholder.com/350x200" class="card-img-top" alt="">
+                <div class="card-body">
+                    <h5 class="card-title mb-2">Nike Sneaker (Green)</h5>
+                    <p class="fw-bold">$120</p>
+                    <p class="text-muted">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+                    <a href="#" class="btn btn-primary w-100">Buy Now</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- CARD 2 -->
+        <div class="col-12 col-sm-6 col-lg-4">
+            <div class="card shadow-sm">
+                <img src="https://via.placeholder.com/350x200" class="card-img-top" alt="">
+                <div class="card-body">
+                    <h5 class="card-title mb-2">Nike Sneaker (Red)</h5>
+                    <p class="fw-bold">$140</p>
+                    <p class="text-muted">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+                    <a href="#" class="btn btn-primary w-100">Buy Now</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- CARD 3 -->
+        <div class="col-12 col-sm-6 col-lg-4">
+            <div class="card shadow-sm product-card">
+                <img src="{% static 'images/burger/beef.jpeg' %}" class="card-img-top product-img" alt="">
+                <div class="card-body">
+                    <h5 class="card-title mb-2">Beef Burger</h5>
+                    <p class="fw-bold">$150</p>
+                    <p class="text-muted">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+                    <a href="#" class="btn btn-gradient w-100">Buy Now</a>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
 </div>
+
 <!-- ================= MAIN CONTENT END ================= -->
 
 

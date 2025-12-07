@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from vendor.models import Vendor
 from django.contrib.gis.db.models.functions import Distance
 from django.contrib.gis.geos import GEOSGeometry
@@ -21,6 +21,11 @@ def get_or_set_current_location(request):
 
 
 def home(request):
+
+    # If vendor is logged in → redirect them to vendor home
+    if request.user.is_authenticated and request.user.role == User.RESTAURANT:
+        return redirect('home')   # vendorhome → name='home' in vendor.urls
+
     location = get_or_set_current_location(request)
 
     if location is not None:
