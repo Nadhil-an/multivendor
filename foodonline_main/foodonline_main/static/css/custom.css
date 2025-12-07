@@ -105,6 +105,11 @@
 /* For cards */
 .card {
     border-radius: 10px;
+
+}
+
+.dt-search{
+    margin-right: 10px;
 }
 /* Remove dots from sidebar menu */
 .sidebar-menu,
@@ -113,6 +118,41 @@
     padding-left: 0 !important;
     margin-left: 0 !important;
 }
+/* Smaller Image Preview */
+.thumbnail {
+    width: 80px !important;
+    height: 80px !important;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+/* Smaller upload button container */
+.upload-gallery input[type="file"] {
+    width: 200px !important;
+    padding: 4px !important;
+    font-size: 13px !important;
+}
+
+/* Reduce spacing between items */
+.restaurant-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+/* Smaller "Update Logo" text */
+.restaurant-info .text-holder label {
+    font-size: 14px !important;
+    font-weight: 600;
+}
+
+/* Reduce big extra padding from original FoodBakery style */
+.foodbakery-gallery-holder .gal-img {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
 
 
 
@@ -121,6 +161,11 @@ li {
 }
 .logout-btn{
     margin-top: 250px;
+}
+
+
+.category-card{
+    width: 500px;
 }
 
 

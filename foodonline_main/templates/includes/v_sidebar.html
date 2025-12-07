@@ -17,7 +17,7 @@
 {% load static %}
 <div class="sidebar p-3">
             <figure>
-                <a href="#"><img src="{{ vendor.user_profile.profile_picture.url }}" alt="logo" style="width:70%; height:80px; border-radius:10%;"></a>
+                <a href="{% url 'home' %}"><img src="{{ vendor.user_profile.profile_picture.url }}" alt="logo" style="width:70%; height:80px; border-radius:10%;"></a>
             </figure>
 
             <ul class="nav flex-column sidebar-menu mt-4">
@@ -36,10 +36,19 @@
 					</a>
 				</li>
 
+				<li class="nav-item mb-2 {% if request.resolver_match.url_name == 'menu_builder' or request.resolver_match.url_name == 'add_category'  or request.resolver_match.url_name == 'addfood'  or request.resolver_match.url_name == 'edit_category' %}active{% endif %}">
+					<a href="{% url 'menu_builder' %}" class="nav-link d-flex align-items-center gap-2">
+						<i class="fa-solid fa-utensils" style="margin-right: 12px;"></i>Menu Builder</a></li>
 
-                <li class="nav-item mb-2"><a href="#" class="nav-link"><i class="fa-solid fa-utensils" style="margin-right: 12px;"></i>Menu Builder</a></li>
-                <li class="nav-item mb-2"><a href="#" class="nav-link"><i class="fa-solid fa-clock" style="margin-right: 12px;"></i>Opening Hours</a></li>
-                <li class="nav-item mb-2"><a href="#" class="nav-link"><i class="fa-solid fa-receipt" style="margin-right: 12px;"></i>Orders</a></li>
+				<li class="nav-item mb-2 {% if request.resolver_match.url_name == 'opening_hours' %}active{% endif %}">
+					<a href="{% url 'opening_hours' %}" class="nav-link d-flex align-items-center gap-2">
+						<i class="fa-solid fa-clock" style="margin-right: 12px;"></i> Opening Hours
+					</a>
+				</li>
+
+				<li class="nav-item mb-2 {% if request.resolver_match.url_name == 'vendor_orders' %}active{% endif %}">
+					<a href="{% url 'vendor_orders' %}" class="nav-link d-flex align-items-center gap-2">
+						<i class="fa-solid fa-receipt" style="margin-right: 12px;"></i>Orders</a></li>
 
                 <li class="nav-item logout-btn ">
                     <a href="{% url 'logout' %}" class="nav-link text-danger"><i class="fa-solid fa-right-from-bracket" style="margin-right: 12px;"></i>Log Out</a>

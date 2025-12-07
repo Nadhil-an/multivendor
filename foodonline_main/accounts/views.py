@@ -142,7 +142,7 @@ def logout(request):
 def vendorDashboard(request):
     vendor = Vendor.objects.get(user=request.user)
     orders = Order.objects.filter(vendor__in=[vendor.id],is_ordered=True).order_by('-created_at')
-    recent_orders = orders[:5]
+    recent_orders = orders[:3]
 
     total_revenue = 0
     for i in orders:
