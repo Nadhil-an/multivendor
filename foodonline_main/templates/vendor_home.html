@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodOnline</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+<!-- ================= NAVBAR START ================= -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top py-2">
+    <div class="container-fluid">
+
+        <!-- LOGO -->
+        <a class="navbar-brand" href="/home/">
+            <img src="/static/logo/foodOnlineLogo.png"
+                 width="200"
+                 class="img-fluid"
+                 alt="FoodOnline">
+        </a>
+
+        
+
+        <!-- NAV ITEMS -->
+        <div class="collapse navbar-collapse" id="navbarContent">
+
+           
+
+            <!-- RIGHT SIDE MENU -->
+            <ul class="navbar-nav ms-auto d-flex align-items-center">
+
+                
+
+                <!-- Marketplace -->
+                <li class="nav-item me-3">
+                    <a href="/marketplace/" class="btn btn-outline-danger fw-bold px-3">
+                        Marketplace
+                    </a>
+                </li>
+
+                <!-- Authenticated User -->
+                {% if user.is_authenticated %}
+                <li class="nav-item me-3">
+                    <a href="/myaccount/" class="nav-link fw-semibold">My Account</a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="/logout/" class="nav-link text-danger fw-semibold">Logout</a>
+                </li>
+
+                <!-- Not Logged In -->
+                {% else %}
+                <li class="nav-item me-3">
+                    <a href="/login/" class="nav-link fw-semibold">Login</a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="/register/" class="nav-link fw-semibold">Register</a>
+                </li>
+                {% endif %}
+
+            </ul>
+
+        </div>
+    </div>
+</nav>
+<!-- ================= NAVBAR END ================= -->
+
+
+<!-- ================= MAIN CONTENT ================= -->
+<div class="container mt-5">
+    <h3>Your Page Content Goes Here...</h3>
+</div>
+<!-- ================= MAIN CONTENT END ================= -->
+
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Optional: Your JS -->
+
+
+</body>
+</html>

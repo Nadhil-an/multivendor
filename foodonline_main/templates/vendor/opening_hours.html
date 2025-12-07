@@ -1,89 +1,116 @@
-{% extends 'base.html'%}
 {% load static %}
+{% include 'v_base.html' %}
 
-{% block content %}
+<body>
 
+<div class="main-container">
+    <div class="dashboard-container">
 
-		<!-- Main Section Start -->
-		<div class="main-section">
-			{% include 'vendor/cover.html' %}
-			<div class="page-section account-header buyer-logged-in">
-				<div class="container">
-					<div class="row">
-						<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-							<div class="user-account-nav user-account-sidebar">
-								{% include 'includes/v_sidebar.html' %}
-							</div>
-						</div>
-						<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
-							<div class="user-dashboard loader-holder">
-								<div class="user-holder">
+        <!-- Sidebar -->
+        {% include 'includes/v_sidebar.html' %}
 
-									<h5>Opening Hours</h5>
-									<!-- My Restaurants Form Start -->
-                                     <hr>
-                                    
-                                    <table class="table opening_hours" style="width: 500px; border: none !important;">
-										<tbody> 
-											{% for hour in opening_hours %}
-											<tr id="hour-{{hour.id}}">
-												<td><b>{{ hour }}</b></td>
-												<td>
-													{% if hour.is_closed %}
-														Closed
-													{% else %}
-														{{ hour.from_hour }} - {{ hour.to_hour }}
-													{% endif %}
-												</td>
-												<td><a href="#"  class="remove_hour"  data-url="{% url 'removing_opening_hour' hour.id%}">Remove</a></td>
-											</tr>
-											{% endfor %}
-										</tbody>
-									</table>
+        <!-- Main Content -->
+        <div class="content">
 
+            <!-- Top Bar -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="fw-bold">Opening Hours</h3>
 
-                                    <br>
+                <a href="#">
+                    <img src="{{ vendor.user_profile.profile_picture.url }}"
+                         width="35" height="35"
+                         class="rounded-circle"
+                         style="object-fit: cover;">
+                </a>
+            </div>
 
-                                    <form id="opening_hours" >
-										{% csrf_token %}
-                                        <div class="row">
-                                            <div class="col-md-3">
-                                                {{ form.day}}
-                                            </div>
-                                            <div class="col-md-2">
-                                                {{ form.from_hour}}
-                                            </div>
-											 <div class="col-md-2">
-                                                {{ form.to_hour}}
-                                            </div>
-                                            <div class="col-md-3">
-                                                {{ form.is_closed }} Set as Closed
-                                            </div>
-                                            <div class="col-md-2">
-                                                <button class="btn btn-success add_hour" data-url="{% url 'add_hour' %}">Add Hours</button>
+            <!-- Main Card -->
+            <div class="card p-4 shadow-sm mx-auto" style="max-width: 900px;">
 
-                                            </div>
-                                        </div>
+                <h5 class="fw-bold text-center mb-3">Manage Opening Hours</h5>
+                <hr>
 
-                                    </form>
-                                     
-                                        
-    
-                                        
-								
-									
-									
-					
-									
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- Main Section End -->
+                <!-- Opening Hours Table -->
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover text-center align-middle shadow-sm">
 
+                        <thead class="table-light">
+                            <tr>
+                                <th class="py-3 fw-bold text-secondary text-uppercase">Day</th>
+                                <th class="py-3 fw-bold text-secondary text-uppercase">Hours</th>
+                                <th class="py-3 fw-bold text-secondary text-uppercase">Action</th>
+                            </tr>
+                        </thead>
 
+                        <tbody>
+                            {% for hour in opening_hours %}
+                            <tr id="hour-{{ hour.id }}">
+                                <td class="fw-semibold">{{ hour }}</td>
 
-{% endblock %}
+                                <td>
+                                    {% if hour.is_closed %}
+                                        <span class="badge bg-danger p-2">Closed</span>
+                                    {% else %}
+                                        <span class="fw-semibold">{{ hour.from_hour }} – {{ hour.to_hour }}</span>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    <a href="#" class="text-danger fw-semibold remove_hour"
+                                       data-url="{% url 'removing_opening_hour' hour.id %}">
+                                        Remove
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+
+                <!-- Add Hours Form -->
+                <form id="opening_hours" class="mt-4">
+                    {% csrf_token %}
+
+                    <div class="row g-3">
+
+                        <div class="col-md-3">
+                            <label class="fw-semibold">Day</label>
+                            {{ form.day }}
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="fw-semibold">From</label>
+                            {{ form.from_hour }}
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="fw-semibold">To</label>
+                            {{ form.to_hour }}
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="fw-semibold">Closed?</label> <br>
+                            {{ form.is_closed }}
+                            <span class="ms-1">Set as Closed</span>
+                        </div>
+
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button class="btn btn-success w-100 add_hour"
+                                    data-url="{% url 'add_hour' %}">
+                                Add
+                            </button>
+                        </div>
+
+                    </div>
+                </form>
+
+            </div><!-- End Card -->
+
+        </div><!-- End Content -->
+
+    </div><!-- End Dashboard Container -->
+</div><!-- End Main Container -->
+
+</body>
+</html>

@@ -1,99 +1,158 @@
-{% extends 'base.html'%}
 {% load static %}
+{% include 'v_base.html' %}
 
-{% block content %}
+<body>
+
+<div class="main-container">
+
+    <div class="dashboard-container">
+
+        <!-- Sidebar -->
+        {% include 'includes/v_sidebar.html' %}
+
+        <!-- RIGHT CONTENT -->
+        <div class="content">
+
+            <!-- TOP BAR -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="fw-bold">Food Items</h3>
+                <a href="#">
+                    <img src="{{ vendor.user_profile.profile_picture.url }}"
+                         width="35" height="35"
+                         class="rounded-circle"
+                         style="object-fit: cover;">
+                </a>
+            </div>
+
+            <!-- MAIN CARD -->
+            <div class="card p-4 shadow-sm mb-4">
+
+                <!-- ACTION BUTTONS -->
+                <div class="d-flex justify-content-between mb-3">
+                    <button class="btn btn-secondary btn-sm"
+                            onclick="window.history.back()">
+                        <i class="fa fa-angle-left"></i> Back
+                    </button>
+
+                    <a href="{% url 'addfood' %}" class="btn btn-success btn-sm px-3">
+                        <i class="fa fa-plus"></i> Add Food
+                    </a>
+                </div>
+
+                {% if fooditems %}
+                <h5 class="fw-bold mb-2">Food List</h5>
+                <p class="text-muted mb-3">Manage all food items under this category.</p>
+                <hr>
+
+                <!-- TABLE -->
+                <div class="table-responsive">
+                    <table class="table align-middle border-0 borderless-table">
+
+                        <tbody>
+                            {% for food in fooditems %}
+                            <tr class="table-row">
+
+                                <!-- INDEX -->
+                                <td width="50px" class="fw-semibold text-secondary">
+                                    {{ forloop.counter }}
+                                </td>
+
+                                <!-- IMAGE -->
+                                <td width="60px">
+                                    <img src="{{ food.image.url }}" 
+                                         width="45" height="45"
+                                         class="rounded"
+                                         style="object-fit: cover;">
+                                </td>
+
+                                <!-- FOOD INFO -->
+                                <td>
+                                    <p class="fw-bold mb-1">{{ food }}</p>
+                                    <small class="text-muted">{{ food.description }}</small>
+                                </td>
+
+                                <!-- AVAILABILITY -->
+                                <td width="150px">
+                                    {% if food.is_available %}
+                                        <span class="badge bg-success px-3 py-2">Available</span>
+                                    {% else %}
+                                        <span class="badge bg-danger px-3 py-2">Out of Stock</span>
+                                    {% endif %}
+                                </td>
+
+                                <!-- ACTION BUTTONS -->
+                                <td width="100px" class="text-end">
+
+                                    <a href="{% url 'edit_food' food.id %}" 
+                                       class="text-primary me-2" title="Edit">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </a>
+
+                                    <a href="{% url 'delete_food' food.id %}" 
+                                       class="text-danger"
+                                       onclick="return confirm('Are you sure you want to delete this item?');"
+                                       title="Delete">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </a>
+
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+
+                {% else %}
+
+                <!-- EMPTY STATE -->
+                <div class="text-center my-5">
+                    <img src="{% static 'images/empty.png' %}"
+                         width="120" class="opacity-75 mb-3">
+                    <h5 class="fw-bold">No Food Items Found</h5>
+                    <p class="text-muted">Add your first food item to this category.</p>
+
+                    <a href="{% url 'addfood' %}" class="btn btn-success px-4">
+                        <i class="fa fa-plus"></i> Add Food
+                    </a>
+                </div>
+
+                {% endif %}
+
+            </div> <!-- End Card -->
+
+        </div> <!-- End Content -->
+
+    </div> <!-- End Dashboard-container -->
+
+</div> <!-- End Main-container -->
 
 
-		<!-- Main Section Start -->
-		<div class="main-section">
-			<div class="page-section restaurant-detail-image-section">
-				<!-- Container Start -->
-				<div class="container">
-					<!-- Row Start -->
-					<div class="row">
-						<!-- Column Start -->
-						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-							<div class="company-info-detail">
-								<div class="company-info">
-									
+<!-- Extra Table Styling -->
+<style>
+    /* Removes all borders */
+    .borderless-table,
+    .borderless-table * {
+        border: none !important;
+    }
 
-                                        
-								</div>
-							</div>
-						</div>
-						<!-- Column End -->
-					</div>
-					<!-- Row End -->
-				</div>
-				<!-- Container End -->
-			</div>
-			<div class="page-section account-header buyer-logged-in">
-				<div class="container">
-					<div class="row">
-						<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-							<div class="user-account-nav user-account-sidebar">
-								{% include 'includes/v_sidebar.html' %}
-							</div>
-						</div>
-						<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
-							<div class="user-dashboard loader-holder">
-								<div class="user-holder">
-									
+    /* Clean modern spacing */
+    .borderless-table td {
+        padding: 14px 10px;
+    }
 
-									<h5>Build Your Menu</h5>
-									<!-- My Restaurants Form Start -->
-									<button class="btn btn-secondary" onclick="window.history.back()"><i class="fa fa-angle-left" aria-hidden="true"></i> Back</button>
-									<a href="{% url 'addfood' %}" class="btn btn-success float-right m-1" ><i class="fa fa-plus" aria-hidden="true"></i>Add Food</a>
-                                     
-                                     {% if fooditems %}
-									<table class="table table-hover table-borderless">
-                                        
-                                        <tbody>
-                                            {% for food in fooditems %}
-                                            <tr>
-                                            <th scope="row" class="text-left">{{ forloop.counter }}</th>
-                                            <td class="text-left"><img src="{{ food.image.url }}" alt="Food Image" width="40"></td>
-                                            <td class="text-left">
-												<p class="mb-0 font-weight-bold">{{ food }}</p>
-												<small class="text muted">{{ food.description }}</small>
-												</a>
-											</td>
-											<td>
-												{% if food.is_available %}
-												<span class="badge bg-success">Available</span>
-												{% else %}
-												<span class="badge bg-danger">Out of Stock</span>
-												{% endif %}
-											</td>
-                                            <td><a href="{% url 'edit_food' food.id %}" style="color:unset"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-												&nbsp;<a href="{% url 'delete_food' food.id %}" style="color: unset" onclick="return confirm('Are you want to delete this Dish?')" ><i class="fa fa-trash text-danger" aria-hidden="true"></i></a> </td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                        </table>
-                                        {% else %}
-                                        <h5 class="text-center">No food items found </h5>
-                                        <div class="text-center">
-                                            <a href="{% url 'addfood' %}" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp; Add Food</a>
-                                        </div>
+    /* Hover effect */
+    .borderless-table tr:hover {
+        background: #f5f6f8;
+        transition: 0.2s ease;
+    }
 
-                                        {% endif %}
-									<!-- My Restaurants Form End -->
+    /* Remove shadow lines from Bootstrap */
+    table.table {
+        border-collapse: separate !important;
+        border-spacing: 0 6px !important; /* spacing between rows */
+    }
+</style>
 
-								
-									
-									
-					
-									
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- Main Section End -->
-
-
-
-{% endblock %}
+</body>
+</html>

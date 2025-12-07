@@ -36,7 +36,7 @@
 					</a>
 				</li>
 
-				<li class="nav-item mb-2 {% if request.resolver_match.url_name == 'menu_builder' or request.resolver_match.url_name == 'add_category'  or request.resolver_match.url_name == 'addfood'  or request.resolver_match.url_name == 'edit_category' %}active{% endif %}">
+				<li class="nav-item mb-2 {% if request.resolver_match.url_name == 'menu_builder' or request.resolver_match.url_name == 'add_category'  or request.resolver_match.url_name == 'addfood'  or request.resolver_match.url_name == 'edit_category' or request.resolver_match.url_name == 'fooditems_by_category'   %}active{% endif %}">
 					<a href="{% url 'menu_builder' %}" class="nav-link d-flex align-items-center gap-2">
 						<i class="fa-solid fa-utensils" style="margin-right: 12px;"></i>Menu Builder</a></li>
 

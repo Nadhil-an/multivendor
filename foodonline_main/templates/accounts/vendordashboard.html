@@ -1,51 +1,60 @@
 {% load static %}
-{% include 'v_base.html'%}
-<body>
-	
-<div class="main-container">
+{% include 'v_base.html' %}
 
+<body>
+
+<div class="main-container">
     <div class="dashboard-container">
 
-		 {% include 'includes/v_sidebar.html' %}
+        <!-- Sidebar -->
+        {% include 'includes/v_sidebar.html' %}
 
-        <!-- RIGHT CONTENT -->
+        <!-- Main Content -->
         <div class="content">
 
-            <!-- TOP BAR -->
+            <!-- Top Bar -->
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h3 class="fw-bold">Dashboard</h3>
-                <a href=""><img src="{{ vendor.user_profile.profile_picture.url }}" width="35" height="35" class="rounded-circle"></a>
+                <a href="#">
+                    <img src="{{ vendor.user_profile.profile_picture.url }}"
+                         width="35" height="35"
+                         class="rounded-circle"
+                         style="object-fit: cover;">
+                </a>
             </div>
 
-            <!-- OVERVIEW CARDS -->
+            <!-- Overview Section -->
             <div class="card p-4 shadow-sm mb-4">
-                <h5 class="text-uppercase mb-3">Overview</h5>
+                <h5 class="text-uppercase fw-bold mb-3">Overview</h5>
 
                 <div class="row g-3">
 
+                    <!-- Total Orders -->
                     <div class="col-lg-4 col-md-4 col-sm-12">
-                        <div class="card h-100">
-                            <div class="card-header">Total Order</div>
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-header fw-semibold">Total Orders</div>
                             <div class="card-body text-center">
-                                <h5>{{ orders_count }}</h5>
+                                <h4 class="fw-bold">{{ orders_count }}</h4>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Total Revenue -->
                     <div class="col-lg-4 col-md-4 col-sm-12">
-                        <div class="card h-100">
-                            <div class="card-header">Total Revenue</div>
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-header fw-semibold">Total Revenue</div>
                             <div class="card-body text-center">
-                                <h5>{{ total_revenue }}</h5>
+                                <h4 class="fw-bold">₹{{ total_revenue }}</h4>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Monthly Revenue -->
                     <div class="col-lg-4 col-md-4 col-sm-12">
-                        <div class="card h-100">
-                            <div class="card-header">This Month</div>
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-header fw-semibold">This Month</div>
                             <div class="card-body text-center">
-                                <h5>{{ current_month_revenue }}</h5>
+                                <h4 class="fw-bold">₹{{ current_month_revenue }}</h4>
                             </div>
                         </div>
                     </div>
@@ -53,55 +62,57 @@
                 </div>
             </div>
 
-            <!-- RECENT ORDERS -->
+            <!-- Recent Orders Section -->
             <div class="card p-4 shadow-sm">
-                <h5 class="mb-3">Recent Orders</h5>
+
+                <h5 class="fw-bold mb-3">Recent Orders</h5>
 
                 <div class="table-responsive">
-                    <table class="table table-hover" id="datatable">
-                        <thead>
-                        <tr>
-                            <th>Order #</th>
-                            <th>Name</th>
-                            <th>Phone</th>
-                            <th>Total</th>
-                            <th>Status</th>
-                            <th>Date</th>
-                            <th>Action</th>
-                        </tr>
+                    <table class="table table-hover table-bordered align-middle text-center shadow-sm" id="datatable">
+
+                        <thead class="table-light">
+                            <tr>
+                                <th>Order #</th>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Action</th>
+                            </tr>
                         </thead>
 
                         <tbody>
                             {% for orders in recent_orders %}
-                        <tr>
-                            <td>{{ orders.order_number }}</td>
-                            <td>{{ orders.first_name }}</td>
-                            <td>{{ orders.phone }}</td>
-                            <td>{{ orders.total }}</td>
-                            <td>{{ orders.status }}</td>
-                            <td>{{ orders.created_at|date:"d F Y" }} </td>
-                            <td><a href="#" class="Details" style="color: blue;">Details</a></td>
-                        </tr>
-                        {% endfor %}
+                            <tr>
+                                <td class="fw-semibold">{{ orders.order_number }}</td>
+                                <td>{{ orders.first_name }}</td>
+                                <td>{{ orders.phone }}</td>
+                                <td>₹{{ orders.total }}</td>
+                                <td>{{ orders.status }}</td>
+                                <td>{{ orders.created_at|date:"d F Y" }}</td>
+                                <td>
+                                    <a href="#" class="btn btn-sm btn-primary">Details</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
                         </tbody>
+
                     </table>
                 </div>
 
-            </div>
+            </div> <!-- End Recent Orders -->
 
-        </div>
+        </div> <!-- End Content -->
 
-    </div>
-</div>
+    </div> <!-- End Dashboard Container -->
+</div> <!-- End Main Container -->
 
 
+<!-- JS -->
+<script src="{% static 'js/modernizr.js' %}"></script>
+<script src="{% static 'js/bootstrap.js' %}"></script>
+<script src="{% static 'js/custom.js' %}"></script>
 
-	<!-- ================= Custom JS (Load LAST) ================= -->
-	<script src="{% static 'js/modernizr.js' %}"></script>
-	<script src="{% static 'js/bootstrap.js' %}"></script>
-	<script src="{% static 'js/custom.js' %}"></script>
-
-	<!-- Debug/Test -->
-	
 </body>
 </html>
