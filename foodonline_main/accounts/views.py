@@ -13,7 +13,7 @@ from vendor.models import Vendor
 from django.template.defaultfilters import slugify
 from orders.models import Order
 import datetime
-
+from menu.models import Category
 # Create your views here.
 
 
@@ -141,10 +141,12 @@ def logout(request):
 @user_passes_test(check_role_vendor)
 def vendorhome(request):
     vendor = Vendor.objects.get(user=request.user)
+    categories = Category.objects.filter(vendor=vendor).prefetch_related("fooditems")
 
 
     context = {
         'vendor':vendor,
+        'categories':categories,
     }
     return render(request,'vendor_home.html',context)
 

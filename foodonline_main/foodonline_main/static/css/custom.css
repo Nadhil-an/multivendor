@@ -155,7 +155,6 @@
 
 
 
-
 li {
     list-style: none !important;
 }
@@ -174,6 +173,8 @@ li {
 .btn-primary:hover {
     background: linear-gradient(to right, #5b96e6, #3b6bdd);
 }
+
+
 
 @media only screen and (max-width:480px){
     
