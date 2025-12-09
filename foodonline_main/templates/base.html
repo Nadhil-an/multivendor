@@ -3,74 +3,76 @@
 <html lang="en">
 
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>FoodOnline</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FoodOnline</title>
 
-	<!-- Google Fonts -->
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700">
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800">
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800">
 
-	<!-- ================= CSS ================= -->
-	<link href="{% static 'css/iconmoon.css' %}" rel="stylesheet">
-	<link href="{% static 'css/style.css' %}" rel="stylesheet">
-	<link href="{% static 'css/cs-foodbakery-plugin.css' %}" rel="stylesheet">
-	<link href="{% static 'css/bootstrap-slider.css' %}" rel="stylesheet">
-	<link href="{% static 'css/custom.css' %}" rel="stylesheet">
+    <!-- ================= Local CSS ================= -->
+    <link rel="stylesheet" href="{% static 'css/iconmoon.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/cs-foodbakery-plugin.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-slider.css' %}">
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
 
-	<!-- Bootstrap CSS -->
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
-	<!-- Font Awesome -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-	<!-- ================= JavaScript ================= -->
+    <!-- DataTables -->
+    <link rel="stylesheet" href="//cdn.datatables.net/2.3.5/css/dataTables.dataTables.min.css">
 
-	<!-- jQuery (Load FIRST) -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
-	<!-- Bootstrap JS (After jQuery) -->
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
-	<!-- SweetAlert2 -->
-	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-	<!-- Google Maps API -->
-	{% if '/' == request.path or 'profile' in request.path %}
-	<script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_API_KEY }}&libraries=places&callback=initAutocomplete" async defer></script>
-	{% endif %}
+    <!-- Google Maps API -->
+    {% if request.path == '/' or 'profile' in request.path %}
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_API_KEY }}&libraries=places&callback=initAutocomplete" async defer></script>
+    {% endif %}
 
-	<script src="https://www.paypal.com/sdk/js?client-id={{ paypal_button }}&currency=USD"></script>
+    <!-- PayPal -->
+    <script src="https://www.paypal.com/sdk/js?client-id={{ paypal_button }}&currency=USD"></script>
 
-	<!-- data table plugin -->
-	<link rel="stylesheet" href=" //cdn.datatables.net/2.3.5/css/dataTables.dataTables.min.css">
-	<script src="//cdn.datatables.net/2.3.5/js/dataTables.min.js"></script>
-	<script>
-		document.addEventListener("DOMContentLoaded", function() {
-        let table = new DataTable('#datatable');
-    });
-	</script>
+    <!-- DataTables JS -->
+    <script src="//cdn.datatables.net/2.3.5/js/dataTables.min.js"></script>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const tableElement = document.querySelector('#datatable');
+            if (tableElement) {
+                new DataTable(tableElement);
+            }
+        });
+    </script>
 
 </head>
 
 <body>
-	<!-- Navbar -->
-	{% include 'includes/navbar.html' %}
 
-	<!-- Main Content -->
-	{% block content %}
-	{% endblock %}
+    {% include 'includes/navbar.html' %}
 
-	<!-- Footer -->
-	{% include 'includes/footer.html' %}
+    <main>
+        {% block content %}{% endblock %}
+    </main>
 
-	<!-- ================= Custom JS (Load LAST) ================= -->
-	<script src="{% static 'js/modernizr.js' %}"></script>
-	<script src="{% static 'js/bootstrap.js' %}"></script>
-	<script src="{% static 'js/custom.js' %}"></script>
+    {% include 'includes/footer.html' %}
 
-	<!-- Debug/Test -->
-	
+    <!-- Custom JS -->
+    <script src="{% static 'js/modernizr.js' %}"></script>
+    <script src="{% static 'js/bootstrap.js' %}"></script>
+    <script src="{% static 'js/custom.js' %}"></script>
+
 </body>
+
 </html>

@@ -11,9 +11,9 @@ ssl._create_default_https_context = ssl._create_unverified_context
 
 def detectUser(user):
     if user.role == 1:   # Vendor
-        return 'home'
+        return 'vendorhome'
     elif user.role == 2:  # Customer
-        return 'customerDashboard'
+        return 'home'
     else:
         return 'loginUser'
 

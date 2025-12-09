@@ -4,7 +4,7 @@ from accounts import views as AccountViews
 
 
 urlpatterns = [
-    path('',AccountViews.vendorhome,name='home'),
+    path('',AccountViews.vendorhome,name='vendorhome'),
     path('Dashboard/',views.vendorDashboard,name='vendor'),
     path('profile/',views.vprofile,name='vprofile'),
     path('menu-builder/',views.menu_builder,name='menu_builder'),
