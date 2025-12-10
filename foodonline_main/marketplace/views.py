@@ -31,104 +31,128 @@ def marketplace(request):
     }
     return render(request,'marketplace/listing.html',context)
 #######################
-#
 # vendor_details
-#
 #######################
-def vendor_details(request,vendor_slug):
-     # getting current day
-    today_date =date.today()
+def vendor_details(request, vendor_slug, category_slug=None):
+    today_date = date.today()
     today = today_date.isoweekday()
-    now = datetime.now()
-    current_time = now.strftime("%H:%M:%S")
 
-    is_open = None
-    vendor = get_object_or_404(Vendor,vendor_slug=vendor_slug)
-    opening_hours = OpeningHour.objects.filter(vendor=vendor).order_by('day','-from_hour')
-    current_opening_hours = OpeningHour.objects.filter(vendor=vendor,day=today)
+    vendor = get_object_or_404(Vendor, vendor_slug=vendor_slug)
 
+    # --- Opening Hours ---
+    opening_hours = OpeningHour.objects.filter(vendor=vendor).order_by('day', '-from_hour')
+    current_opening_hours = OpeningHour.objects.filter(vendor=vendor, day=today)
 
-
+    # Check if vendor is open NOW
+    is_open = False
+    now = datetime.now().time()
     for i in current_opening_hours:
-        # Convert to time object safely (handles both TimeField and string)
-        if isinstance(i.from_hour, str):
-            try:
-                start_time = datetime.strptime(i.from_hour, "%I:%M:%p").time()
-            except ValueError:
-                start_time = datetime.strptime(i.from_hour, "%H:%M:%S").time()
-        else:
-            start_time = i.from_hour
+        start = i.from_hour
+        end = i.to_hour
 
-        if isinstance(i.to_hour, str):
-            try:
-                end_time = datetime.strptime(i.to_hour, "%I:%M:%p").time()
-            except ValueError:
-                end_time = datetime.strptime(i.to_hour, "%H:%M:%S").time()
-        else:
-            end_time = i.to_hour
-
-        now = datetime.now().time()
-
-        if start_time <= now <= end_time and not i.is_closed:
+        if start <= now <= end and not i.is_closed:
             is_open = True
-            break
-        else:
-            is_open = False
 
+    # --- Category List ---
+    categories = Category.objects.filter(vendor=vendor)
 
-    current_opening_hours = OpeningHour.objects.filter(vendor=vendor,day=today)
-    category = Category.objects.filter(vendor=vendor).prefetch_related(
-        Prefetch(
-            'fooditems',
-            queryset = FoodItem.objects.filter(is_available=True)
-        )
-    )
-    
+    # --- If Category Selected ---
+    if category_slug:
+        selected_category = get_object_or_404(Category, vendor=vendor, slug=category_slug)
+        foods = FoodItem.objects.filter(category=selected_category, is_available=True).order_by('food_title')
+
+    else:
+        selected_category = None
+        foods = FoodItem.objects.filter(vendor=vendor, is_available=True).order_by('category__category_name', 'food_title')
+
+    # Category with foods mapping (for full view)
+    category_with_food = {}
+    for cat in categories:
+        category_with_food[cat] = FoodItem.objects.filter(category=cat, is_available=True)
+
+    # --- User Cart ---
     if request.user.is_authenticated:
         cart_items = Cart.objects.filter(user=request.user)
         cart_items_dict = {item.fooditem.id: item.quantity for item in cart_items}
     else:
         cart_items = None
         cart_items_dict = {}
-    context={
-        'vendor':vendor,
-        'category':category,
-        'cart_items':cart_items,
+
+    context = {
+        'vendor': vendor,
+
+        # categories in sidebar
+        'categories': categories,
+
+        # foods returned based on slug
+        'foods': foods,
+
+        # mapping for full list view
+        'category_with_food': category_with_food,
+
+        # highlight sidebar selected item
+        'selected_category': category_slug,
+
+        # cart details
+        'cart_items': cart_items,
         'cart_items_dict': cart_items_dict,
-        'opening_hours':opening_hours,
-        'current_opening_hours':current_opening_hours,
-        'is_open':is_open,
+
+        # opening hour data
+        'opening_hours': opening_hours,
+        'current_opening_hours': current_opening_hours,
+        'is_open': is_open,
     }
-    return render(request,'marketplace/vendor_details.html',context)
+
+    return render(request, 'marketplace/vendor_details.html', context)
+
 #######################
 #
 # add_to_cart
 #
 #######################
-def add_to_cart(request,food_id=None):
-    if request.user.is_authenticated:
-        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+def add_to_cart(request, food_id=None):
+    if not request.user.is_authenticated:
+        return JsonResponse({'status': 'login_required', 'message': 'Please login to continue'})
 
-            try:
-                #check if the food item is available
-                fooditem = FoodItem.objects.get(id=food_id)
-            except FoodItem.DoesNotExist:
-                return JsonResponse({'status':'failed','message':'This food does not exist'})
+    # Must be AJAX request
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        
+        # Check if food exists
+        try:
+            fooditem = FoodItem.objects.get(id=food_id)
+        except FoodItem.DoesNotExist:
+            return JsonResponse({'status':'failed','message':'This food does not exist'})
 
-            try:
-                #checking if the food item is already added to the cart
-                chkCart = Cart.objects.get(user=request.user, fooditem=fooditem)
-                chkCart.quantity += 1
-                chkCart.save()
-                return JsonResponse({'status':'Success','message':'Increased the cart quantity','cart_counter':get_cart_counter(request), 'qty':chkCart.quantity,'cart_amount':get_cart_amount(request)})
-            except Cart.DoesNotExist:
-                newCart = Cart.objects.create(user=request.user, fooditem=fooditem, quantity=1)
-                return JsonResponse({'status':'Success','message':'Product added to the cart','cart_counter':get_cart_counter(request), 'qty':newCart.quantity,'cart_amount':get_cart_amount(request)})
+        # If item already in cart → increase qty
+        try:
+            chkCart = Cart.objects.get(user=request.user, fooditem=fooditem)
+            chkCart.quantity += 1
+            chkCart.save()
 
-        return JsonResponse({'status':'failed','message':'Invalid Request'})
+            return JsonResponse({
+                'status': 'Success',
+                'message': 'Increased the cart quantity',
+                'food_id': fooditem.id,
+                'cart_counter': get_cart_counter(request),
+                'qty': chkCart.quantity,
+                'cart_amount': get_cart_amount(request)
+            })
 
-    else:
-        return JsonResponse({'status':'login_required','message':'Please login to continue'})
+        # If it's a new item → add to cart
+        except Cart.DoesNotExist:
+            newCart = Cart.objects.create(user=request.user, fooditem=fooditem, quantity=1)
+            return JsonResponse({
+                'status': 'Success',
+                'message': 'Product added to the cart',
+                'food_id': fooditem.id,
+                'cart_counter': get_cart_counter(request),
+                'qty': newCart.quantity,
+                'cart_amount': get_cart_amount(request)
+            })
+
+    # If request is NOT ajax
+    return JsonResponse({'status': 'failed', 'message': 'Invalid Request'})
+
 ########################
 #
 # decrease_cart

@@ -72,6 +72,7 @@ $(document).ready(function(){
         $.ajax({
             type: 'GET',
             url: url,
+            headers: { "X-Requested-With": "XMLHttpRequest" },
             data: {'food_id': food_id},
             success: function(response){
                 if (response.status === 'login_required') {
@@ -115,6 +116,7 @@ $(document).ready(function(){
         $.ajax({
             type: 'GET',
             url: url,
+            headers: { "X-Requested-With": "XMLHttpRequest" },
             data: {'food_id': food_id},
             success: function(response){
                 if (response.status === 'login_required') {
@@ -188,6 +190,8 @@ $(document).ready(function(){
             }
         });
     });
+
+    
 
     //  Check if Cart is Empty
     function displayEmptyText(){

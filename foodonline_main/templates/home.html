@@ -4,7 +4,7 @@
 	{% block content %}
 	
 
-		<!-- Main Section Start -->
+		<!- Main Section Start -->
 		<div class="main-section">
 			<!-- Home Pages Elements Strat -->
 			<!-- Main Search Start -->
@@ -14,10 +14,9 @@
 						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
 							<div class="element-title">
 								<h1 style="font-size: 40px; color: #505050; text-transform: uppercase; line-height: 50px; margin-bottom: 25px; text-align:center;">
-									We are in the business of food<br>our restaurants do</h1>
+									Discover Great Food Near You</h1>
 								<p style="font-size: 18px; letter-spacing: 1px; color: #505050; text-align:center;">
-									Ridiculus sociosqu
-									cursus neque cursus curae ante scelerisque vehicula.</p>
+									Search for restaurants, dishes, or explore new flavors around your location.</p>
 							</div>
 						</div>
 						<div class="col-lg-12 col-md-12 col-sm-3 col-xs-12 ">
@@ -35,7 +34,7 @@
 													<li class="select-location">
 														<div class="foodbakery-locations-fields-group foodbakery-focus-out">
 															<span class="foodbakery-search-location-icon"><i class="icon-location"></i></span>
-															<span id="foodbakery_radius_location_open333" class="foodbakery-radius-location"><i class="icon-target5"></i></span>
+															<span id="foodbakery_radius_location_open333" class="foodbakery-radius-location"></span>
 															<input type="text" name="address" class="location-field-text filter" placeholder="All Locations" id="id_address" >
 															<input type="hidden" name="lat" value="" id="id_latitude">
 															<input type="hidden" name="lng" value="" id="id_longitude">
@@ -72,35 +71,62 @@
 			<!-- Main Search End -->
 			
 			<!-- Top Restarurants Section Start -->
-			<div class="page-section nopadding cs-nomargin" style="margin-top: 0px;padding-top: 60px;padding-bottom: 0px;margin-bottom: 0px;background: #ffffff;">
-				<div class="container">
-					<div class="row">
-						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-							<div class="element-title align-left">
-								<h2>Top Restaurants</h2>
-								<p>Explore restaurants, bars, and cafés by locality</p>
-							</div>
-						</div>
-						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-							<div class="company-logo">
-								<ul>
-									{% for vend in vendors %}
-									<li class="has-border">
-										<figure>
-											{% if vend.user_profile.profile_picture %}
-											<a href="{% if vend.vendor_slug %}{% url 'vendor_details' vend.vendor_slug %}{% else %}#{% endif %}"><img src="{{ vend.user_profile.profile_picture.url }}" class="attachment-full size-full wp-post-image" alt=""></a>
-											{% else %}
-											<a href="#"><img src="{% static 'images/users/black.jpg' %}" class="attachment-full size-full wp-post-image" alt=""></a>
-											{% endif %}
-										</figure>
-									</li>
-									{% endfor %}					
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+			<div class="page-section nopadding cs-nomargin" 
+     style="margin-top:0; padding-top:60px; padding-bottom:0; background:#ffffff;">
+
+    <div class="container">
+        <div class="row">
+
+            {% if vendors %}
+                <!-- Title -->
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="element-title align-left">
+                        <h2>Top Restaurants</h2>
+                        <p>Explore restaurants, bars, and cafés by locality</p>
+                    </div>
+                </div>
+
+                <!-- Restaurant Logo Grid -->
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="company-logo">
+                        <ul>
+                            {% for vend in vendors %}
+                                <li class="has-border">
+                                    <figure>
+                                        {% if vend.user_profile.profile_picture %}
+                                            <a href="{% url 'vendor_details' vend.vendor_slug %}">
+                                                <img src="{{ vend.user_profile.profile_picture.url }}"
+                                                     class="attachment-full size-full wp-post-image"
+                                                     alt="{{ vend.vendor_name }}">
+                                            </a>
+                                        {% else %}
+                                            <a href="#">
+                                                <img src="{% static 'images/users/black.jpg' %}"
+                                                     class="attachment-full size-full wp-post-image"
+                                                     alt="No Image">
+                                            </a>
+                                        {% endif %}
+                                    </figure>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+            {% else %}
+                <!-- No Restaurants Found -->
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="element-title align-center">
+                        <h2>Sorry for the inconvenience</h2>
+                        <p>Restaurants are not found in your area.</p>
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
 			<!-- Top Restarurants Section End -->
 			<!-- Choose From Most Popular Listin Start -->
 			<div class="page-section nopadding cs-nomargin" style="margin-top: 0px;padding-top: 60px;padding-bottom: 50px;margin-bottom: 0px;background: #ffffff;">
@@ -108,6 +134,7 @@
 					<div class="row">
 						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 							<div class="element-title align-center">
+								{% if vendors %}
 								<h2>Choose From Most Popular Restaurants</h2>
 								<p>Cum doctus civibus efficiantur in imperdiet deterruisset.</p>
 							</div>
@@ -157,18 +184,12 @@
 											</div>
 										</div>
 									</li>
-									{% endfor %}
-
-									
-
-									
-									
-									
-									
-									
+									{% endfor %}		
 								</ul>
 							</div>
 						</div>
+						{% endif %}
+
 					</div>
 				</div>
 			</div>
