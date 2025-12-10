@@ -47,29 +47,36 @@
                                                     <a href="{% url 'vendor_details' cart.fooditem.vendor.vendor_slug%}" class="badge badge-warning">{{ cart.fooditem.vendor }}</a>
                                                 </div>
 
-                                                <div class="price-holder" style="text-align: right;">
-                                                    <div style="margin-top: 5px;">
-                                                        
+                                               <div class="price-holder" style="text-align: right;">
+                                            <div class="cart-controls" style="margin-top: 5px;">
 
-                                                        <a href="#" class="decrease_cart" data-id="{{ cart.fooditem.id }}" data-cart-id="{{cart.id}}" data-url="{% url 'decrease_cart' cart.fooditem.id %}" style="margin-right: 28px;"><i class="icon-minus text-color"></i></a>
+                                                <a href="#" class="decrease_cart" data-id="{{ cart.fooditem.id }}" data-cart-id="{{cart.id}}" 
+                                                data-url="{% url 'decrease_cart' cart.fooditem.id %}">
+                                                    <i class="icon-minus text-color"></i>
+                                                </a>
 
-                                                        {% if cart.quantity %}
-                                                        <label id="qty-{{ cart.fooditem.id }}">{{ cart.quantity }}</label>
-                                                        {% else %}
-                                                        <label id="qty-{{ cart.fooditem.id }}">0</label>
-                                                        {% endif %}
-                                                        <a href="#" class="add_to_cart"
-                                                            data-id="{{ cart.fooditem.id }}"
-                                                            data-url="{% url 'add_to_cart' cart.fooditem.id %}"
-                                                            style="margin-right: 15px; text-decoration: none; border-radius: 50%; ">
-                                                            <i class="icon-plus4 text-color"></i>
-                                                        </a>
-                                                        <a href="#" class="delete_item" style="text-decoration: none;" data-id="{{ cart.id }}"data-url="{% url 'delete_item' cart.fooditem.id %}"
-                                                            style="margin-left: 8px;">
-                                                            <i class="icon-delete text-color"></i>
-                                                        </a>
-                                                    </div>
-                                                </div>
+                                                {% if cart.quantity %}
+                                                    <label id="qty-{{ cart.fooditem.id }}">{{ cart.quantity }}</label>
+                                                {% else %}
+                                                    <label id="qty-{{ cart.fooditem.id }}">0</label>
+                                                {% endif %}
+
+                                                <a href="#" class="add_to_cart"
+                                                data-id="{{ cart.fooditem.id }}"
+                                                data-url="{% url 'add_to_cart' cart.fooditem.id %}"
+                                                style="text-decoration: none; border-radius: 50%;">
+                                                    <i class="icon-plus4 text-color"></i>
+                                                </a>
+
+                                                <a href="#" class="delete_item" data-id="{{ cart.id }}" 
+                                                data-url="{% url 'delete_item' cart.fooditem.id %}" 
+                                                style="text-decoration: none;">
+                                                <i class="icon-delete text-color"></i>
+                                                </a>
+
+                                            </div>
+                                        </div>
+
                                             </li>
                                             {% endfor %}
                                         </ul>

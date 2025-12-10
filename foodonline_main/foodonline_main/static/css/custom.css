@@ -173,6 +173,13 @@ li {
 .btn-primary:hover {
     background: linear-gradient(to right, #5b96e6, #3b6bdd);
 }
+.decrease_cart {
+    margin-right: 20px;
+}
+
+.qty-label {
+    margin-right: 20px !important;
+}
 
 
 

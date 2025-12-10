@@ -71,27 +71,34 @@
             <div class="row">
 
                 <!-- SIDEBAR -->
-                <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 sticky-sidebar">
-                    <div class="filter-wrapper">
-                        <div class="categories-menu">
+                                            <!-- SIDEBAR -->
+                            <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 sticky-sidebar">
+                                <div class="filter-wrapper">
+                                    <div class="categories-menu">
 
-                            <h6><i class="icon-restaurant_menu"></i>Categories</h6>
+                                        <h6><i class="icon-restaurant_menu"></i>Categories</h6>
 
-                            <a href="{% url 'vendor_details' vendor.vendor_slug %}" style="text-decoration: none; color:#C33332;">All Dishes</a>
-
-                            {% for cat in categories %}
-                                <ul class="menu-list">
-                                    <li class="{% if selected_category == cat.slug %}active{% endif %}">
-                                        <a href="{% url 'vendor_details_by_category' vendor.vendor_slug cat.slug %}" style="color: #C33332;">
-                                            {{ cat.category_name }}
+                                        <!-- All Dishes Highlight -->
+                                        <a href="{% url 'vendor_details' vendor.vendor_slug %}" 
+                                        class="{% if not selected_category %}active-category{% endif %}"
+                                        style="text-decoration: none; color:#C33332; font-weight:bolder; margin-top: 20px; display:block;">
+                                            All Dishes
                                         </a>
-                                    </li>
-                                </ul>
-                            {% endfor %}
 
-                        </div>
-                    </div>
-                </div>
+                                        {% for cat in categories %}
+                                            <ul class="menu-list">
+                                                <li class="{% if selected_category == cat.slug %}active-category{% endif %}">
+                                                    <a href="{% url 'vendor_details_by_category' vendor.vendor_slug cat.slug %}"
+                                                    style="color: #C33332; font-weight:bold;margin-top: 20px; font-size: medium; display:block;">
+                                                        {{ cat.category_name }}
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        {% endfor %}
+
+                                    </div>
+                                </div>
+                            </div>
 
                 <!-- MENU -->
                 <div class="col-lg-9 col-md-9 col-sm-8 col-xs-12">
@@ -142,7 +149,7 @@
                 <div class="price-holder">
                     <span class="price">₹{{ food.price }}</span>
 
-                    <a  style="margin-right: 20px;" href="javascript:void(0)" class="decrease_cart"
+                    <a   href="javascript:void(0)" class="decrease_cart"
 
                        data-id="{{ food.id }}"
                        data-url="{% url 'decrease_cart' food.id %}">

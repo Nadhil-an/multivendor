@@ -185,6 +185,9 @@ def payments(request):
             ordered_food.price = item.fooditem.price
             ordered_food.amount = item.fooditem.price * item.quantity
             ordered_food.save()
+        # ✅ Clear cart after successful payment
+        Cart.objects.filter(user=request.user).delete()
+
 
         # #send order confirmation email to customer
         # mail_subject = 'Thank you for ordering with us.'
