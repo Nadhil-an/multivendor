@@ -180,6 +180,23 @@ li {
 .qty-label {
     margin-right: 20px !important;
 }
+.image-holder {
+    width: 80px;       /* adjust as you want */
+    height: 80px;      /* adjust as you want */
+    overflow: hidden;
+    border-radius: 6px;  /* optional: rounded corners */
+}
+
+.image-holder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;   /* IMPORTANT: fills the box, crops edges */
+    display: block;
+}
+span.price {
+    margin-right: 45px;
+    margin-top: 7px;
+}
 
 
 

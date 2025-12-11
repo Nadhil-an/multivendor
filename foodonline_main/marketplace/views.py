@@ -117,7 +117,7 @@ def vendor_details(request, vendor_slug, category_slug=None):
         'category_with_food': category_with_food,
 
         # highlight sidebar selected item
-        'selected_category': category_slug,
+        'selected_category': selected_category,
 
         # cart details
         'cart_items': cart_items,
