@@ -33,6 +33,18 @@ def marketplace(request):
 #######################
 # vendor_details
 #######################
+
+def parse_time_string(value):
+    """Convert '09:00' or '09:00 AM' into datetime.time object."""
+    if isinstance(value, str):
+        for fmt in ("%H:%M", "%I:%M %p"):
+            try:
+                return datetime.strptime(value, fmt).time()
+            except ValueError:
+                continue
+    return None
+
+
 def vendor_details(request, vendor_slug, category_slug=None):
     today_date = date.today()
     today = today_date.isoweekday()
@@ -44,14 +56,28 @@ def vendor_details(request, vendor_slug, category_slug=None):
     current_opening_hours = OpeningHour.objects.filter(vendor=vendor, day=today)
 
     # Check if vendor is open NOW
+    # Check if vendor is open NOW
     is_open = False
     now = datetime.now().time()
-    for i in current_opening_hours:
-        start = i.from_hour
-        end = i.to_hour
 
-        if start <= now <= end and not i.is_closed:
+    for i in current_opening_hours:
+
+        if not i.from_hour or not i.to_hour:
+            continue
+
+        if i.is_closed:
+            continue
+
+        start = parse_time_string(i.from_hour)
+        end = parse_time_string(i.to_hour)
+
+        if not start or not end:
+            continue
+
+        if start <= now <= end:
             is_open = True
+
+
 
     # --- Category List ---
     categories = Category.objects.filter(vendor=vendor)

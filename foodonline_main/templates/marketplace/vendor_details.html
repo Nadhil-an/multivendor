@@ -19,7 +19,7 @@
                                     {% if vendor.user_profile.profile_picture %}
                                         <img src="{{ vendor.user_profile.profile_picture.url }}" alt="">
                                     {% else %}
-                                        <img src="static 'images/default.jpg'" alt="">
+                                        <img src="{% static 'images/default.jpg' %}" alt="">
                                     {% endif %}
                                 </figure>
                             </div>
@@ -27,7 +27,7 @@
                             <div class="text-holder">
                                 <span class="restaurant-title">
                                     {{ vendor.vendor_name }}
-                                    {% if not vendor.is_open %} [ Closed ] {% else %} [ Open ] {% endif %}
+                                    {% if is_open %} [ Open ] {% else %} [ Closed ] {% endif %}
                                 </span>
                             </div>
                         </div>
@@ -71,34 +71,33 @@
             <div class="row">
 
                 <!-- SIDEBAR -->
-                                            <!-- SIDEBAR -->
-                            <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 sticky-sidebar">
-                                <div class="filter-wrapper">
-                                    <div class="categories-menu">
+                <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 sticky-sidebar">
+                    <div class="filter-wrapper">
+                        <div class="categories-menu">
 
-                                        <h6><i class="icon-restaurant_menu"></i>Categories</h6>
+                            <h6><i class="icon-restaurant_menu"></i>Categories</h6>
 
-                                        <!-- All Dishes Highlight -->
-                                        <a href="{% url 'vendor_details' vendor.vendor_slug %}" 
-                                        class="{% if not selected_category %}active-category{% endif %}"
-                                        style="text-decoration: none; color:#C33332; font-weight:bolder; margin-top: 20px; display:block;">
-                                            All Dishes
+                            <!-- All Dishes -->
+                            <a href="{% url 'vendor_details' vendor.vendor_slug %}"
+                                class="{% if not selected_category %}active-category{% endif %}"
+                                style="text-decoration: none; color:#C33332; font-weight:bolder; margin-top: 20px; display:block;">
+                                All Dishes
+                            </a>
+
+                            {% for cat in categories %}
+                                <ul class="menu-list">
+                                    <li class="{% if selected_category == cat.slug %}active-category{% endif %}">
+                                        <a href="{% url 'vendor_details_by_category' vendor.vendor_slug cat.slug %}"
+                                           style="color: #C33332; font-weight:bold; margin-top: 20px; font-size: medium; display:block;">
+                                            {{ cat.category_name }}
                                         </a>
+                                    </li>
+                                </ul>
+                            {% endfor %}
 
-                                        {% for cat in categories %}
-                                            <ul class="menu-list">
-                                                <li class="{% if selected_category == cat.slug %}active-category{% endif %}">
-                                                    <a href="{% url 'vendor_details_by_category' vendor.vendor_slug cat.slug %}"
-                                                    style="color: #C33332; font-weight:bold;margin-top: 20px; font-size: medium; display:block;">
-                                                        {{ cat.category_name }}
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        {% endfor %}
-
-                                    </div>
-                                </div>
-                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- MENU -->
                 <div class="col-lg-9 col-md-9 col-sm-8 col-xs-12">
@@ -117,131 +116,112 @@
                                 <div class="menu-itam-holder">
                                     <div id="menu-item-list-6272" class="menu-itam-list">
 
+                                        {% if not is_open %}
+                                            <!-- SHOP CLOSED MESSAGE -->
+                                            <div class="text-center p-4" style="border:1px solid #ddd; border-radius:8px;">
+                                                <h3 class="text-danger"><b>Shop is Closed</b></h3>
 
-<!-- ========================================================= -->
-<!-- LOGIC FIX STARTS HERE -->
-<!-- ========================================================= -->
+                                                <p class="mt-2"><b>Today's Timing:</b></p>
 
-{% if selected_category %}
+                                                {% if current_opening_hours %}
+                                                    {% for hour in current_opening_hours %}
+                                                        {% if hour.is_closed %}
+                                                            <p class="text-muted">Closed Today</p>
+                                                        {% else %}
+                                                            <p class="text-muted">{{ hour.from_hour }} - {{ hour.to_hour }}</p>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                {% else %}
+                                                    <p class="text-muted">No opening hours available</p>
+                                                {% endif %}
+                                            </div>
 
-    <!-- 1️⃣ SHOW ONLY SELECTED CATEGORY -->
-    <div class="element-title" id="menu-category-2">
-        <h5 class="text-color">{{ foods.first.category.category_name }}</h5>
-        <span>{{ foods.first.category.description }}</span>
-    </div>
+                                        {% else %}
 
-    <ul>
-        {% for food in foods %}
-            <li>
-                <div class="image-holder">
-                    {% if food.image %}
-                        <a href="{{ food.image.url }}"><img src="{{ food.image.url }}" alt="{{ food.food_title }}"></a>
-                    {% else %}
-                        <a href="{% static 'images/default-food.jpg' %}"><img src="{% static 'images/default-food.jpg' %}" alt="Default"></a>
-                    {% endif %}
-                </div>
+                                            <!-- MENU LOGIC START -->
 
-                <div class="text-holder">
-                    <h6>{{ food.food_title }}</h6>
-                    <span>{{ food.description }}</span>
-                </div>
+                                            {% if selected_category %}
 
-                <div class="price-holder">
-                    <span class="price">₹{{ food.price }}</span>
+                                                <!-- SHOW ONLY SELECTED CATEGORY -->
+                                                <div class="element-title" id="menu-category-2">
+                                                    <h5 class="text-color">{{ foods.first.category.category_name }}</h5>
+                                                    <span>{{ foods.first.category.description }}</span>
+                                                </div>
 
-                    <a   href="javascript:void(0)" class="decrease_cart"
+                                                    <ul>
+                                                    {% for food in foods_in_cat %}
+                                                        <li>
+                                                            <div class="image-holder">
+                                                                {% if food.image %}
+                                                                    <a href="{{ food.image.url }}"><img src="{{ food.image.url }}" alt=""></a>
+                                                                {% else %}
+                                                                    <a><img src="{% static 'images/default-food.jpg' %}" alt=""></a>
+                                                                {% endif %}
+                                                            </div>
 
-                       data-id="{{ food.id }}"
-                       data-url="{% url 'decrease_cart' food.id %}">
-                        <i class="icon-minus text-color"></i> 
-                    </a>
+                                                            <div class="text-holder">
+                                                                <h6>{{ food.food_title }}</h6>
+                                                                <span>{{ food.description }}</span>
+                                                            </div>
 
-                    <label id="qty-{{ food.id }}">0</label>
+                                                            <div class="price-holder">
+                                                                <span class="price">₹{{ food.price }}</span>
 
-                    <a href="javascript:void(0)" class="add_to_cart"
+                                                                <a href="javascript:void(0)" class="decrease_cart"
+                                                                data-id="{{ food.id }}"
+                                                                data-url="{% url 'decrease_cart' food.id %}">
+                                                                <i class="icon-minus text-color"></i>
+                                                            </a>
 
-                       data-id="{{ food.id }}"
-                       data-url="{% url 'add_to_cart' food.id %}">
-                        <i class="icon-plus4 text-color"></i>
-                    </a>
-                </div>
+                                                            <label id="qty-{{ food.id }}">0</label>
 
-            </li>
-        {% endfor %}
-    </ul>
-
-{% else %}
-
-    <!-- 2️⃣ SHOW ALL CATEGORIES AND THEIR FOODS -->
-    {% for cat, foods_in_cat in category_with_food.items %}
-
-        <div class="element-title" id="menu-category-2">
-            <h5 class="text-color">{{ cat.category_name }}</h5>
-            <span>{{ cat.description }}</span>
-        </div>
-
-        <ul>
-            {% for food in foods_in_cat %}
-                <li>
-                    <div class="image-holder">
-                        {% if food.image %}
-                            <a href="{{ food.image.url }}"><img src="{{ food.image.url }}" alt="{{ food.food_title }}"></a>
-                        {% else %}
-                            <a href="{% static 'images/default-food.jpg' %}"><img src="{% static 'images/default-food.jpg' %}" alt="Default"></a>
-                        {% endif %}
-                    </div>
-
-                    <div class="text-holder">
-                        <h6>{{ food.food_title }}</h6>
-                        <span>{{ food.description }}</span>
-                    </div>
-
-                    <div class="price-holder">
-                        <span class="price">₹{{ food.price }}</span>
-
-                        <a href="#" class="decrease_cart"
-                           data-id="{{ food.id }}"
-                           data-url="{% url 'decrease_cart' food.id %}">
-                            <i class="icon-minus text-color"></i>
-                        </a>
-
-                        <label id="qty-{{ food.id }}">0</label>
-
-                         <a href="#" class="add_to_cart"
-                                                       data-id="{{ food.id }}"
-                                                       data-url="{% url 'add_to_cart' food.id %}">
-                                                        <i class="icon-plus4 text-color"></i>
-                         </a>
-                    </div>
-
-                </li>
-            {% endfor %}
-        </ul>
-
-    {% endfor %}
-
-{% endif %}
-
-<!-- LOGIC FIX END -->
+                                                            <a href="javascript:void(0)" class="add_to_cart"
+                                                            data-id="{{ food.id }}"
+                                                            data-url="{% url 'add_to_cart' food.id %}">
+                                                                <i class="icon-plus4 text-color"></i>
+                                                            </a>
+                                                        </div>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
 
 
-<!-- LOAD CART QUANTITIES -->
-{% for item in cart_items %}
-    <span id="qty-{{ item.fooditem.id }}" class="item_qty d-none" data-qty="{{ item.quantity }}"></span>
-{% endfor %}
+                                            {% else %}
 
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                                <!-- SHOW ALL CATEGORIES & FOODS -->
+                                                {% for cat, foods_in_cat in category_with_food.items %}
+                                                    <div class="element-title" id="menu-category-2">
+                                                        <h5 class="text-color">{{ cat.category_name }}</h5>
+                                                        <span>{{ cat.description }}</span>
+                                                    </div>
 
-                    </div>
-                </div>
+                                                    <ul>
+                                                        {% for food in foods_in_cat %}
+                                                            <li>
+                                                                <div class="image-holder">
+                                                                    {% if food.image %}
+                                                                        <a href="{{ food.image.url }}"><img src="{{ food.image.url }}" alt=""></a>
+                                                                    {% else %}
+                                                                        <a><img src="{% static 'images/default-food.jpg' %}" alt=""></a>
+                                                                    {% endif %}
+                                                                </div>
 
-            </div>
-        </div>
-    </div>
+                                                                <div class="text-holder">
+                                                                    <h6>{{ food.food_title }}</h6>
+                                                                    <span>{{ food.description }}</span>
+                                                                </div>
 
-</div>
+                                                                <div class="price-holder">
+                                                                    <span class="price">₹{{ food.price }}</span>
 
-{% endblock %}
+                                                                    <a href="javascript:void(0)" class="decrease_cart"
+                                                                        data-id="{{ food.id }}"
+                                                                        data-url="{% url 'decrease_cart' food.id %}">
+                                                                        <i class="icon-minus text-color"></i>
+                                                                    </a>
+
+                                                                    <label id="qty-{{ food.id }}">0</label>
+
+                                                                    <a href="javascript:void(0)" class="add_to_cart"
+                                                                        data-id="{{ food.id }}"
+                                                                        data-url="{% url 'add_to_cart' food.id %}">

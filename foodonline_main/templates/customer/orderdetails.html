@@ -46,7 +46,7 @@
                                                     <div class="row text-center mb-3">
                                                         <div class="col-md-3">
                                                             <span class="d-block">Order Date:</span>
-                                                            <b>{{ order.created_at }}</b>
+                                                            <b>{{ order.created_at|date:"d F Y" }}</b>
                                                         </div>
                                                         <div class="col-md-3">
                                                             <span class="d-block">Order No:</span>
@@ -99,19 +99,9 @@
 
                                                         <div class="col-md-6">
                                                             <ul class="list-unstyled">
-                                                                <li class="mb-2">
-                                                                    Subtotal
-                                                                    <span class="float-right">₹{{ subtotal }}</span>
-                                                                </li>
+                                                                
 
-                                                                {% for key, value in tax_data.items %}
-                                                                    {% for rate, amount in value.items %}
-                                                                        <li class="mb-2">
-                                                                            {{ key }} ({{ rate }}%)
-                                                                            <span class="float-right">₹{{ amount }}</span>
-                                                                        </li>
-                                                                    {% endfor %}
-                                                                {% endfor %}
+                                                               
 
                                                                 <li class="font-weight-bold">
                                                                     TOTAL

@@ -315,10 +315,4 @@ $(document).on('click','.remove_hour',function(e){
     })
 })
 
-
-
-
-
-    
-
 });
