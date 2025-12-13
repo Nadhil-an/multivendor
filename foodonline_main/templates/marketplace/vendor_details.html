@@ -130,7 +130,7 @@
                                                     <span class="price">{{ food.price|floatformat:0 }}</span>
 
 
-                                                    <a href="#" class="restaurant-add-menu-btn">
+                                                   <a href="#" class="restaurant-add-menu-btn add_to_cart "  data-id="{{ food.id }}" data-url="{% url 'add_to_cart' food.id %}">
                                                         <i class="icon-plus4 text-color"></i>
                                                     </a>
                                                 </div>
@@ -171,7 +171,7 @@
                                                     <span class="price">{{ food.price|floatformat:0 }}</span>
 
 
-                                                    <a href="#" class="restaurant-add-menu-btn">
+                                                   <a href="#" class="restaurant-add-menu-btn add_to_cart "  data-id="{{ food.id }}" data-url="{% url 'add_to_cart' food.id %}">
                                                         <i class="icon-plus4 text-color"></i>
                                                     </a>
                                                 </div>
@@ -195,5 +195,20 @@
     </div>
 
 </div>
+
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+$(document).on('click', '.add_to_cart', function(e){
+    e.preventDefault();
+    console.log("CLICKED!");
+
+    let food_id = $(this).data('id');
+    console.log("Food ID:", food_id);
+});
+</script>
+{% endblock %}
+
 
 {% endblock %}

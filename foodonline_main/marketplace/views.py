@@ -135,49 +135,105 @@ def vendor_details(request, vendor_slug, category_slug=None):
 #
 # add_to_cart
 #
-#######################
-def add_to_cart(request, food_id=None):
+####################### 
+
+def add_to_cart(request, food_id):
+
     if not request.user.is_authenticated:
-        return JsonResponse({'status': 'login_required', 'message': 'Please login to continue'})
+        return JsonResponse({
+            'status': 'login_required',
+            'message': 'Please login to continue'
+        })
 
-    # Must be AJAX request
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+    if request.headers.get('x-requested-with') != 'XMLHttpRequest':
+        return JsonResponse({
+            'status': 'failed',
+            'message': 'Invalid request'
+        })
+
+    try:
+        fooditem = FoodItem.objects.get(id=food_id)
+    except FoodItem.DoesNotExist:
+        return JsonResponse({
+            'status': 'failed',
+            'message': 'This food does not exist'
+        })
+
+    try:
+        chkCart = Cart.objects.get(user=request.user, fooditem=fooditem)
+        chkCart.quantity += 1
+        chkCart.save()
+
+        return JsonResponse({
+            'status': 'success',
+            'message': 'Increased the cart quantity',
+            'food_id': fooditem.id,
+            'cart_counter': get_cart_counter(request),
+            'qty': chkCart.quantity,
+            'cart_amount': get_cart_amount(request)
+        })
+
+    except Cart.DoesNotExist:
+        newCart = Cart.objects.create(
+            user=request.user,
+            fooditem=fooditem,
+            quantity=1
+        )
+
+        return JsonResponse({
+            'status': 'success',
+            'message': 'Product added to the cart',
+            'food_id': fooditem.id,
+            'cart_counter': get_cart_counter(request),
+            'qty': newCart.quantity,
+            'cart_amount': get_cart_amount(request)
+        })
+
+
+
+
+
+    # if not request.user.is_authenticated:
+    #     return JsonResponse({'status': 'login_required', 'message': 'Please login to continue'})
+
+    # # Must be AJAX request
+    # if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         
-        # Check if food exists
-        try:
-            fooditem = FoodItem.objects.get(id=food_id)
-        except FoodItem.DoesNotExist:
-            return JsonResponse({'status':'failed','message':'This food does not exist'})
+    #     # Check if food exists
+    #     try:
+    #         fooditem = FoodItem.objects.get(id=food_id)
+    #     except FoodItem.DoesNotExist:
+    #         return JsonResponse({'status':'failed','message':'This food does not exist'})
 
-        # If item already in cart → increase qty
-        try:
-            chkCart = Cart.objects.get(user=request.user, fooditem=fooditem)
-            chkCart.quantity += 1
-            chkCart.save()
+    #     # If item already in cart → increase qty
+    #     try:
+    #         chkCart = Cart.objects.get(user=request.user, fooditem=fooditem)
+    #         chkCart.quantity += 1
+    #         chkCart.save()
 
-            return JsonResponse({
-                'status': 'Success',
-                'message': 'Increased the cart quantity',
-                'food_id': fooditem.id,
-                'cart_counter': get_cart_counter(request),
-                'qty': chkCart.quantity,
-                'cart_amount': get_cart_amount(request)
-            })
+    #         return JsonResponse({
+    #             'status': 'Success',
+    #             'message': 'Increased the cart quantity',
+    #             'food_id': fooditem.id,
+    #             'cart_counter': get_cart_counter(request),
+    #             'qty': chkCart.quantity,
+    #             'cart_amount': get_cart_amount(request)
+    #         })
 
-        # If it's a new item → add to cart
-        except Cart.DoesNotExist:
-            newCart = Cart.objects.create(user=request.user, fooditem=fooditem, quantity=1)
-            return JsonResponse({
-                'status': 'Success',
-                'message': 'Product added to the cart',
-                'food_id': fooditem.id,
-                'cart_counter': get_cart_counter(request),
-                'qty': newCart.quantity,
-                'cart_amount': get_cart_amount(request)
-            })
+    #     # If it's a new item → add to cart
+    #     except Cart.DoesNotExist:
+    #         newCart = Cart.objects.create(user=request.user, fooditem=fooditem, quantity=1)
+    #         return JsonResponse({
+    #             'status': 'Success',
+    #             'message': 'Product added to the cart',
+    #             'food_id': fooditem.id,
+    #             'cart_counter': get_cart_counter(request),
+    #             'qty': newCart.quantity,
+    #             'cart_amount': get_cart_amount(request)
+    #         })
 
-    # If request is NOT ajax
-    return JsonResponse({'status': 'failed', 'message': 'Invalid Request'})
+    # # If request is NOT ajax
+    # return JsonResponse({'status': 'failed', 'message': 'Invalid Request'})
 
 ########################
 #
