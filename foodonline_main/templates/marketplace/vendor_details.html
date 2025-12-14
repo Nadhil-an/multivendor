@@ -124,10 +124,14 @@
                                                 </div>
 
                                                 <div class="price-holder">
-                                                    <a href="#" class="menu-btn minus-btn">
+                                                    <a href="#" class="menu-btn minus-btn" style="margin-right: 20px;">
                                                         <i class="icon-minus text-color"></i>
                                                     </a>
-                                                    <span class="price">{{ food.price|floatformat:0 }}</span>
+                                                    {% if cart.quantity %}
+                                                    <label id="qty-{{ cart.fooditem.id }}">{{ cart.quantity }}</label>
+                                                    {% else %}
+                                                        <label id="qty-{{ cart.fooditem.id }}">0</label>
+                                                    {% endif %}
 
 
                                                    <a href="#" class="restaurant-add-menu-btn add_to_cart "  data-id="{{ food.id }}" data-url="{% url 'add_to_cart' food.id %}">
@@ -162,18 +166,30 @@
                                                 <div class="text-holder">
                                                     <h6>{{ food.food_title }}</h6>
                                                     <p>{{ food.description }}</p>
+                                                    <span class="price " style="color: #C33332;font-weight: 600;font-size: 15px;">₹{{ food.price|floatformat:0 }}</span>
+
                                                 </div>
 
                                                 <div class="price-holder">
-                                                    <a href="#" class="menu-btn minus-btn">
+                                                    <a href="#" class="menu-btn minus-btn" style="margin-right: 20px;">
                                                         <i class="icon-minus text-color"></i>
                                                     </a>
-                                                    <span class="price">{{ food.price|floatformat:0 }}</span>
+                                                    {% if cart.quantity %}
+                                                    <label id="qty-{{ cart.fooditem.id }}">{{ cart.quantity }}</label>
+                                                    {% else %}
+                                                        <label id="qty-{{ cart.fooditem.id }}">0</label>
+                                                    {% endif %}
+
+                                                    
 
 
-                                                   <a href="#" class="restaurant-add-menu-btn add_to_cart "  data-id="{{ food.id }}" data-url="{% url 'add_to_cart' food.id %}">
+                                                   <a href="#"
+                                                    class="restaurant-add-menu-btn add_to_cart"
+                                                    data-id="{{ food.id }}"
+                                                    data-url="{% url 'add_to_cart' food.id %}">
                                                         <i class="icon-plus4 text-color"></i>
                                                     </a>
+
                                                 </div>
                                             </li>
                                             {% endfor %}
@@ -195,8 +211,9 @@
     </div>
 
 </div>
+{% endblock %}
 
-{% block extra_js %}
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
@@ -208,7 +225,7 @@ $(document).on('click', '.add_to_cart', function(e){
     console.log("Food ID:", food_id);
 });
 </script>
-{% endblock %}
 
 
-{% endblock %}
+
+

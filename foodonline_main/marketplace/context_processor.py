@@ -5,10 +5,17 @@ from marketplace.models import Tax
 def get_cart_counter(request):
     cart_count = 0
     if request.user.is_authenticated:
-        cart_items = Cart.objects.filter(user=request.user)
-        for item in cart_items:
-            cart_count += item.quantity
-    return {'cart_count': cart_count}
+        try:
+
+            cart_items = Cart.objects.filter(user=request.user)
+            if cart_items:
+                for item in cart_items:
+                    cart_count += item.quantity
+            else:
+                cart_count = 0
+        except:
+            cart_count = 0
+    return  dict(cart_count=cart_count)
 
 
 def get_cart_amount(request):

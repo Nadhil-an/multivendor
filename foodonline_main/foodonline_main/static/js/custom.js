@@ -66,45 +66,23 @@ $(document).ready(function(){
 $(document).on('click', '.add_to_cart', function (e) {
     e.preventDefault();
 
-    let food_id = $(this).data('id');
-    let url = $(this).data('url');
+    let food_id = $(this).data('id');     // ✅ FIXED
+    let url = $(this).data('url');        // ✅ FIXED
 
     $.ajax({
         type: 'GET',
         url: url,
-        headers: { "X-Requested-With": "XMLHttpRequest" },
+        data: {
+            food_id: food_id
+        },
+        headers: { "X-Requested-With": "XMLHttpRequest" }, // ✅ IMPORTANT
         success: function (response) {
-
-            if (response.status === 'login_required') {
-                Swal.fire({
-                    icon: 'info',
-                    title: response.message,
-                    showConfirmButton: true,
-                    confirmButtonText: 'Login Now'
-                }).then((result) => {
-                    if (result.isConfirmed) window.location.href = '/login/';
-                });
-            }
-            else if (response.status === 'failed') {
-                Swal.fire({
-                    icon: 'error',
-                    title: response.message
-                });
-            }
-            else if (response.status === 'success') {
-                // ✅ Update cart counter and item quantity
-                $('#cart_counter').html(response.cart_counter.cart_count);
-                $('#qty-' + food_id).html(response.qty);
-
-                applyamount(
-                    response.cart_amount.subtotal,
-                    response.cart_amount.tax,
-                    response.cart_amount.grand_total
-                );
-            }
+            console.log(response);
         }
     });
 });
+
+
 
 
 
