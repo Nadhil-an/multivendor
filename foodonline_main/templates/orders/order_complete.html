@@ -1,7 +1,33 @@
-{% extends 'base.html' %}
+
 {% load static %}
 
-{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FoodOnline</title>
+
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800">
+
+    <!-- Local CSS -->
+    <link rel="stylesheet" href="{% static 'css/iconmoon.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/cs-foodbakery-plugin.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-slider.css' %}">
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
 
 <div class="container mt-5 mb-5">
     <div class="row justify-content-center">
@@ -126,5 +152,7 @@
         </div>
     </div>
 </div>
+</body>
+</html>
 
-{% endblock %}
+

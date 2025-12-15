@@ -48,8 +48,9 @@
                         <ul class="stickynav-tabs nav nav-tabs">
                             <li class="active">
                                 <a data-toggle="tab" href="#order">
-                                    <i class="icon-room_service"></i> Your Order
+                                    <i class="fa fa-credit-card"></i> Total Amount
                                 </a>
+
                             </li>
                         </ul>
                         <div class="tab-content">
@@ -95,7 +96,7 @@
 
                                         {% elif order.payment_method == "RazorPay" %}
                                         <div id="rzp_payment_button">
-                                            <button class="btn btn-danger w-100 p-2" id="rzp-button1">Pay with Razorpay</button>
+                                            <button class="btn btn-danger w-100 p-2" id="rzp-button1"><i class="fa fa-credit-card" style="margin-right: 10px;"></i>Pay with Razorpay</button>
                                             <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
                                         </div>

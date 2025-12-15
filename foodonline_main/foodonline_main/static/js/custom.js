@@ -1,6 +1,16 @@
 /* =========================
-   GOOGLE PLACES AUTOCOMPLETE
+   GOOGLE PLACES AUTOCOMPLET
 ========================= */
+
+/* =========================
+   HANDLE BROWSER BACK CACHE
+========================= */
+window.addEventListener('pageshow', function (event) {
+    if (event.persisted) {
+        window.location.reload();
+    }
+});
+
 
 let autocomplete;
 
@@ -147,6 +157,11 @@ $(document).ready(function () {
                     Swal.fire({ icon: 'error', title: response.message });
                 } else {
                     $('#cart_counter').html(response.cart_counter.cart_count);
+                    applyamount(
+                        response.cart_amount['subtotal'],
+                        response.cart_amount['tax_dict'],
+                        response.cart_amount['grand_total']
+                    )
                     $('#cart-item-' + food_id).fadeOut(300, function () {
                         $(this).remove();
                         displayEmptyText();

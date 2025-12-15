@@ -35,7 +35,7 @@ def marketplace(request):
 #######################
 
 def parse_time_string(value):
-    """Convert '09:00' or '09:00 AM' into datetime.time object."""
+    """Convert 'HH:MM' or 'HH:MM AM/PM' into time object."""
     if isinstance(value, str):
         for fmt in ("%H:%M", "%I:%M %p"):
             try:
@@ -46,8 +46,8 @@ def parse_time_string(value):
 
 
 def vendor_details(request, vendor_slug, category_slug=None):
-    today_date = date.today()
-    today = today_date.isoweekday()
+    today = date.today().isoweekday()
+    now = datetime.now().time()
 
     vendor = get_object_or_404(Vendor, vendor_slug=vendor_slug)
 
@@ -55,48 +55,56 @@ def vendor_details(request, vendor_slug, category_slug=None):
     opening_hours = OpeningHour.objects.filter(vendor=vendor).order_by('day', '-from_hour')
     current_opening_hours = OpeningHour.objects.filter(vendor=vendor, day=today)
 
-    # Check if vendor is open NOW
-    # Check if vendor is open NOW
+    # --- CHECK IF SHOP IS OPEN (FIXED LOGIC) ---
     is_open = False
-    now = datetime.now().time()
 
-    for i in current_opening_hours:
-
-        if not i.from_hour or not i.to_hour:
+    for hour in current_opening_hours:
+        if hour.is_closed:
             continue
 
-        if i.is_closed:
-            continue
-
-        start = parse_time_string(i.from_hour)
-        end = parse_time_string(i.to_hour)
+        start = parse_time_string(hour.from_hour)
+        end = parse_time_string(hour.to_hour)
 
         if not start or not end:
             continue
 
-        if start <= now <= end:
-            is_open = True
+        # Normal timing (e.g. 10:00 AM – 10:00 PM)
+        if start <= end:
+            if start <= now <= end:
+                is_open = True
+                break
+        else:
+            # Overnight timing (e.g. 1:20 PM – 2:00 AM)
+            if now >= start or now <= end:
+                is_open = True
+                break
 
-
-
-    # --- Category List ---
+    # --- Categories ---
     categories = Category.objects.filter(vendor=vendor)
 
-    # --- If Category Selected ---
+    # --- Foods ---
     if category_slug:
         selected_category = get_object_or_404(Category, vendor=vendor, slug=category_slug)
-        foods = FoodItem.objects.filter(category=selected_category, is_available=True).order_by('food_title')
-
+        foods = FoodItem.objects.filter(
+            category=selected_category,
+            is_available=True
+        ).order_by('food_title')
     else:
         selected_category = None
-        foods = FoodItem.objects.filter(vendor=vendor, is_available=True).order_by('category__category_name', 'food_title')
+        foods = FoodItem.objects.filter(
+            vendor=vendor,
+            is_available=True
+        ).order_by('category__category_name', 'food_title')
 
-    # Category with foods mapping (for full view)
+    # --- Category → Foods mapping ---
     category_with_food = {}
     for cat in categories:
-        category_with_food[cat] = FoodItem.objects.filter(category=cat, is_available=True)
+        category_with_food[cat] = FoodItem.objects.filter(
+            category=cat,
+            is_available=True
+        )
 
-    # --- User Cart ---
+    # --- Cart ---
     if request.user.is_authenticated:
         cart_items = Cart.objects.filter(user=request.user)
         cart_items_dict = {item.fooditem.id: item.quantity for item in cart_items}
@@ -106,30 +114,19 @@ def vendor_details(request, vendor_slug, category_slug=None):
 
     context = {
         'vendor': vendor,
-
-        # categories in sidebar
         'categories': categories,
-
-        # foods returned based on slug
         'foods': foods,
-
-        # mapping for full list view
         'category_with_food': category_with_food,
-
-        # highlight sidebar selected item
         'selected_category': selected_category,
-
-        # cart details
         'cart_items': cart_items,
         'cart_items_dict': cart_items_dict,
-
-        # opening hour data
         'opening_hours': opening_hours,
         'current_opening_hours': current_opening_hours,
-        'is_open': is_open,
+        'is_open': is_open,   # ✅ THIS NOW WORKS CORRECTLY
     }
 
     return render(request, 'marketplace/vendor_details.html', context)
+
 
 #######################
 #

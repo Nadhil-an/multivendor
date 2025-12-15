@@ -70,6 +70,8 @@
         <div class="container">
             <div class="row">
 
+                {% if vendor.is_open%}
+
                 <!-- CATEGORY LIST -->
                 <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 sticky-sidebar">
                     <div class="filter-toggle">
@@ -94,7 +96,7 @@
                 <div class="col-lg-9 col-md-9 col-sm-8 col-xs-12">
                     <div class="tabs-holder horizontal">
                         <ul class="stickynav-tabs nav nav-tabs">
-                            <li class="active"><a data-toggle="tab" href="#home"><i class="icon-room_service"></i> Menu</a></li>
+                            <li class="active"><a data-toggle="tab" href="#home" ><i class="icon-room_service"></i> Menu</a></li>
                         </ul>
 
                         <div class="tab-content">
@@ -238,6 +240,23 @@
                 </div> 
 
             </div>
+            {% else %}
+
+            <div class="col-lg-9 col-md-9 col-sm-8 col-xs-12 d-flex justify-content-center align-items-center closed">
+                <div class="closed-box text-center">
+                    <h4 class="mb-3 text-danger">Shop is Closed</h4>
+                    <p class="text-muted mb-4">
+                        This restaurant is currently not accepting orders.
+                        Please check back later or explore other nearby restaurants.
+                    </p>
+                    <a href="{% url 'marketplace' %}" class="btn btn-outline-danger">
+                        Explore More Restaurants
+                    </a>
+                </div>
+            </div>
+
+
+            {% endif %}
         </div>
     </div>
 
