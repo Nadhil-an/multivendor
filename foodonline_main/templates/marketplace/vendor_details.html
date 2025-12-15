@@ -175,7 +175,8 @@
                                                 </div>
 
                                                 <div class="price-holder">
-                                                    <a href="#" class="menu-btn minus-btn" style="margin-right: 20px;">
+                                                    <a href="#" class="menu-btn minus-btn decrease_cart" data-id="{{ food.id }}" data-url="{% url 'decrease_cart' food.id %}" 
+                                                    style="margin-right: 20px;">
                                                         <i class="icon-minus text-color"></i>
                                                     </a>
                                                     {% if cart.quantity %}
