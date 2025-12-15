@@ -146,10 +146,10 @@ def add_to_cart(request, food_id):
                     chkCart = Cart.objects.get(user=request.user, fooditem=fooditem)
                     chkCart.quantity +=1
                     chkCart.save()
-                    return JsonResponse({'status':'Success','message':'Increase the cart quantity','cart_counter':get_cart_counter(request),'qty':chkCart.quantity})
+                    return JsonResponse({'status':'Success','message':'Increase the cart quantity','cart_counter':get_cart_counter(request),'qty':chkCart.quantity,'cart_amount':get_cart_amount(request)})
                 except:
                     chkCart = Cart.objects.create(user=request.user,fooditem=fooditem,quantity=1)
-                    return JsonResponse({'status':'Success','message':'Added to food to the cart','cart_counter':get_cart_counter(request),'qty':chkCart.quantity})
+                    return JsonResponse({'status':'Success','message':'Added to food to the cart','cart_counter':get_cart_counter(request),'qty':chkCart.quantity,'cart_amount':get_cart_amount(request)})
             except:
                 return JsonResponse({'status':'Failed','message':'This food does not exist!'})
             
@@ -222,7 +222,8 @@ def delete_item(request, food_id):
             'status':'Success',
             'message':'Cart Item has been deleted!',
             'cart_counter': get_cart_counter(request), 
-             'cart_amount':get_cart_amount(request) # returns updated cart count
+             'cart_amount':get_cart_amount(request),
+              # returns updated cart count
         })
     except Cart.DoesNotExist:
         return JsonResponse({'status':'failed','message':'Cart Item does not exist'})

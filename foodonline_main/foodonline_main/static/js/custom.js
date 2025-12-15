@@ -64,8 +64,24 @@ $(document).ready(function () {
             data: { food_id: food_id },
             headers: { "X-Requested-With": "XMLHttpRequest" },
             success: function (response) {
-                 $('#cart_counter').html(response.cart_counter['cart_count'])
-                 $('#qty-'+food_id).html(response.qty)
+                if(response.status == 'login_required'){
+                    swal(response.message,'','info').then(function(){
+                        window.location = '/login';
+                    })
+                }else if(response.status == 'Failed'){
+                    swal(response.message,'','error')
+                }else{
+                    $('#cart_counter').html(response.cart_counter['cart_count'])
+                    $('#qty-'+food_id).html(response.qty)
+
+                    applyamount(
+                        response.cart_amount['subtotal'],
+                        response.cart_amount['tax_dict'],
+                        response.cart_amount['grand_total']
+                    )
+
+                }
+                 
             }
         });
     });
@@ -97,6 +113,12 @@ $(document).ready(function () {
                 } else {
                     $('#cart_counter').html(response.cart_counter.cart_count);
                     $('#qty-' + food_id).html(response.qty);
+                    applyamount(
+                        response.cart_amount['subtotal'],
+                        response.cart_amount['tax_dict'],
+                        response.cart_amount['grand_total']
+                    )
+
 
                     if (parseInt(response.qty) <= 0) {
                         $('#cart-item-' + cart_id).fadeOut(300, function () {
@@ -225,7 +247,14 @@ function displayEmptyText() {
 function applyamount(subtotal, tax, grand_total) {
     if (window.location.pathname === '/cart/') {
         $('#subtotal').html(subtotal);
-        $('#tax').html(tax);
-        $('#grand_total').html(grand_total);
+        $('#total').html(grand_total);
+
+        // update each tax dynamically
+        for (const [tax_type, tax_data] of Object.entries(tax)) {
+            for (const [percentage, amount] of Object.entries(tax_data)) {
+                $('#tax-' + tax_type).html(amount);
+            }
+        }
     }
 }
+
