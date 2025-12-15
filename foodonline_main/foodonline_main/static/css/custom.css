@@ -197,6 +197,28 @@ span.price {
     margin-right: 45px;
     margin-top: 7px;
 }
+.cart-qty{
+    margin-right: 10px;
+}
+.qty_button {
+    width: 32px;
+    height: 32px;
+    border: 1.5px solid #C33332;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    background-color: #fff;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.qty_button i {
+    color: #C33332;
+    font-size: 14px;
+    font-weight: bold;
+}
 
 
 

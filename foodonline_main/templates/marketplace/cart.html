@@ -50,18 +50,18 @@
                                                <div class="price-holder" style="text-align: right;">
                                             <div class="cart-controls" style="margin-top: 5px;">
 
-                                                <a href="#" class="decrease_cart" data-id="{{ cart.fooditem.id }}" data-cart-id="{{cart.id}}" 
+                                                <a href="#" class="decrease_cart qty_button"  style="text-decoration: none;" data-id="{{ cart.fooditem.id }}" data-cart-id="{{cart.id}}" 
                                                 data-url="{% url 'decrease_cart' cart.fooditem.id %}">
                                                     <i class="icon-minus text-color"></i>
                                                 </a>
 
                                                 {% if cart.quantity %}
-                                                    <label id="qty-{{ cart.fooditem.id }}">{{ cart.quantity }}</label>
+                                                    <label class="cart-qty" id="qty-{{ cart.fooditem.id }}">{{ cart.quantity }}</label>
                                                 {% else %}
-                                                    <label id="qty-{{ cart.fooditem.id }}">0</label>
+                                                    <label class="cart-qty" id="qty-{{ cart.fooditem.id }}">0</label>
                                                 {% endif %}
 
-                                                <a href="#" class="add_to_cart"
+                                                <a href="#" class="add_to_cart qty_button"
                                                 data-id="{{ cart.fooditem.id }}"
                                                 data-url="{% url 'add_to_cart' cart.fooditem.id %}"
                                                 style="text-decoration: none; border-radius: 50%;">
