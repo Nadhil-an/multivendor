@@ -18,9 +18,12 @@
             <ul class="navbar-nav ms-auto d-flex align-items-center">
 
                 {% if user.is_authenticated %}
-                <li class="nav-item me-3 ">
-                    <a  href="{% url 'vendor' %}" class="btn fw-bold px-3 myaccount-btn">My Account</a>
-                </li>
+                <a href="{% url 'vendor' %}"
+                    class="btn fw-bold px-3 myaccount-btn"
+                    style="border:none; box-shadow:none;">
+                    My Account
+                    </a>
+
 
                 <li class="nav-item me-3">
                     <a href="{% url 'logout' %}" class="btn btn-outline-danger fw-bold px-3">Logout</a>
@@ -51,7 +54,7 @@
     <h2 class="mb-0">Welcome, {{ vendor.vendor_name }}</h2>
 
     <a href="{% url 'menu_builder' %}" style="color: black; font-weight: bold;" class="text-decoration-none fw-semibold ">
-                    View More
+                    Add More
                 </a>
 </div>
 

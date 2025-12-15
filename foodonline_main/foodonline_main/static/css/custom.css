@@ -217,6 +217,20 @@ span.price {
     align-items: center;
 }
 
+.custom-toast {
+    position: fixed;
+    
+    z-index: 9999;
+    min-width: 280px;
+    max-width: 360px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    border-radius: 6px;
+    margin-left: 843px;
+    margin-top: 100px;
+}
+
+
+
 .qty_button {
     width: 32px;
     height: 32px;

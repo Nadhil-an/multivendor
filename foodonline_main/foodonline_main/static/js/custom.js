@@ -273,3 +273,14 @@ function applyamount(subtotal, tax, grand_total) {
     }
 }
 
+// document.addEventListener("DOMContentLoaded", function () {
+//     const alertBox = document.querySelector(".custom-toast");
+//     if (alertBox) {
+//         setTimeout(() => {
+//             alertBox.classList.remove("show");
+//             alertBox.classList.add("fade");
+//             setTimeout(() => alertBox.remove(), 300);
+//         }, 3000);
+//     }
+// });
+
