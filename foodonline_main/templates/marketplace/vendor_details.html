@@ -102,16 +102,16 @@
                                 <div class="menu-itam-holder">
 
 
-                                    {% if selected_category %}
+                                    <!-- {% if selected_category %} -->
 
-                                    <div class="menu-itam-list">
+                                    <!-- <div class="menu-itam-list"> -->
 
                                         <!-- CATEGORY NAME -->
-                                        <div class="element-title">
+                                        <!-- <div class="element-title">
                                             <h5 class="text-color">{{ selected_category.category_name }}</h5>
-                                        </div>
+                                        </div> -->
 
-                                        <ul>
+                                        <!-- <ul>
                                             {% for food in foods %}
                                             <li>
                                                 <div class="image-holder">
@@ -124,37 +124,41 @@
                                                 </div>
 
                                                 <div class="price-holder">
-                                                    <a href="#" class="menu-btn minus-btn" style="margin-right: 20px;">
-                                                        <i class="icon-minus text-color"></i>
-                                                    </a>
-                                                    {% if cart.quantity %}
+                                                <a href="#" class="menu-btn minus-btn" style="margin-right: 20px;">
+                                                    <i class="icon-minus text-color"></i>
+                                                </a>
+
+                                                {% if cart.quantity %}
                                                     <label id="qty-{{ cart.fooditem.id }}">{{ cart.quantity }}</label>
-                                                    {% else %}
-                                                        <label id="qty-{{ cart.fooditem.id }}">0</label>
-                                                    {% endif %}
+                                                {% else %}
+                                                    <label id="qty-{{ cart.fooditem.id }}">0</label>
+                                                {% endif %}
 
+                                                <a href="#"
+                                                class="restaurant-add-menu-btn add_to_cart"
+                                                data-id="{{ food.id }}"
+                                                data-url="{% url 'add_to_cart' food.id %}">
+                                                    <i class="icon-plus4 text-color"></i>
+                                                </a>
+                                            </div>
 
-                                                   <a href="#" class="restaurant-add-menu-btn add_to_cart "  data-id="{{ food.id }}" data-url="{% url 'add_to_cart' food.id %}">
-                                                        <i class="icon-plus4 text-color"></i>
-                                                    </a>
-                                                </div>
-                                            </li>
+                                             </li>
                                             {% endfor %}
                                         </ul>
 
-                                    </div>
+                                    </div> -->
 
-                                    {% else %}
+                                    <!-- {% else %} -->
 
                                     
 
                                     {% for cat, foods in category_with_food.items %}
                                     <div class="menu-itam-list">
 
-                                        <!-- CATEGORY NAME -->
-                                        <div class="element-title">
+                                       
+                                         <div class="element-title">
                                             <h5 class="text-color">{{ cat.category_name }}</h5>
-                                        </div>
+                                        </div> 
 
                                         <ul>
                                             {% for food in foods %}
@@ -175,12 +179,10 @@
                                                         <i class="icon-minus text-color"></i>
                                                     </a>
                                                     {% if cart.quantity %}
-                                                    <label id="qty-{{ cart.fooditem.id }}">{{ cart.quantity }}</label>
+                                                    <label id="qty-{{food.id}}">{{ cart.quantity }}</label>
                                                     {% else %}
-                                                        <label id="qty-{{ cart.fooditem.id }}">0</label>
+                                                        <label id="qty-{{food.id}}">0</label>
                                                     {% endif %}
-
-                                                    
 
 
                                                    <a href="#"
@@ -197,7 +199,12 @@
 
                                     </div>
                                     {% endfor %}
-                                    {% endif %}
+                                    {% endif %} 
+
+                                    {% for item in cart_items %}
+                                    <span id="qty-{{item.fooditem.id}}" class="item_qty d-none" data-qty="{{ item.quantity }}">{{ item.quantity }}</span>
+                                     
+                                     {% endfor %}
 
                                 </div>
                             </div>
@@ -214,17 +221,9 @@
 {% endblock %}
 
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<script>
-$(document).on('click', '.add_to_cart', function(e){
-    e.preventDefault();
-    console.log("CLICKED!");
 
-    let food_id = $(this).data('id');
-    console.log("Food ID:", food_id);
-});
-</script>
+
 
 
 

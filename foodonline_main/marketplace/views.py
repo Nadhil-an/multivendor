@@ -136,66 +136,29 @@ def vendor_details(request, vendor_slug, category_slug=None):
 # add_to_cart
 #
 ####################### 
-
 def add_to_cart(request, food_id):
 
-    if request.user.is_authenticated:
-
+    if  request.user.is_authenticated:
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             try:
                 fooditem = FoodItem.objects.get(id=food_id)
-
                 try:
                     chkCart = Cart.objects.get(user=request.user, fooditem=fooditem)
-                    chkCart.quantity += 1
+                    chkCart.quantity +=1
                     chkCart.save()
-                    return JsonResponse({
-                        'status': 'success',
-                        'message': 'Increased the cart quantity'
-                    })
-
-                except Cart.DoesNotExist:
-                    Cart.objects.create(
-                        user=request.user,
-                        fooditem=fooditem,
-                        quantity=1
-                    )
-                    return JsonResponse({
-                        'status': 'success',
-                        'message': 'Added the food to cart'
-                    })
-
-            except FoodItem.DoesNotExist:
-                return JsonResponse({
-                    'status': 'failed',
-                    'message': 'This food does not exist'
-                })
-
-        else:
-            return JsonResponse({
-                'status': 'failed',
-                'message': 'Invalid request'
-            })
-
+                    return JsonResponse({'status':'Success','message':'Increase the cart quantity','cart_counter':get_cart_counter(request),'qty':chkCart.quantity})
+                except:
+                    chkCart = Cart.objects.create(user=request.user,fooditem=fooditem,quantity=1)
+                    return JsonResponse({'status':'Success','message':'Added to food to the cart','cart_counter':get_cart_counter(request),'qty':chkCart.quantity})
+            except:
+                return JsonResponse({'status':'Failed','message':'This food does not exist!'})
+            
+    
     else:
-        return JsonResponse({
-            'status': 'failed',
-            'message': 'Please login to continue'
-        })
-
+        return JsonResponse({'status':'Failed','message':'Invalid Request'})
+        
 
     
-
-    
-
-    
-
-    
-
-    
-
-
-
 
 
     
