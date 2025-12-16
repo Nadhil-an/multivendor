@@ -6,6 +6,9 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
 from django.conf import settings
 import ssl
+from django.core.mail import EmailMultiAlternatives
+from django.utils.html import strip_tags
+
 ssl._create_default_https_context = ssl._create_unverified_context
 
 
@@ -17,18 +20,29 @@ def detectUser(user):
     else:
         return 'loginUser'
 
-def send_verification_email(request,user,email_template,mail_subject):
+def send_verification_email(request, user, email_template, mail_subject):
     from_email = settings.DEFAULT_FROM_EMAIL
     current_site = get_current_site(request)
-    message = render_to_string(email_template,{
-        'user':user,
-        'domain':current_site,
-        'uid':urlsafe_base64_encode(force_bytes(user.pk)),
-        'token':default_token_generator.make_token(user),
-    })
-    to_email = user.email
-    mail = EmailMessage(mail_subject,message,from_email,to=[to_email])
-    mail.send()
+
+    context = {
+        'user': user,
+        'domain': current_site.domain,  # IMPORTANT
+        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+        'token': default_token_generator.make_token(user),
+    }
+
+    html_message = render_to_string(email_template, context)
+    plain_message = strip_tags(html_message)
+
+    email = EmailMultiAlternatives(
+        subject=mail_subject,
+        body=plain_message,
+        from_email=from_email,
+        to=[user.email],
+    )
+
+    email.attach_alternative(html_message, "text/html")
+    email.send()
 
 def send_approve_mail(mail_template,context,mail_subject):
     from_email = settings.DEFAULT_FROM_EMAIL

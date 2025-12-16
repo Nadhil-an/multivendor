@@ -197,3 +197,9 @@ SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
 
 RZP_KEY_ID = config('RZP_KEY_ID')
 RZP_KEY_SECRET = config('RZP_KEY_SECRET')
+
+
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS ={
+    messages.ERROR:'danger',
+}

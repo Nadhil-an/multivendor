@@ -46,10 +46,10 @@ def registerUser(request):
             user.role = User.CUSTOMER       
             user.set_password(form.cleaned_data['password'])
             user.save()
-            # account activation
-            # mail_subject = 'Activate your Account'
-            # email_template = 'accounts/emails/account_verification_email.html'
-            # send_verification_email(request, user, email_template, mail_subject)
+           # account activation
+            mail_subject = 'Activate your Account'
+            email_template = 'accounts/emails/account_verification_email.html'
+            send_verification_email(request, user, email_template, mail_subject)
             # messages.success(request, 'Activation email as been sended ')
             return redirect('loginUser')
     else:
@@ -89,7 +89,7 @@ def registerVendor(request):
             vendor.user_profile = user_profile
             vendor.save()
 
-            messages.success(request, 'Your account has been registered successfully! Please wait for approval.')
+            # messages.success(request, 'Your account has been registered successfully! Please wait for approval.')
             return redirect('loginUser')
         else:
             messages.error(request, 'Please correct the errors below.')
@@ -117,7 +117,7 @@ def loginUser(request):
 
         if user is not None:
             auth.login(request,user)
-            messages.success(request,'successfully login')
+            # messages.success(request,'successfully login')
             return redirect('myaccount')
         else:
             messages.error(request,'Invalid login credentials')
@@ -189,7 +189,7 @@ def activate(request,uidb64,token):
     if user is not None and default_token_generator.check_token(user,token):
         user.is_active = True
         user.save()
-        messages.success(request,'Account has been activated')
+        # messages.success(request,'Account has been activated')
         return redirect('myaccount')
     else:
         messages.error(request,"Invalid activation link")
@@ -210,7 +210,7 @@ def forgotpassword(request):
             mail_subject = 'Reset Your Password'
             email_template = 'accounts/emails/reset_password_email.html'
             send_verification_email(request, user, email_template, mail_subject)
-            messages.success(request, 'Reset Email has been sent')
+            # messages.success(request, 'Reset Email has been sent')
             return redirect('loginUser')
         else:
             messages.error(request, 'Account does not exist')
@@ -253,7 +253,7 @@ def reset_password(request):
             user.set_password(password)
             user.is_active = True
             user.save()
-            messages.success(request,'Password reset successfully')
+            # messages.success(request,'Password reset successfully')
             return redirect('loginUser')
 
         
