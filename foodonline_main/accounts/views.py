@@ -50,8 +50,8 @@ def registerUser(request):
             mail_subject = 'Activate your Account'
             email_template = 'accounts/emails/account_verification_email.html'
             send_verification_email(request, user, email_template, mail_subject)
-            # messages.success(request, 'Activation email as been sended ')
-            return redirect('loginUser')
+            messages.success(request, 'Activation email as been sended ')
+           
     else:
         form = UserForm()
 
@@ -89,7 +89,7 @@ def registerVendor(request):
             vendor.user_profile = user_profile
             vendor.save()
 
-            # messages.success(request, 'Your account has been registered successfully! Please wait for approval.')
+            messages.success(request, 'Your account has been registered successfully! Please wait for approval.')
             return redirect('loginUser')
         else:
             messages.error(request, 'Please correct the errors below.')
@@ -210,8 +210,8 @@ def forgotpassword(request):
             mail_subject = 'Reset Your Password'
             email_template = 'accounts/emails/reset_password_email.html'
             send_verification_email(request, user, email_template, mail_subject)
-            # messages.success(request, 'Reset Email has been sent')
-            return redirect('loginUser')
+            messages.success(request, 'Reset Email has been sent')
+            
         else:
             messages.error(request, 'Account does not exist')
             return redirect('forgotpassword')

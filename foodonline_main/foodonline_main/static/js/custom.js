@@ -259,6 +259,11 @@ function displayEmptyText() {
     }
 }
 
+
+
+
+
+
 function applyamount(subtotal, tax, grand_total) {
     if (window.location.pathname === '/cart/') {
         $('#subtotal').html(subtotal);
@@ -273,14 +278,17 @@ function applyamount(subtotal, tax, grand_total) {
     }
 }
 
-// document.addEventListener("DOMContentLoaded", function () {
-//     const alertBox = document.querySelector(".custom-toast");
-//     if (alertBox) {
-//         setTimeout(() => {
-//             alertBox.classList.remove("show");
-//             alertBox.classList.add("fade");
-//             setTimeout(() => alertBox.remove(), 300);
-//         }, 3000);
-//     }
-// });
+document.addEventListener("DOMContentLoaded", function () {
+    const alertBox = document.querySelector(".show-notification");
+
+    if (alertBox) {
+        setTimeout(() => {
+            alertBox.classList.add("fade-out");
+
+            setTimeout(() => {
+                alertBox.remove();
+            }, 500); // match CSS transition
+        }, 3000); // visible time
+    }
+});
 

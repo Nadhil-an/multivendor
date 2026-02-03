@@ -1,18 +1,37 @@
-@keyframes show-toast{
-    0%{bottom:-100%}
-    20%{bottom:100px}
-    80%{bottom:100px}
-    100%{bottom:-100%}
+@keyframes show-toast {
+    0% {
+        opacity: 0;
+        transform: translateY(100px);
+    }
+    20% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    80% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(100px);
+    }
 }
 
-.show-notification{
-    position: fixed;
-    bottom: 100%;
-    right: 20px;
-    animation-name:show-toast ;
-    animation-duration:5s ;
-    z-index: 99;
+
+.show-notification {
+    position: fixed !important;
+    bottom: 30px;
+    right: 40px;
+
+    width: auto !important;
+    max-width: 360px;        /* 👈 control width */
+    padding: 15px 20px;
+
+    z-index: 99999;
+    border-radius: 6px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
+
 
 .btn{
     padding: 2px 1.75sem;
