@@ -1,135 +1,60 @@
 {% load static %}
 
 <!-- ================= Header Start ================= -->
-<header id="header">
-    <div class="main-header">
-        <div class="container-fluid">
-            <div class="row">
+<header id="header" class="main-header">
+    <div class="container-fluid px-lg-5">
+        <div class="row align-items-center py-2">
 
-                <!-- Logo & Location -->
-                <div class="col-lg-8 col-md-8 col-sm-12 d-flex align-items-center" style="padding: 10px;">
-                    <div class="logo">
-                        <a href="{% url 'home' %}">
-                            <img src="{% static 'images/foodmozone.png' %}" alt="FoodOnline Logo" width="250" height="50px">
-                        </a> 
-                    </div>
+            <!-- Logo -->
+            <div class="col-lg-3 col-md-4 col-6">
+                <a href="{% url 'home' %}" class="logo">
+                    <img src="{% static 'images/logo.png' %}" alt="Unibite Logo" height="45">
+                </a>
+            </div>
 
-                    <div class="main-location ml-5">
-                        <ul>
-                            <li class="location-has-children choose-location">
-                                <form>
-                                    <input 
-                                        type="text"
-                                        id="location"
-                                        placeholder="Current Location"
-                                        autocomplete="off"
-                                    >
-                                    <span id="get_location_btn" class="foodbakery-radius-location">
-                                        <i class="icon-target5"></i>
-                                    </span>
-                                </form>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+            <!-- Navigation -->
+            <div class="col-lg-9 col-md-8 col-6 d-flex justify-content-end align-items-center">
 
-                <!-- Login / Cart / Marketplace -->
-                <div class="col-lg-4 col-md-4 col-sm-12">
-                    <div class="login-option">
+                <div class="nav-right">
 
-                        {% if user.is_authenticated %}
-                        <a href="{% url 'cart' %}">
-                            <i class="fa fa-shopping-cart text-danger" style="font-size: 20px;"></i>
-                            <span 
-                                class="badge badge-warning"
-                                id="cart_counter"
-                                style="border-radius: 50px; position: relative; bottom: 10px;">
-                                {{ cart_count }}
-                            </span>
-                        </a>
-                        {% endif %}
+                    <!-- Food Stalls -->
+                    <a href="{% url 'marketplace' %}" class="clean-nav-link">Food Stalls</a>
 
-                        <a href="{% url 'marketplace' %}" class="btn btn-outline-danger text-uppercase font-weight-bold">
-                            Market place
+                    {% if user.is_authenticated %}
+
+                        <!-- My Account -->
+                        <a href="{% url 'customerDashboard' %}" class="clean-nav-link">My Account</a>
+
+                        <!-- Cart -->
+                        <a href="{% url 'cart' %}" class="clean-cart-icon">
+                            <i class="fa fa-shopping-cart"></i>
+                            <span class="clean-cart-badge" id="cart_counter">{{ cart_count }}</span>
                         </a>
 
-                        {% if user.is_authenticated %}
-                            <a class="cs-color login-popup" href="{% url 'customerDashboard' %}">My Account</a>
-                            <a class="cs-color login-popup text-danger" href="{% url 'logout' %}">Logout</a>
-                        {% else %}
-                            <a class="cs-color login-popup" href="{% url 'loginUser' %}">Login</a>/
-                            <a class="cs-color login-popup ml-0" href="{% url 'registerUser' %}">Register</a>
-                            <a class="get-start-btn" href="{% url 'registerVendor' %}">
-                                Register Restaurant
-                            </a>
-                        {% endif %}
+                        <!-- Logout -->
+                        <a href="{% url 'logout' %}" class="clean-nav-link logout-link">Logout</a>
 
-                    </div>
+                    {% else %}
+
+                        <!-- Login / Register -->
+                        <div class="auth-links">
+                            <a href="{% url 'loginUser' %}" class="login-link">Login</a>
+                            <span>/</span>
+                            <a href="{% url 'registerUser' %}" class="register-link">Register</a>
+                        </div>
+
+                        <!-- Register Restaurant -->
+                        <a href="{% url 'registerVendor' %}" class="clean-nav-btn-solid">
+                            Register Restaurant
+                        </a>
+
+                    {% endif %}
+
                 </div>
 
             </div>
+
         </div>
     </div>
 </header>
 <!-- ================= Header End ================= -->
-
-
-<!-- ================= JavaScript ================= -->
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-
-    const locationInput = document.getElementById("location");
-    const locationBtn = document.getElementById("get_location_btn");
-
-    // Load stored location
-    const storedLocation = sessionStorage.getItem("current_location");
-    if (storedLocation) {
-        locationInput.value = storedLocation;
-    }
-
-    // Button click -> get location
-    locationBtn.addEventListener("click", getLocation);
-
-    function getLocation() {
-        if (!navigator.geolocation) {
-            alert("Geolocation is not supported by your browser.");
-            return;
-        }
-        navigator.geolocation.getCurrentPosition(success, geoError);
-    }
-
-    function success(position) {
-        const lat = position.coords.latitude;
-        const long = position.coords.longitude;
-        const apiKey = "{{ GOOGLE_API_KEY }}";
-
-        const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${apiKey}`;
-
-        $.ajax({
-            url: url,
-            type: "GET",
-            success: function (response) {
-                if (response.status === "OK") {
-                    const address = response.results[0].formatted_address;
-
-                    locationInput.value = address;
-                    sessionStorage.setItem("current_location", address);
-
-                    window.location = `?lat=${lat}&long=${long}`;
-                } else {
-                    console.error("Geocoding error:", response.status);
-                    alert("Unable to fetch the location. Try again.");
-                }
-            },
-            error: function () {
-                alert("Failed to contact Google Maps API.");
-            }
-        });
-    }
-
-    function geoError() {
-        alert("Unable to retrieve your location.");
-    }
-
-});
-</script>

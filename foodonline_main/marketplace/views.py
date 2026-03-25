@@ -102,7 +102,7 @@ def vendor_details(request, vendor_slug, category_slug=None):
         category_with_food[cat] = FoodItem.objects.filter(
             category=cat,
             is_available=True
-        )
+        ).order_by('food_title')
 
     # --- Cart ---
     if request.user.is_authenticated:
@@ -152,7 +152,7 @@ def add_to_cart(request, food_id):
             
     
     else:
-        return JsonResponse({'status':'Failed','message':'Invalid Request'})
+        return JsonResponse({'status':'login_required','message':'Please login to continue'})
         
 
     

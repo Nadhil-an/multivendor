@@ -84,14 +84,18 @@ $(document).ready(function () {
                     $('#cart_counter').html(response.cart_counter['cart_count'])
                     $('#qty-'+food_id).html(response.qty)
 
+                    // Simplified Feedback: Change text to 'Added to Cart'
+                    let addBtn = $('#add-btn-' + food_id);
+                    if (addBtn.length > 0) {
+                        addBtn.addClass('blinkit-added').text('Added to Cart');
+                    }
+
                     applyamount(
                         response.cart_amount['subtotal'],
                         response.cart_amount['tax_dict'],
                         response.cart_amount['grand_total']
                     )
-
                 }
-                 
             }
         });
     });
@@ -117,12 +121,17 @@ $(document).ready(function () {
             data: { food_id: food_id },
             headers: { "X-Requested-With": "XMLHttpRequest" },
             success: function (response) {
-
-                if (response.status === 'failed') {
+                if(response.status == 'login_required'){
+                    swal(response.message,'','info').then(function(){
+                        window.location = '/login';
+                    })
+                } else if (response.status === 'failed') {
                     Swal.fire({ icon: 'error', title: response.message });
                 } else {
                     $('#cart_counter').html(response.cart_counter.cart_count);
                     $('#qty-' + food_id).html(response.qty);
+
+                    // Note: Selector toggle removed per simplicity request
                     applyamount(
                         response.cart_amount['subtotal'],
                         response.cart_amount['tax_dict'],

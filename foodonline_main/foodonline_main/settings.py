@@ -202,4 +202,5 @@ RZP_KEY_SECRET = config('RZP_KEY_SECRET')
 from django.contrib.messages import constants as messages
 MESSAGE_TAGS ={
     messages.ERROR:'danger',
-}
+} 
+

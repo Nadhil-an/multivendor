@@ -1,180 +1,40 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>FoodOnline</title>
+{% block content %}
+<div class="login-wrapper">
+    <div class="login-card">
+        <h3>Sign In</h3>
+        <p class="subtitle">Welcome back! Please enter your details.</p>
 
-	<!-- Google Fonts -->
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700">
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800">
+        <!-- Alerts -->
+        <div style="margin-bottom: 20px;">
+            {% include 'includes/alert.html' %}
+        </div>
 
-	<!-- ================= CSS ================= -->
-	<link href="{% static 'css/iconmoon.css' %}" rel="stylesheet">
-	<link href="{% static 'css/style.css' %}" rel="stylesheet">
-	<link href="{% static 'css/cs-foodbakery-plugin.css' %}" rel="stylesheet">
-	<link href="{% static 'css/bootstrap-slider.css' %}" rel="stylesheet">
-	<link href="{% static 'css/custom.css' %}" rel="stylesheet">
+        <form action="{% url 'loginUser' %}" method="POST" class="login-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" name="email" placeholder="name@company.com" required>
+            </div>
 
-	<!-- Bootstrap CSS -->
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" placeholder="••••••••" required>
+            </div>
 
-	<!-- Font Awesome -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+            <a href="{% url 'forgotpassword' %}" class="forgot-link">Forgot password?</a>
 
-	<!-- ================= JavaScript ================= -->
+            <button type="submit" class="login-btn">Sign In</button>
+        </form>
 
-	<!-- jQuery (Load FIRST) -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
-	<!-- Bootstrap JS (After jQuery) -->
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
-	<!-- SweetAlert2 -->
-	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-	
-	</script>
-
-
-</head>
-
-<body>
-	<!-- ================= Header Start ================= -->
-<header id="header">
-    <div class="main-header">
-        <div class="container-fluid">
-            <div class="row">
-                <!-- Logo & Location -->
-                <div class="col-lg-8 col-md-8 col-sm-12">
-                    <div class="logo">
-                        <figure>
-                            <a href="{% url 'home' %}" class="light-logo">
-                                <img src="{% static 'logo/foodOnlineLogo.png' %}" alt="FoodBakery" width="250">
-                            </a>
-                        </figure>
-                    </div>
-
-                    
-                </div>
-
-                <!-- Right Side: Login / Cart / Marketplace -->
-                <div class="col-lg-4 col-md-4 col-sm-12">
-                    <div class="login-option">
-                        {% if user.is_authenticated %}
-                        <a href="{% url 'cart' %}">
-                            <i class="fa fa-shopping-cart text-danger" style="font-size: 20px;"></i>
-                            <span class="badge badge-warning" id="cart_counter" 
-                                  style="border-radius:50px; position:relative; bottom: 10px;">
-                                  {{ cart_count }}
-                            </span>
-                        </a>
-                        {% endif %}
-
-                        <a href="{% url 'marketplace' %}" 
-                           class="btn btn-outline-danger text-uppercase font-weight-bold">
-                           Marketplace
-                        </a>
-
-                        {% if user.is_authenticated %}
-                        <a class="cs-color cs-popup-joinus-btn login-popup" href="{% url 'myaccount' %}">
-                            My Account
-                        </a>
-                        <a class="cs-color cs-popup-joinus-btn login-popup text-danger" href="{% url 'logout' %}">
-                            Logout
-                        </a>
-                        {% else %}
-                        <a class="cs-color cs-popup-joinus-btn login-popup" href="{% url 'loginUser' %}">Login/</a>
-                        <span>
-                            <a href="{% url 'registerUser' %}" 
-                               class="cs-color cs-popup-joinus-btn login-popup ml-0">
-                               Register
-                            </a>
-                        </span>
-                        <a class="get-start-btn" href="{% url 'registerVendor' %}">
-                            Register Restaurant
-                        </a>
-                        {% endif %}
-                    </div>
-                </div>
+        <div class="login-footer">
+            Don't have an account? <a href="{% url 'registerUser' %}">Sign up for free</a>
+            <div style="margin-top: 10px;">
+                Are you a Vendor? <a href="{% url 'registerVendor' %}">Register Restaurant</a>
             </div>
         </div>
     </div>
-</header>
-		
-<!-- Main Section Start -->
-		<div class="main-section">
-			<div class="page-section nopadding cs-nomargin" style="margin-top: 0px;padding-top: 60px;padding-bottom: 60px;margin-bottom: 0px;">
-				<div class="container">
-					<div class="row">
-						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
-							<div class="user-dashboard loader-holder" style="width: 450px; min-height: auto;">
-								<div class="user-holder">
-                            <h4 class="text-center" style="margin-bottom: 0;">SIGN IN</h4>
-                            
-                            <hr>
-                            <div id="restaurant-sets-holder">
-                                <form class="form-fields-set foodbakery-dev-restaurant-form" method="post" action="{% url 'loginUser' %}" >
-                                    {% csrf_token %}
-                                    <ul class="register-add-restaurant-tab-container restaurant-information-tab-container">
-                                        
-                                            <div class="row">
-                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                    <div class="row">
-                                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                                    <div class="field-holder">
-                                                                        <label>Email</label>
-                                                                        <input type="email" name="email" placeholder="Enter Your Email">
-                                                                    </div>
-
-                                                                    <div class="field-holder">
-                                                                        <label>Password</label>
-                                                                        <input type="password" name="password" placeholder="Enter Your Password">
-                                                                    </div>             
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        
-                                        <li>
-                                            <div class="row payment-holder ml-3" >
-                                                <a style="color: red;text-decoration: none;" href="{%url 'forgotpassword'%}">Forgot Password</a>
-                                            </div>
-                                           
-                                            
-                                            <div class="row">
-                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                    <div class="field-holder">
-                                                        <div class="payment-holder">
-                                                            <input type="submit" value="Submit" id="btn-next-restaurant-information" class="bgcolor">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                        </li>
-                                    </ul>
-                                </form>
-                            </div>
-                        </div>
-							</div>
-						</div>
-					</div>
-                    
-				</div>
-			</div>
-		</div>
-		<!-- Main Section End -->
-	
-	
-
-	<!-- ================= Custom JS (Load LAST) ================= -->
-	<script src="{% static 'js/modernizr.js' %}"></script>
-	<script src="{% static 'js/bootstrap.js' %}"></script>
-	<script src="{% static 'js/custom.js' %}"></script>
-
-	<!-- Debug/Test -->
-	
-</body>
-</html>
+</div>
+{% endblock %}
