@@ -73,7 +73,7 @@ def place_order(request):
             order.tax_data = json.dumps(tax_data)
             order.total_data = json.dumps(total_data)
             order.total_tax = total_tax
-            order.payment_method = request.POST['payment_method']
+            order.payment_method = request.POST.get('payment_method')
 
             order.save()
             order.order_number = generate_order_number(order.id)

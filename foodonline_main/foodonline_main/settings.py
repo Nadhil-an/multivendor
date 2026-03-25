@@ -79,7 +79,6 @@ TEMPLATES = [
                 'accounts.context_processor.get_google_api',
                 'accounts.context_processor.get_user_profile',
                 'accounts.context_processor.get_vendor',
-                'accounts.context_processor.paypal_button',
 
             ],
         },
@@ -186,8 +185,6 @@ GDAL_LIBRARY_PATH = os.path.join(BASE_DIR.parent, 'env', 'Lib', 'site-packages',
 
 
 
-#PAYPAL API
-PAYPAL_ID = config('PAYPAL_CLIENTID')
 
 
 SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
