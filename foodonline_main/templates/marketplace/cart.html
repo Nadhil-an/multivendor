@@ -92,15 +92,6 @@
                                     <span class="font-weight-bold">₹<span id="subtotal">{{ subtotal }}</span></span>
                                 </div>
 
-                                {% for key, value in tax_dict.items %}
-                                    {% for i,j in value.items %}
-                                    <div class="d-flex justify-content-between mb-3" style="font-size: 15px;">
-                                        <span class="text-muted">{{ key }} <small class="ml-1">({{ i }}%)</small></span>
-                                        <span class="font-weight-bold">₹<span id="tax-{{key}}">{{ j }}</span></span>
-                                    </div>
-                                    {% endfor %}
-                                {% endfor %}
-
                                 <hr class="my-4">
 
                                 <div class="d-flex justify-content-between align-items-center mb-4">

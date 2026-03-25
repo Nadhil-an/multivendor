@@ -33,12 +33,12 @@ def place_order(request):
     for i in cart_items:
         if i.fooditem.vendor.id not in vendors_ids:
             vendors_ids.append(i.fooditem.vendor.id)
-    get_tax = Tax.objects.filter(is_active =True)
-    subtotal=0
+    # Taxes are disabled as per user request
+    subtotal = 0
     total_data = {}
     k = {}
     for i in cart_items:
-        fooditem =FoodItem.objects.get(pk=i.fooditem.id,vendor_id__in=vendors_ids)
+        fooditem = FoodItem.objects.get(pk=i.fooditem.id, vendor_id__in=vendors_ids)
         v_ids = fooditem.vendor.id
         if v_ids in k:
             subtotal = k[v_ids]
@@ -47,16 +47,10 @@ def place_order(request):
         else:
             subtotal = (fooditem.price * i.quantity)
             k[v_ids] = subtotal
-        #calculate the tax_data
+        
+        # Disable tax_data for vendors
         tax_dict = {}
-
-        for i in get_tax:
-            tax_type = i.tax_type
-            tax_percentage = i.tax_percentage
-            tax_amount = round((tax_percentage * subtotal)/100,2)
-            tax_dict.update({tax_type:{str(tax_percentage): str(tax_amount)}})
-
-        total_data.update({fooditem.vendor.id: {str(subtotal) :str(tax_dict)}})
+        total_data.update({fooditem.vendor.id: {str(subtotal): str(tax_dict)}})
         
 
     if request.method == 'POST':

@@ -2,187 +2,174 @@
 {% load static %}
 
 {% block content %}
-
-<div class="main-section">
+<div class="main-section" style="background: #f8f9fa; padding-bottom: 60px;">
     <div class="page-section pt-5">
         <div class="container">
             <div class="row">
+                <!-- Billing Details Section -->
+                <div class="col-lg-7 col-md-12">
+                    <div class="checkout-card bg-white p-4 mb-4" style="border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid #eee;">
+                        <div class="d-flex align-items-center mb-4 pb-2 border-bottom">
+                            <i class="fa fa-address-card text-danger mr-2" style="font-size: 20px;"></i>
+                            <h4 class="mb-0 font-weight-bold" style="letter-spacing: -0.5px;">Billing Details</h4>
+                        </div>
+                        
+                        <form action="{% url 'place_order' %}" method="POST" id="checkout-form">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="font-weight-bold small text-uppercase" style="letter-spacing: 0.5px; color: #666;">First Name</label>
+                                    {{ form.first_name }}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="font-weight-bold small text-uppercase" style="letter-spacing: 0.5px; color: #666;">Last Name</label>
+                                    {{ form.last_name }}
+                                </div>
+                            </div>
 
-                <!--  Cart Items -->
-                <div class="col-lg-6 col-md-6 col-sm-8 ">
-                    <div class="tabs-holder horizontal">
-                        <ul class="stickynav-tabs nav nav-tabs">
-                            <li class="active">
-                                <a data-toggle="tab" href="#cart">
-                                    <i class="fa fa-shopping-cart text-danger"></i>  Billing Address
-                                </a>
-                            </li>
-                        </ul>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="font-weight-bold small text-uppercase" style="letter-spacing: 0.5px; color: #666;">Email Address</label>
+                                    {{ form.email }}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="font-weight-bold small text-uppercase" style="letter-spacing: 0.5px; color: #666;">Phone Number</label>
+                                    {{ form.phone }}
+                                </div>
+                            </div>
 
-                        <div class="tab-content p-3">
-                            <div id="cart" class="tab-pane in active">
-                                <div class="menu-item-holder">
-                                    <div id="menu-item-list-6272" class="menu-item-list">
-                                        <form action="{% url 'place_order' %}" method="POST">
-                                            {% csrf_token %}
-                                            <div class="row">
-                                                <div class="form-group col-md-6 col-sm-12 col-lg-6">
-                                                    First Name: {{ form.first_name }}
+                            <div class="mb-3">
+                                <label class="font-weight-bold small text-uppercase" style="letter-spacing: 0.5px; color: #666;">Full Address</label>
+                                {{ form.address }}
+                            </div>
 
-                                                </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="font-weight-bold small text-uppercase" style="letter-spacing: 0.5px; color: #666;">Country</label>
+                                    {{ form.country }}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="font-weight-bold small text-uppercase" style="letter-spacing: 0.5px; color: #666;">State</label>
+                                    {{ form.state }}
+                                </div>
+                            </div>
 
-                                                <div class="form-group col-md-6 col-sm-12 col-lg-6">
-                                                    Last Name : {{ form.last_name }}
-                                                    
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                 <div class="form-group col-md-6 col-sm-12 col-lg-6">
-                                                    Email: {{ form.email }}
-                                                </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="font-weight-bold small text-uppercase" style="letter-spacing: 0.5px; color: #666;">City</label>
+                                    {{ form.city }}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="font-weight-bold small text-uppercase" style="letter-spacing: 0.5px; color: #666;">Pin Code</label>
+                                    {{ form.pin_code }}
+                                </div>
+                            </div>
+                    </div>
+                </div>
 
-                                                <div class="form-group col-md-6 col-sm-12 col-lg-6">
-                                                    Phone : {{ form.phone }}            
-                                                </div>
-                                            </div>
-
-                                            <div class="row">                   
-                                                <div class="form-group col-md-12 col-sm-12 col-lg-12">
-                                                    Address: {{ form.address }}
-                                                </div>
-                                            </div>
-
-                                            <div class="row">                   
-                                                <div class="form-group col-md-6 col-sm-12 col-lg-6">
-                                                    Country: {{ form.country }}
-                                                </div>
-                                                <div class="form-group col-md-6 col-sm-12 col-lg-6">
-                                                    State: {{ form.state }}
-                                                </div>
-                                            </div>
-
-                                            <div class="row">                   
-                                                <div class="form-group col-md-6 col-sm-12 col-lg-6">
-                                                    City: {{ form.city }}
-                                                </div>
-                                                <div class="form-group col-md-6 col-sm-12 col-lg-6">
-                                                    Pin Code: {{ form.pin_code }}
-                                                </div>
-                                            </div>
+                <!-- Order Summary Section -->
+                <div class="col-lg-5 col-md-12">
+                    <div class="sticky-top" style="top: 100px;">
+                        <div class="summary-card bg-white p-4" style="border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid #eee;">
+                            <h5 class="font-weight-bold mb-4 pb-2 border-bottom" style="letter-spacing: -0.5px;">Your Order</h5>
+                            
+                            <div class="order-items mb-4" style="max-height: 300px; overflow-y: auto;">
+                                {% for cart in cart_items %}
+                                <div class="d-flex align-items-center mb-3 pb-3 border-bottom-sm">
+                                    <img src="{{ cart.fooditem.image.url }}" alt="{{ cart.fooditem.food_title }}" 
+                                         style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px; border: 1px solid #eee;">
+                                    <div class="ml-3 flex-grow-1">
+                                        <h6 class="mb-0 font-weight-bold" style="font-size: 14px;">{{ cart.fooditem.food_title }}</h6>
+                                        <small class="text-muted">{{ cart.fooditem.vendor.vendor_name }}</small>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="font-weight-bold" style="font-size: 14px;">₹{{ cart.fooditem.price }}</span>
+                                        <div class="small text-muted">x {{ cart.quantity }}</div>
                                     </div>
                                 </div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="price-summary mb-4">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-muted">Subtotal</span>
+                                    <span class="font-weight-bold">₹{{ subtotal }}</span>
+                                </div>
+                                <hr class="my-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="font-weight-bold text-uppercase" style="font-size: 13px; letter-spacing: 1px;">Grand Total</span>
+                                    <span class="font-weight-bolder text-danger" style="font-size: 22px;">₹{{ grand_total }}</span>
+                                </div>
+                            </div>
+
+                            <div class="payment-method-section mb-4">
+                                <h6 class="font-weight-bold mb-3 small text-uppercase" style="letter-spacing: 1px; color: #888;">Select Payment Method</h6>
+                                <div class="payment-options">
+                                    <label class="payment-option-card d-flex align-items-center p-3 mb-2 border clickable" style="border-radius: 8px; cursor: pointer; transition: all 0.2s;">
+                                        <input type="radio" name="payment_method" value="PayPal" class="mr-3">
+                                        <img src="{% static 'images/PayPal.png' %}" alt="PayPal" width="80">
+                                        <span class="ml-auto small font-weight-bold text-muted">PayPal</span>
+                                    </label>
+                                    
+                                    <label class="payment-option-card d-flex align-items-center p-3 mb-2 border clickable" style="border-radius: 8px; cursor: pointer; transition: all 0.2s;">
+                                        <input type="radio" name="payment_method" value="RazorPay" class="mr-3">
+                                        <img src="{% static 'images/razorpay_logo.png' %}" alt="RazorPay" width="80">
+                                        <span class="ml-auto small font-weight-bold text-muted">RazorPay</span>
+                                    </label>
+                                </div>
+                                <span class="text-danger small font-weight-bold" id="payment-method-error"></span>
+                            </div>
+
+                            <button onclick="return payMethodConfirm()" type="submit" class="btn btn-danger btn-block py-3 font-weight-bold text-uppercase shadow-sm"
+                                    style="border-radius: 8px; letter-spacing: 1.5px; font-size: 15px; background: #d32323; border: none; transition: transform 0.2s;">
+                                Place Order
+                            </button>
+                            
+                            <div class="text-center mt-3">
+                                <p class="text-muted" style="font-size: 12px;"><i class="fa fa-lock mr-1"></i> Secure checkout powered by Unibites</p>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <!--  Your Order Summary -->
-                <div class="col-lg-6 col-md-6 col-sm-6">
-                    <div class="tabs-holder horizontal">
-                        <ul class="stickynav-tabs nav nav-tabs">
-                            <li class="active">
-                                <a data-toggle="tab" href="#order">
-                                    <i class="icon-room_service"></i> Your Order
-                                </a>
-                            </li>
-                        </ul>
-                        <div class="tab-content">
-                            <div id="order" class="tab-pane in active">
-                                <div class="menu-item-holder">
-                                    <div id="menu-item-list-6272" class="menu-item-list">
-                                        
-                                        <ul>
-                                            {% for cart in cart_items %}
-                                            <li id="cart-item-{{cart.id }}"
-                                            style="display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee;">
-                                                <div class="image-holder" style="flex: 0 0 80px;">
-                                                    <a href="{{ cart.fooditem.image.url }}">
-                                                        <img src="{{ cart.fooditem.image.url }}"
-                                                            alt="{{ cart.fooditem.food_title }}"
-                                                            style="width: 70px; height: 70px; object-fit: cover; border-radius: 8px;">
-                                                    </a>
-                                                </div>
-
-                                                <div class="text-holder" style="flex: 1; margin-left: 15px;">
-                                                    <h6 style="margin: 0; font-size: 16px;">{{ cart.fooditem.food_title }}</h6>
-                                                    <span style="font-size: 13px; color: #777;">{{ cart.fooditem.description }}</span>
-                                                    <a href="{% url 'vendor_details' cart.fooditem.vendor.vendor_slug%}" class="badge badge-warning">{{ cart.fooditem.vendor }}</a>
-                                                </div>
-
-                                                <div class="price-holder" style="text-align: right;">
-                                                    
-                                                    <div style="margin-top: 5px;">
-                                                        <span class="price">${{ cart.fooditem.price}}</span>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            {% endfor %}
-                                        </ul>
-                                        
-                                    </div>
-                                    <ul style="padding: 15px;">
-                                        <li style="list-style-type: none; margin-bottom: 10px;">
-                                            Subtotal
-                                            <span class="price float-right">
-                                                ₹<span id="subtotal">{{ subtotal}}</span>
-                                            </span>
-                                        </li>
-
-                                        {% for key, value in tax_dict.items %}
-                                           {% for i,j in value.items %}
-                                        <li style="list-style-type: none; margin-bottom: 10px;">
-                                            {{ key }} <small>({{ i }}%)</small>
-                                            <span class="price float-right">
-                                                <span class="currency"></span>
-                                                ₹<span id="tax-{{key}}">{{ j }}</span>
-                                            </span>
-                                        </li>
-                                        {% endfor %}
-                                        {% endfor %}
-                                        <li style="list-style-type: none; font-weight: 600;">
-                                            TOTAL
-                                            <span class="price float-right">
-                                                ₹<span id="total">{{ grand_total }}</span>
-                                            </span>
-                                        </li>
-                                        <hr>
-
-                                        <h5>SELECT PAYMENT METHOD</h5>
-                                        <div class="payment-method">
-                                            <label> 
-                                                <input type="radio" name="payment_method" value="PayPal">
-                                                <img src="{% static 'images/PayPal.png' %}" alt="PayPal" width="100">
-                                            </label>
-                                            &emsp;
-                                            <label> 
-                                                <input type="radio" name="payment_method" value="RazorPay">
-                                                <img src="{% static 'images/razorpay_logo.png' %}" alt="RazorPay" width="100">
-                                            </label>
-                                        </div>
-                                        <span class="text-danger" id="payment-method-error"></span>
-
-                                        <button onclick="return payMethodConfirm()" type="submit" class="btn btn-danger w-100 p-2 mt-3">PLACE ORDER</button>
-                                    </ul>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div> <!--  row closed properly here -->
+                </form>
+            </div>
         </div>
     </div>
 </div>
+
+<style>
+    .form-control:focus {
+        border-color: #d32323;
+        box-shadow: 0 0 0 0.2rem rgba(211, 35, 35, 0.1);
+    }
+    .payment-option-card:hover {
+        background: #fffafa;
+        border-color: #ffdada !important;
+    }
+    input[type="radio"]:checked + img + span {
+        color: #d32323 !important;
+    }
+    .payment-option-card input[type="radio"]:checked {
+        accent-color: #d32323;
+    }
+    .border-bottom-sm {
+        border-bottom: 1px solid #f8f9fa;
+    }
+    /* Simple styling for the selected state */
+    .payment-option-card:has(input:checked) {
+        border-color: #d32323 !important;
+        background: #fff5f5;
+    }
+</style>
 
 <script>
     function payMethodConfirm(){
         var payMethod = $("input[name='payment_method']:checked").val()
         if(!payMethod){
-            $('#payment-method-error').html('Select Payment Method')
+            $('#payment-method-error').html('Please select a payment method to continue.')
             return false;
         }else{
-            var conf = confirm('You have selected' +payMethod+ 'as your  preffered  payment method.\nClick "OK" to continue')
+            var conf = confirm('You have selected ' + payMethod + ' as your preferred payment method.\nClick "OK" to proceed to payment.')
             if(conf == true){
                 return true;
             }else{
@@ -191,11 +178,8 @@
         }
     }
 
-    $("input[name='payment_method]").on('change',function(){
+    $("input[name='payment_method']").on('change', function(){
         $('#payment-method-error').html("");
-
-    })
+    });
 </script>
-
-
 {% endblock %}

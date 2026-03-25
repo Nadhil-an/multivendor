@@ -78,15 +78,9 @@ class Order(models.Model):
                 for key, val in data.items():
                     sub_total += float(key)
 
-                    val = val.replace("'", '"')
-                    val = json.loads(val)
-                    tax_dict.update(val)
-
-                    for i in val:
-                        for j in val[i]:
-                            tax += float(val[i][j])
-
-        grand_total = sub_total + tax
+        # Taxes are disabled as per user request
+        tax = 0
+        grand_total = sub_total
 
         context =  {
             'sub_total': sub_total,
