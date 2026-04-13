@@ -11,6 +11,7 @@ from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
 from vendor.models import Vendor 
 from django.template.defaultfilters import slugify
+from django.db.models import Sum
 from orders.models import Order
 import datetime
 from menu.models import Category
@@ -159,10 +160,16 @@ def customerDashboard(request):
     orders = Order.objects.filter(user=request.user,is_ordered=True)
     recent_orders = Order.objects.filter(user=request.user,is_ordered=True)[:5]
     orders_count = orders.count()
+    # Calculate total spent
+    total_spent = orders.aggregate(Sum('total'))['total__sum']
+    if total_spent is None:
+        total_spent = 0
+    
     context = {
         'orders':orders,
         'orders_count':orders_count,
-        'recent_orders':recent_orders
+        'recent_orders':recent_orders,
+        'total_spent': total_spent,
     }
     return render(request, 'accounts/customerDashboard.html',context)
 

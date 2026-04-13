@@ -179,9 +179,10 @@ DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
 
 
 # --- Add GDAL and PROJ paths manually ---
-os.environ['PATH'] = os.path.join(BASE_DIR.parent, 'env', 'Lib', 'site-packages', 'osgeo') + ';' + os.environ['PATH']
-os.environ['PROJ_LIB'] = os.path.join(BASE_DIR.parent, 'env', 'Lib', 'site-packages', 'osgeo', 'data', 'proj')
-GDAL_LIBRARY_PATH = os.path.join(BASE_DIR.parent, 'env', 'Lib', 'site-packages', 'osgeo', 'gdal.dll')
+if os.name == 'nt':
+    os.environ['PATH'] = os.path.join(BASE_DIR.parent, 'env', 'Lib', 'site-packages', 'osgeo') + ';' + os.environ['PATH']
+    os.environ['PROJ_LIB'] = os.path.join(BASE_DIR.parent, 'env', 'Lib', 'site-packages', 'osgeo', 'data', 'proj')
+    GDAL_LIBRARY_PATH = os.path.join(BASE_DIR.parent, 'env', 'Lib', 'site-packages', 'osgeo', 'gdal.dll')
 
 
 

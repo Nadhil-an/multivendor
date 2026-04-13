@@ -1,0 +1,19 @@
+# Local virtual environments
+env/
+venv/
+.env
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Local database (we'll use PostgreSQL in Docker)
+db.sqlite3
+
+# Local media/static folders
+staticfiles/
+media/
+
+# Git metadata
+.git/
+.gitignore
