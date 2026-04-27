@@ -26,6 +26,7 @@ class Order(models.Model):
         ('New','New'),
         ('Accepted','Accepted'),
         ('Completed','Completed'),
+        ('Delivered','Delivered'),
         ('Cancelled','Cancelled'),
     )
 
@@ -33,6 +34,7 @@ class Order(models.Model):
     payment = models.ForeignKey(Payment, on_delete=models.SET_NULL, blank=True, null=True)
     vendor = models.ManyToManyField(Vendor,blank=True)
     order_number = models.CharField(max_length=20)
+    order_token = models.CharField(max_length=20, blank=True, null=True)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     phone = models.CharField(max_length=50, blank=True)

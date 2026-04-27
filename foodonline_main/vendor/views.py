@@ -18,33 +18,58 @@ import datetime
 
 
 def vendorDashboard(request):
+    """
+    Displays the vendor dashboard with current and past orders, revenue stats, and insights.
+    """
     vendor = Vendor.objects.get(user=request.user)
-    orders = Order.objects.filter(vendor__in=[vendor.id],is_ordered=True).order_by('-created_at')
+    orders = Order.objects.filter(vendor__in=[vendor.id], is_ordered=True).order_by('-created_at')
+    
+    # Filter orders
+    current_orders = orders.filter(status__in=['New', 'Accepted'])
+    history_orders = orders.filter(status__in=['Completed', 'Delivered', 'Cancelled'])
+    
     recent_orders = orders[:3]
 
     total_revenue = 0
-    for i in orders:
+    for i in orders.filter(status__in=['Completed', 'Delivered']):
         total_revenue += i.get_total_by_vendor()['grand_total']
 
-    #monthly revenue
+    # monthly revenue
     current_month = datetime.datetime.now().month
-    current_month_orders = orders.filter(vendor__in=[vendor.id],created_at__month=current_month)
-    current_month_revenue= 0
+    current_month_orders = orders.filter(
+        vendor__in=[vendor.id], 
+        created_at__month=current_month,
+        status__in=['Completed', 'Delivered']
+    )
+    current_month_revenue = 0
     for i in current_month_orders:
         current_month_revenue += i.get_total_by_vendor()['grand_total']
-        
-
-
 
     context = {
-        'vendor':vendor,
-        'orders':orders,
-        'orders_count':orders.count(),
-        'recent_orders':recent_orders,
-        'total_revenue':total_revenue,
-        'current_month_revenue':current_month_revenue,
+        'vendor': vendor,
+        'current_orders': current_orders,
+        'history_orders': history_orders,
+        'orders_count': orders.count(),
+        'recent_orders': recent_orders,
+        'total_revenue': total_revenue,
+        'current_month_revenue': current_month_revenue,
     }
-    return render(request, 'vendor/vendorDashboard.html',context)
+    return render(request, 'vendor/vendorDashboard.html', context)
+
+@login_required(login_url='loginUser')
+@user_passes_test(check_role_vendor)
+def update_order_status(request, order_number):
+    if request.method == 'POST':
+        status = request.POST.get('status')
+        try:
+            order = Order.objects.get(order_number=order_number)
+            order.status = status
+            order.save()
+            messages.success(request, f'Order #{order_number} status updated to {status}')
+        except Order.DoesNotExist:
+            messages.error(request, 'Order not found')
+        
+    return redirect('vendor')
 
 ##################################
 #
@@ -69,8 +94,7 @@ def vprofile(request):
             messages.success(request,'Settings Updated.')
             return redirect('vprofile')
         else:
-            print(profile_form.errors)
-            print(vendor_form.errors)
+            pass # Validation errors are handled in the template
     else:
         profile_form = UserProfileForm(instance=profile)
         vendor_form = VendorForm(instance=vendor_get)
@@ -404,8 +428,6 @@ def removing_opening_hour(request,pk=None):
     else:
         return HttpResponse('Unauthorized', status=401)
 
-    pass
-
 
 def vendor_order_details(request,order_number):
     try:
@@ -426,10 +448,12 @@ def vendor_order_details(request,order_number):
 
 def vendor_orders(request):
     vendor = Vendor.objects.get(user=request.user)
-    order = Order.objects.filter(vendor__in=[vendor.id],is_ordered=True).order_by('-created_at')
+    orders = Order.objects.filter(
+        vendor__in=[vendor.id], 
+        is_ordered=True,
+        status__in=['Completed', 'Delivered', 'Cancelled']
+    ).order_by('-created_at')
     context = {
-        'order':order,
-        
+        'order': orders,
     }
-
-    return render(request,'vendor/vendor_orders.html',context)
+    return render(request, 'vendor/vendor_orders.html', context)

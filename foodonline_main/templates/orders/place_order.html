@@ -153,7 +153,7 @@
         "key": "{{ RZP_KEY_ID }}",
         "amount": "{{ grand_total }}", 
         "currency": "INR",
-        "name": "Unibites",
+        "name": "UniEats",
         "description": "Student Order Payment",
         "image": "{% static 'logo/foodonlineLogo.png' %}",
         "order_id": "{{ rzp_id }}",
@@ -195,6 +195,10 @@
                 'csrfmiddlewaretoken':csrfToken
             },
             success: function(response) {
+                // Manually clear cart counter on frontend for instant feedback
+                const cartCounter = document.getElementById('cart_counter');
+                if (cartCounter) cartCounter.style.display = 'none';
+                
                 window.location.href = order_complete 
                     + '?order_no=' + response.order_number 
                     + '&transaction_id=' + response.transaction_id;

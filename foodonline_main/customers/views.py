@@ -17,8 +17,7 @@ def cprofile(request):
             messages.success(request,'Profile Updated')
             return redirect('cprofile')
         else:
-            print(userprofile_form.errors)
-            print(user_form.errors)
+            pass # Validation errors are handled in the template
     else:       
         userprofile_form = UserProfileForm(instance=profile)
         user_form = UserInfoForm(instance=request.user)
@@ -51,3 +50,32 @@ def order_details(request,order_number):
         return redirect('customer')
     return render(request,'customer/orderdetails.html',context)
 
+def order_status(request):
+    """
+    Displays the real-time order tracking dashboard for the latest active order.
+    """
+    # Fetch the latest active order (is_ordered and not yet Completed/Delivered/Cancelled)
+    active_order = Order.objects.filter(
+        user=request.user, 
+        is_ordered=True
+    ).exclude(status__in=['Completed', 'Delivered', 'Cancelled']).order_by('-created_at').first()
+    
+    context = {
+        'order': active_order,
+    }
+    return render(request, 'customer/order_status.html', context)
+
+from django.http import JsonResponse
+def check_order_status(request, order_number):
+    """
+    JSON endpoint for AJAX polling to check the current status of an order.
+    """
+    try:
+        order = Order.objects.get(order_number=order_number)
+        response = {
+            'status': order.status,
+            'is_ordered': order.is_ordered,
+        }
+        return JsonResponse(response)
+    except Order.DoesNotExist:
+        return JsonResponse({'error': 'Order not found'}, status=404)

@@ -5,7 +5,7 @@ from marketplace.models import Cart,Tax
 from marketplace.context_processor import get_cart_amount
 from .forms import OrderForm
 from .models import Order, Payment, OrderedFood
-from .utlis import generate_order_number
+from .utlis import generate_order_number, generate_order_token
 import simplejson as json
 from django.conf import settings
 import requests
@@ -18,7 +18,9 @@ from accounts.utilis import send_approve_mail,send_notification,send_verificatio
 
 @login_required(login_url='login')
 def place_order(request):
-
+    """
+    Handles the initial order placement, calculates totals, and creates a Razorpay order.
+    """
     cart_items = Cart.objects.filter(user=request.user).order_by('created_at')
     cart_count = cart_items.count()
     if cart_count <= 0:
@@ -92,16 +94,12 @@ def place_order(request):
                 }
             }
 
-            print("\nRAZORPAY DATA =>", DATA)
-
             # --- Manual API call (bypassing SDK) ---
             response = requests.post(
                 "https://api.razorpay.com/v1/orders",
                 auth=HTTPBasicAuth(settings.RZP_KEY_ID, settings.RZP_KEY_SECRET),
                 json=DATA
             )
-
-            print("\nRAZORPAY RAW RESPONSE =>", response.text)
 
             rzp_data = response.json()
 
@@ -124,13 +122,17 @@ def place_order(request):
             return render(request, 'orders/place_order.html', context)
 
         else:
-            print("FORM ERRORS =>", form.errors)
+            pass # Form validation errors are handled in the template or via messages
 
     return render(request, 'orders/place_order.html')
 
 
 @login_required(login_url='login')
 def payments(request):
+    """
+    Finalizes the payment process, creates Payment/OrderedFood records, and clears the cart.
+    Called via AJAX from place_order.html after Razorpay success.
+    """
     if request.headers.get('x-requested-with') == 'XMLHttpRequest' and request.method == 'POST':
 
         order_number = request.POST.get('order_number')
@@ -154,6 +156,7 @@ def payments(request):
         # Update order
         order.payment = payment
         order.is_ordered = True
+        order.order_token = generate_order_token()
         order.save()
 
         # ------------------------------
@@ -182,44 +185,6 @@ def payments(request):
         # ✅ Clear cart after successful payment
         Cart.objects.filter(user=request.user).delete()
 
-
-        # #send order confirmation email to customer
-        # mail_subject = 'Thank you for ordering with us.'
-        # mail_template = 'orders/email/order_confirmation_email.html'
-        # ordered_food = OrderedFood.objects.filter(order=order)
-        # customer_subtotal = 0
-        # for item in ordered_food:
-        #      customer_subtotal += (item.price * item.quantity)
-        # tax_data = json.loads(order.tax_data)
-        # context = {
-        #     'user':request.user,
-        #     'order':order,
-        #     'to_email':order.email,
-        #     'ordered_food':ordered_food,
-        #     'domain':get_current_site(request),
-        #     'customer_subtotal' : customer_subtotal,
-        #     'tax_data' : tax_data,
-        
-        # }
-        # send_notification(mail_subject,mail_template,context)
-
-        # # send order recieve email to vendor
-        # mail_subject ='You have recieved a new order'
-        # mail_template = 'orders/email/vendor_order_confirmation.html'
-        # to_emails = []
-        # for i in cart_items:
-        #     if i.fooditem.vendor.user.email not in to_emails:
-        #         to_emails.append(i.fooditem.vendor.user.email)
-        #         ordered_food_to_vendor = OrderedFood.objects.filter(order=order,fooditem__vendor=i.fooditem.vendor)
-
-        #         context ={
-        #             'order':order,
-        #             'to_email':i.fooditem.vendor.user.email,
-        #             'ordered_food_to_vendor':ordered_food_to_vendor,
-        #         }
-        #         send_notification(mail_subject,mail_template,context)
-
-                
         response = {
             'transaction_id':transaction_id,
             'order_number':order_number,
@@ -227,6 +192,9 @@ def payments(request):
         return JsonResponse(response)
 
 def order_complete(request):
+    """
+    Displays the order success/completion page to the customer.
+    """
     order_number = request.GET.get('order_no')
     transaction_id = request.GET.get('transaction_id')
 

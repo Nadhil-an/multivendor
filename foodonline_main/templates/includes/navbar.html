@@ -8,7 +8,7 @@
             <!-- Logo -->
             <div class="col-lg-3 col-md-4 col-6">
                 <a href="{% url 'home' %}" class="logo">
-                    <img src="{% static 'images/logo.png' %}" alt="Unibite Logo" height="45">
+                    <img src="{% static 'logo/unieats_logo.png' %}" alt="UniEats Logo" height="65">
                 </a>
             </div>
 
@@ -22,8 +22,14 @@
 
                     {% if user.is_authenticated %}
 
-                        <!-- My Account -->
+                        <!-- User Account Links -->
                         <a href="{% url 'customerDashboard' %}" class="clean-nav-link d-none d-lg-flex text-uppercase font-weight-bold mx-3" style="font-size: 13px; letter-spacing: 0.5px; color: #333; text-decoration: none;">My Account</a>
+                        
+                        {% if user.role == 2 %}
+                        <a href="{% url 'order_status' %}" class="clean-nav-btn-solid text-uppercase font-weight-bold ml-3" style="background: #d32323; color: #fff; padding: 10px 20px; border-radius: 12px; font-size: 12px; text-decoration: none;">
+                            <i class="fas fa-clock mr-1"></i> Order Status
+                        </a>
+                        {% endif %}
 
                         <!-- Cart Button -->
                         <a href="{% url 'cart' %}" class="my-cart-btn px-4 py-2 ml-3 d-flex align-items-center" style="background: #e9e9e9; border-radius: 12px; text-decoration: none; transition: all 0.3s; opacity: 1;">

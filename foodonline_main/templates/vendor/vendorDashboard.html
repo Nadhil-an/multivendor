@@ -74,45 +74,112 @@
                     </div>
                 </div>
 
-                <!-- RECENT ORDERS SECTION -->
+                <!-- CURRENT ORDERS SECTION -->
                 <div class="section-title mb-4 pb-2 d-flex align-items-center">
-                    <h5 class="font-weight-bold mb-0" style="color: #1e293b; letter-spacing: -0.5px;">Recent Orders</h5>
+                    <h5 class="font-weight-bold mb-0" style="color: #d32323; letter-spacing: -0.5px;">Current Orders (Pending)</h5>
                     <div class="flex-grow-1 ml-4" style="height: 1px; background: #e2e8f0;"></div>
                 </div>
 
-                <div class="table-responsive">
-                    <table class="table table-clean w-100" id="datatable">
-                        <thead>
+                <div class="table-responsive mb-5">
+                    <table class="table table-clean w-100" style="background: #fff; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); border: 1px solid #f1f5f9; overflow: hidden;">
+                        <thead style="background: #fafafa; border-bottom: 2px solid #f1f5f9;">
                             <tr>
-                                <th>Order #</th>
-                                <th>Customer</th>
-                                <th>Phone</th>
-                                <th>Total</th>
-                                <th>Status</th>
-                                <th>Date</th>
-                                <th>Action</th>
+                                <th class="px-4 py-3 border-0" style="color: #64748b; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">Customer</th>
+                                <th class="py-3 border-0" style="color: #64748b; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">Order Token</th>
+                                <th class="py-3 border-0" style="color: #64748b; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">Order Details</th>
+                                <th class="py-3 border-0" style="color: #64748b; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">Total</th>
+                                <th class="py-3 border-0" style="color: #64748b; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">Status</th>
+                                <th class="py-3 border-0 text-right px-4" style="color: #64748b; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for orders in recent_orders %}
+                            {% if current_orders %}
+                                {% for order in current_orders %}
+                                <tr style="border-bottom: 1px solid #f8fafc;">
+                                    <td class="px-4 py-4">
+                                        <div class="font-weight-bold" style="color: #1a1a1a; line-height: 1.2; margin-bottom: 4px;">{{ order.name }}</div>
+                                        <div class="text-muted" style="font-size: 11px; font-weight: 500;"><i class="fas fa-phone-alt mr-1" style="font-size: 9px; opacity: 0.7;"></i> {{ order.phone }}</div>
+                                    </td>
+                                    <td class="py-4">
+                                        <span class="px-3 py-2" style="background: #fff1f2; color: #d32323; border-radius: 10px; font-weight: 800; font-size: 13px; border: 1px dashed #fda4af; display: inline-block;">{{ order.order_token }}</span>
+                                    </td>
+                                    <td class="py-4">
+                                        {% for item in order.orderedfood_set.all %}
+                                            {% if item.fooditem.vendor.user == request.user %}
+                                                <div class="d-flex align-items-center mb-1">
+                                                    <span class="badge badge-pill badge-light mr-2" style="font-size: 10px; padding: 4px 8px; background: #f1f5f9;">{{ item.quantity }}x</span>
+                                                    <span class="small font-weight-600" style="color: #334155;">{{ item.fooditem.food_title }}</span>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                    <td class="py-4">
+                                        <span class="font-weight-bold" style="color: #111; font-size: 15px;">₹{{ order.get_total_by_vendor.grand_total }}</span>
+                                    </td>
+                                    <td class="py-4">
+                                        <form action="{% url 'update_order_status' order.order_number %}" method="POST">
+                                            {% csrf_token %}
+                                            <select name="status" class="form-control form-control-sm border shadow-none" 
+                                                    style="background: #fff; border-radius: 10px; font-weight: 700; font-size: 11px; height: 35px; border-color: #cbd5e1; width: 125px;"
+                                                    onchange="this.form.submit()">
+                                                <option value="New" {% if order.status == 'New' %}selected{% endif %}>Accepted</option>
+                                                <option value="Accepted" {% if order.status == 'Accepted' %}selected{% endif %}>Preparing</option>
+                                                <option value="Completed" {% if order.status == 'Completed' %}selected{% endif %}>Ready</option>
+                                            </select>
+                                        </form>
+                                    </td>
+                                    <td class="py-4 text-right px-4">
+                                        <a href="{% url 'vendor_order_details' order.order_number %}" class="btn btn-sm btn-dark" style="border-radius: 10px; font-size: 10px; font-weight: 700; padding: 6px 15px;">Details</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="6" class="text-center py-5">
+                                        <img src="https://cdni.iconscout.com/illustration/premium/thumb/empty-cart-5521508-4610092.png" width="120" class="mb-3 opacity-50">
+                                        <div class="text-muted small">No pending orders to display.</div>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- ORDER HISTORY SECTION -->
+                <div class="section-title mb-4 pb-2 d-flex align-items-center mt-5">
+                    <h5 class="font-weight-bold mb-0" style="color: #64748b; letter-spacing: -0.5px;">Order History (Past)</h5>
+                    <div class="flex-grow-1 ml-4" style="height: 1px; background: #e2e8f0;"></div>
+                </div>
+
+                 <div class="table-responsive">
+                    <table class="table table-clean w-100">
+                        <thead>
                             <tr>
-                                <td><span class="font-weight-bold" style="color: #64748b;">#{{ orders.order_number }}</span>
-                                </td>
-                                <td><span class="font-weight-bold" style="color: #0f172a;">{{ orders.first_name }}</span>
-                                </td>
-                                <td class="text-muted small">{{ orders.phone }}</td>
-                                <td><span class="font-weight-bold" style="color: #d32323;">₹{{ orders.total }}</span></td>
+                                <th>Token</th>
+                                <th>Customer</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in history_orders %}
+                            <tr>
+                                <td class="font-weight-bold" style="color: #94a3b8;">{{ order.order_token }}</td>
+                                <td>{{ order.name }}</td>
+                                <td>₹{{ order.get_total_by_vendor.grand_total }}</td>
                                 <td>
-                                    <span class="badge"
-                                        style="background: #f1f5f9; color: #475569; padding: 6px 12px; border-radius: 8px; font-weight: 700;">{{ orders.status }}</span>
+                                    {% if order.status == 'Delivered' %}
+                                        <span class="badge" style="background: #ebfaf2; color: #10b981; padding: 5px 12px; border-radius: 8px; font-size: 10px; font-weight: 700;">Delivered</span>
+                                    {% elif order.status == 'Completed' %}
+                                        <span class="badge" style="background: #eff6ff; color: #1e40af; padding: 5px 12px; border-radius: 8px; font-size: 10px; font-weight: 700;">Ready</span>
+                                    {% elif order.status == 'Cancelled' %}
+                                        <span class="badge" style="background: #fef2f2; color: #991b1b; padding: 5px 12px; border-radius: 8px; font-size: 10px; font-weight: 700;">Cancelled</span>
+                                    {% else %}
+                                        <span class="badge" style="background: #f1f5f9; color: #475569; padding: 5px 12px; border-radius: 8px; font-size: 10px; font-weight: 700;">{{ order.status }}</span>
+                                    {% endif %}
                                 </td>
-                                <td class="text-muted small">{{ orders.created_at|date:"d F Y" }}</td>
-                                <td>
-                                    <a href="{% url 'vendor_order_details' orders.order_number %}" class="btn btn-sm btn-dark px-3"
-                                        style="border-radius: 10px; font-size: 10px; font-weight: 700; padding: 6px 15px;">
-                                        Details
-                                    </a>
-                                </td>
+                                <td class="text-muted small">{{ order.created_at|date:"d M Y" }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>

@@ -67,17 +67,17 @@
                                             style="color: #ef4444;">₹{{ order.get_total_by_vendor.grand_total }}</span></td>
                                     <td>
                                         {% if order.status == "Delivered" %}
-                                        <span class="badge"
-                                            style="background: #f0fdf4; color: #166534; padding: 6px 14px; border-radius: 10px; font-weight: 700;">Delivered</span>
-                                        {% elif order.status == "Pending" %}
-                                        <span class="badge"
-                                            style="background: #fffbeb; color: #92400e; padding: 6px 14px; border-radius: 10px; font-weight: 700;">Pending</span>
+                                        <span class="badge" style="background: #f0fdf4; color: #166534; padding: 6px 14px; border-radius: 10px; font-weight: 700;">Delivered</span>
+                                        {% elif order.status == "New" %}
+                                        <span class="badge" style="background: #f1f5f9; color: #475569; padding: 6px 14px; border-radius: 10px; font-weight: 700;">Accepted</span>
+                                        {% elif order.status == "Accepted" %}
+                                        <span class="badge" style="background: #fffbeb; color: #92400e; padding: 6px 14px; border-radius: 10px; font-weight: 700;">Preparing</span>
+                                        {% elif order.status == "Completed" %}
+                                        <span class="badge" style="background: #eff6ff; color: #1e40af; padding: 6px 14px; border-radius: 10px; font-weight: 700;">Ready</span>
                                         {% elif order.status == "Cancelled" %}
-                                        <span class="badge"
-                                            style="background: #fef2f2; color: #991b1b; padding: 6px 14px; border-radius: 10px; font-weight: 700;">Cancelled</span>
+                                        <span class="badge" style="background: #fef2f2; color: #991b1b; padding: 6px 14px; border-radius: 10px; font-weight: 700;">Cancelled</span>
                                         {% else %}
-                                        <span class="badge"
-                                            style="background: #f1f5f9; color: #475569; padding: 6px 14px; border-radius: 10px; font-weight: 700;">{{ order.status }}</span>
+                                        <span class="badge" style="background: #f1f5f9; color: #475569; padding: 6px 14px; border-radius: 10px; font-weight: 700;">{{ order.status }}</span>
                                         {% endif %}
                                     </td>
                                     <td class="text-muted small text-nowrap">{{ order.created_at|date:"d M Y" }}</td>
